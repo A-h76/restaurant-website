@@ -12,7 +12,7 @@ interface Props {
 const { icon, heading, tone = 'dark', align = 'left', class: className = '' } = Astro.props;
 const toneClass = tone === 'dark'
   ? 'bg-brand-green text-brand-cream'
-  : 'bg-white text-brand-text-dark shadow-[0_1px_8px_-4px_rgba(7,28,20,0.12)]';
+  : 'bg-white text-brand-text-dark shadow-card';
 const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 ---
 

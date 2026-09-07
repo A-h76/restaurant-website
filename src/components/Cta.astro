@@ -2,25 +2,39 @@
 interface Props {
   href: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'dark' | 'whatsapp';
+  /** Only used by variant="ghost", which has no color of its own — every
+      other variant sets its own text color and this is ignored. Required
+      for ghost so callers can't accidentally fall back to inherited color. */
+  tone?: 'cream' | 'accent' | 'dark';
   class?: string;
   target?: string;
   rel?: string;
 }
 
-const { href, variant = 'primary', class: className = '', target, rel } = Astro.props;
+const { href, variant = 'primary', tone = 'accent', class: className = '', target, rel } = Astro.props;
+
+const toneClass: Record<NonNullable<Props['tone']>, string> = {
+  cream: 'text-brand-cream',
+  accent: 'text-brand-accent',
+  dark: 'text-brand-text-dark',
+};
 
 function variantClass(kind: NonNullable<Props['variant']>) {
   switch (kind) {
     case 'primary':
-      return 'bg-brand-accent text-brand-dark hover:bg-brand-accent-light shadow-[0_8px_24px_-8px_rgba(201,168,78,0.45)]';
+      return 'bg-brand-accent text-brand-dark hover:bg-brand-accent-light shadow-cta active:scale-[0.98]';
     case 'secondary':
       return 'border border-brand-accent/70 text-brand-accent hover:bg-brand-accent hover:text-brand-dark';
     case 'ghost':
-      return 'text-current underline underline-offset-4 hover:text-brand-accent';
+      // No text-current here on purpose — it previously let this class list's
+      // own default silently outrank a caller's color override, since
+      // Tailwind's cascade order (not source order) decides ties. `tone`
+      // is the only supported way to set ghost's color now.
+      return `${toneClass[tone]} underline underline-offset-4 hover:text-brand-accent-light`;
     case 'dark':
-      return 'bg-brand-dark text-brand-cream hover:bg-brand-green';
+      return 'bg-brand-dark text-brand-cream hover:bg-brand-green active:scale-[0.98]';
     case 'whatsapp':
-      return 'bg-whatsapp text-white hover:brightness-110';
+      return 'bg-whatsapp text-white hover:brightness-110 active:scale-[0.98]';
     default: {
       const _exhaustive: never = kind;
       return _exhaustive;

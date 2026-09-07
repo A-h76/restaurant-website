@@ -29,6 +29,7 @@ const navCategories = categories.map((cat) => ({
 
     <div
       id="category-scroller"
+      data-fade="right"
       class="scrollbar-none fade-edges flex min-w-0 flex-1 gap-1.5 overflow-x-auto overscroll-x-contain scroll-smooth py-0.5 md:[mask-image:none]"
     >
       {navCategories.map((cat, i) => (
@@ -118,6 +119,15 @@ const navCategories = categories.map((cat) => ({
         scroller.scrollBy({ left: dir * 220, behavior: 'smooth' });
       });
     });
+
+    function updateFade() {
+      const atStart = scroller.scrollLeft <= 2;
+      const atEnd = scroller.scrollLeft >= scroller.scrollWidth - scroller.clientWidth - 2;
+      scroller.dataset.fade = atStart && atEnd ? 'none' : atStart ? 'right' : atEnd ? 'left' : 'both';
+    }
+    scroller.addEventListener('scroll', updateFade, { passive: true });
+    updateFade();
+    window.addEventListener('resize', updateFade, { passive: true });
 
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();

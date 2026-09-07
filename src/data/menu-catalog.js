@@ -4,7 +4,18 @@ const OWNED = {
   license: 'All rights reserved — Smart Cook Dera',
 };
 
-function dish(id, name, price, description, file = id, query) {
+// Real manufacturer-branded product photography sourced from Pakistani
+// retailers (Al-Fatah, ARY Sahulat Bazar, Jodia Baazar) depicting the exact
+// product sold — not owned/original photography like the dish() default.
+function retailerSourced(retailer) {
+  return {
+    provider: 'retailer-product-photo',
+    sourceUrl: retailer,
+    license: `Product photography from ${retailer} — depicts the manufacturer's real packaging for this exact product`,
+  };
+}
+
+function dish(id, name, price, description, file = id, query, opts = {}) {
   return {
     id,
     name,
@@ -13,7 +24,8 @@ function dish(id, name, price, description, file = id, query) {
     image: `/images/menu/${file}.webp`,
     imageThumb: `/images/menu/${file}-sm.webp`,
     imageStatus: 'verified',
-    imageSource: OWNED,
+    imageFit: opts.imageFit || 'cover',
+    imageSource: opts.imageSource || OWNED,
     imageSearchQuery: query || `${name} Pakistani restaurant dish`,
   };
 }
@@ -134,13 +146,13 @@ export const desiCategories = [
     dish('mint-raita', 'Mint Raita', 'Small: ₨80 / Full: ₨450', 'Yogurt raita blended with mint — distinctly green.', 'mint-raita', 'mint raita Pakistani restaurant'),
   ]},
   { name: 'Drinks', urdu: 'ڈرنکس', items: [
-    pending('pepsi-345ml', 'Pepsi 345ml', '₨80', 'A chilled 345ml bottle of Pepsi served with the meal.', 'Pepsi 345ml bottle'),
+    dish('pepsi-345ml', 'Pepsi 345ml', '₨80', 'A chilled 345ml bottle of Pepsi served with the meal.', 'pepsi-345ml', 'Pepsi 345ml bottle', { imageFit: 'product', imageSource: retailerSourced('ARY Sahulat Bazar') }),
     dish('half-liter-cold-drink', 'Half Liter (500ml)', '₨100', 'A 500ml cold drink.', 'half-liter-cold-drink', '500ml cold drink Pakistani restaurant'),
-    dish('coke-tin-pack', 'Coke Tin Pack', '₨120', 'Coca-Cola tin. Branded product photography is held for trademark-safe artwork.', 'coke-tin-pack', 'Coke tin pack Pakistani restaurant'),
+    dish('coke-tin-pack', 'Coke Tin Pack', '₨120', 'A chilled 250ml Coca-Cola can.', 'coke-tin-250ml', 'Coke tin pack Pakistani restaurant', { imageFit: 'product', imageSource: retailerSourced('Al-Fatah') }),
     dish('water-small', 'Water Small', '₨70', 'Small bottled drinking water.', 'water-small', 'small bottled water restaurant'),
     dish('water-large', 'Water Large', '₨120', 'Large bottled drinking water.', 'water-large', 'large bottled water restaurant'),
-    dish('coke-1-5-ltr', 'Coke 1.5 Ltr', '₨210', '1.5 litre Coca-Cola bottle. Branded photography is held for trademark-safe artwork.', 'coke-1-5-ltr', 'Coke 1.5 liter Pakistani restaurant'),
-    dish('coke-1-ltr', 'Coke 1 Ltr', '₨170', '1 litre Coca-Cola bottle. Branded photography is held for trademark-safe artwork.', 'coke-1-ltr', 'Coke 1 liter Pakistani restaurant'),
+    dish('coke-1-5-ltr', 'Coke 1.5 Ltr', '₨210', '1.5 litre Coca-Cola bottle.', 'coke-1-5l', 'Coke 1.5 liter Pakistani restaurant', { imageFit: 'product', imageSource: retailerSourced('Al-Fatah') }),
+    dish('coke-1-ltr', 'Coke 1 Ltr', '₨170', '1 litre Coca-Cola bottle.', 'coke-1l', 'Coke 1 liter Pakistani restaurant', { imageFit: 'product', imageSource: retailerSourced('Jodia Baazar') }),
     dish('mint-margarita', 'Mint Margarita', '₨220', 'Pakistani mint margarita mocktail — frothy mint lemonade with a salted rim. No alcohol.', 'mint-margarita', 'mint margarita mocktail Pakistani restaurant'),
   ]},
   { name: 'Nashta', urdu: 'ناشتہ', items: [

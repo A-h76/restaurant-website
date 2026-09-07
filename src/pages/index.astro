@@ -6,7 +6,7 @@ import MenuItemModal from '../components/menu/MenuItemModal.astro';
 import FoodImage from '../components/FoodImage.astro';
 import { findItem } from '../lib/menu.js';
 import { desiCategories, dealCategory } from '../data/menu-catalog.js';
-import { PHONE_TEL, MAPS_DIRECTIONS_URL, WHATSAPP_URL } from '../consts.js';
+import { PHONE_TEL, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, WHATSAPP_URL } from '../consts.js';
 
 const schema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -85,7 +85,7 @@ const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, fami
       <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
         <Cta href={PHONE_TEL}>Call Now</Cta>
         <Cta href={MAPS_DIRECTIONS_URL} variant="secondary">Get Directions</Cta>
-        <Cta href="/menu" variant="ghost" class="text-brand-accent!">View Menu →</Cta>
+        <Cta href="/menu" variant="ghost" tone="accent">View Menu →</Cta>
       </div>
     </div>
   </section>
@@ -93,7 +93,7 @@ const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, fami
   <section class="border-b border-brand-accent/15 bg-brand-cream px-4 py-section-sm md:px-10">
     <div class="mx-auto grid max-w-6xl grid-cols-2 gap-2 lg:grid-cols-4">
       {pillars.map((p) => (
-        <article class="rounded-xl bg-white px-3 py-3 text-center shadow-[0_1px_6px_-3px_rgba(7,28,20,0.1)]">
+        <article class="rounded-xl bg-white px-3 py-3 text-center shadow-card-sm">
           <h2 class="font-display text-base font-semibold text-brand-text-dark md:text-lg">{p.title}</h2>
           <p class="mt-1 font-sans text-xs leading-relaxed text-brand-text-muted md:text-sm">{p.text}</p>
         </article>
@@ -101,10 +101,10 @@ const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, fami
     </div>
   </section>
 
-  <section class="bg-brand-off-white px-4 py-section-md md:px-8 lg:px-16">
+  <section class="bg-brand-cream px-4 py-section-md md:px-8 lg:px-16">
     <div class="mx-auto max-w-6xl">
       <p class="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-brand-accent">Popular</p>
-      <h2 class="mt-1 font-display text-2xl font-semibold text-brand-text-dark md:text-3xl">Your Favourite Food</h2>
+      <h2 class="mt-1 font-display text-3xl font-semibold text-brand-text-dark md:text-4xl">Your Favourite Food</h2>
       <div class="scrollbar-none mt-5 flex gap-3 overflow-x-auto pb-2">
         {featured.map((item) => (
           <div class="w-[280px] shrink-0 sm:w-[240px]">
@@ -140,20 +140,28 @@ const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, fami
     </div>
   </section>
 
-  <section class="border-y border-brand-accent/20 bg-brand-cream px-5 py-section-sm lg:px-16">
-    <div class="mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-2 md:gap-10">
+  <section class="border-y border-brand-accent/20 bg-brand-cream px-5 py-section-md lg:px-16">
+    <div class="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-12">
       <div class="text-center md:text-left">
         <p class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-accent">Find us</p>
         <h2 class="mt-1 font-display text-2xl font-semibold text-brand-text-dark md:text-3xl">Sahiwal–Arifwala Road</h2>
         <p class="mx-auto mt-2 max-w-md font-sans text-sm leading-relaxed text-brand-text-muted md:mx-0">
           An easy highway stop with ample parking, conveniently located near Arifwala.
         </p>
+        <div class="mt-5 flex flex-col items-center gap-3 sm:flex-row md:justify-start">
+          <Cta href={MAPS_DIRECTIONS_URL} variant="primary">Get Directions</Cta>
+          <Cta href={PHONE_TEL} variant="ghost" tone="dark">Call for directions</Cta>
+        </div>
       </div>
-      <div class="flex flex-col items-center gap-3 sm:flex-row md:justify-end">
-        <Cta href={MAPS_DIRECTIONS_URL} variant="primary">Get Directions</Cta>
-        <a href={PHONE_TEL} class="inline-flex min-h-11 items-center justify-center px-2 font-sans text-sm font-semibold uppercase tracking-widest text-brand-text-dark underline underline-offset-4 hover:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent">
-          Call for directions
-        </a>
+      <div class="overflow-hidden rounded-2xl border border-brand-accent/25">
+        <iframe
+          src={MAPS_EMBED_URL}
+          width="100%"
+          height="240"
+          style="border:0; display: block;"
+          loading="lazy"
+          title="Smart Cook Dera location map"
+        ></iframe>
       </div>
     </div>
   </section>

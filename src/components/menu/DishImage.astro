@@ -8,6 +8,12 @@ interface Props {
   sizes?: string;
   imgClass?: string;
   iconSize?: number;
+  /** 'cover' (default) fills the frame — right for plated food photography.
+      'product' is for white-background product shots (bottles/cans): the
+      photo is inset and letterboxed on a dark backdrop instead of being
+      cropped/stretched to fill, so a studio cutout doesn't look distorted
+      next to the site's full-bleed food photos. */
+  fit?: 'cover' | 'product';
 }
 
 const {
@@ -19,6 +25,7 @@ const {
   sizes = '(max-width: 640px) 40vw, 240px',
   imgClass = '',
   iconSize = 40,
+  fit = 'cover',
 } = Astro.props;
 
 const showPhoto = verified && Boolean(src);
@@ -27,6 +34,21 @@ const smallSrc = thumbSrc || src;
 ---
 
 {showPhoto ? (
+  fit === 'product' ? (
+    <div class={`flex h-full w-full items-center justify-center bg-brand-dark p-4 ${imgClass}`}>
+      <img
+        src={smallSrc}
+        srcset={thumbSrc && src !== thumbSrc ? `${smallSrc} 480w, ${fullSrc} 960w` : undefined}
+        sizes={sizes}
+        alt={alt}
+        width="960"
+        height="960"
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        class="h-full w-full object-contain object-center"
+      />
+    </div>
+  ) : (
   <img
     src={smallSrc}
     srcset={thumbSrc && src !== thumbSrc ? `${smallSrc} 480w, ${fullSrc} 960w` : undefined}
@@ -38,6 +60,7 @@ const smallSrc = thumbSrc || src;
     decoding="async"
     class={`h-full w-full object-cover object-center ${imgClass}`}
   />
+  )
 ) : (
   <div class={`flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-brand-mid via-brand-green to-brand-dark ${imgClass}`}>
     <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-40">

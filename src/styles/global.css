@@ -13,9 +13,6 @@
   --color-brand-accent: #C9A84E;
   --color-brand-accent-light: #D8B85A;
   --color-brand-cream: #F6F0DF;
-  /* Aliased to cream — kept as a separate token only so existing bg-brand-off-white
-     classes don't need a repo-wide rename; the two are no longer meant to differ. */
-  --color-brand-off-white: #F6F0DF;
   --color-brand-text-dark: #10251B;
   --color-brand-text-light: #F6F0DF;
   --color-brand-text-muted: #8B7355;
@@ -36,6 +33,12 @@
   --spacing-section-sm: 2.5rem;
   --spacing-section-md: 4rem;
   --spacing-section-lg: 5.5rem;
+
+  /* One shadow system, three depths. Every card on the site should use one
+     of these three — never a one-off shadow value. */
+  --shadow-card-sm: 0 1px 6px -3px rgba(7, 28, 20, 0.10);
+  --shadow-card: 0 1px 8px -4px rgba(7, 28, 20, 0.12);
+  --shadow-cta: 0 8px 24px -8px rgba(201, 168, 78, 0.45);
 }
 
 @layer utilities {
@@ -53,10 +56,24 @@
 
   /* Visual cue that a horizontally-scrolling strip has more content past the
      edge (mobile category nav) — fades the last ~24px instead of a hard
-     clip, so a cut-off pill reads as "scrollable" rather than "broken". */
+     clip, so a cut-off pill reads as "scrollable" rather than "broken".
+     data-fade is kept in sync with actual scroll position by StickyCategoryNav's
+     own script — "none" at the very start, "both" mid-scroll, "left" at the end. */
   .fade-edges {
+    mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+  }
+  .fade-edges[data-fade="both"] {
     mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent);
+  }
+  .fade-edges[data-fade="left"] {
+    mask-image: linear-gradient(to right, transparent, black 16px);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 16px);
+  }
+  .fade-edges[data-fade="none"] {
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .bg-geo {

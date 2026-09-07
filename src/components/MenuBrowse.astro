@@ -31,25 +31,25 @@ const fastFoodEnd = desiEnd + fastFoodCategories.length;
 <div id="menu">
 <StickyCategoryNav categories={sections.map((c) => ({ id: c.id, label: c.name }))} />
 
-<div class="bg-brand-off-white px-4 py-8 pb-6 md:px-8 lg:px-16">
+<div class="bg-brand-cream px-4 py-section-md md:px-8 lg:px-16">
   <div class="mx-auto max-w-6xl space-y-12">
     {sections.map((cat, i) => (
       <>
         {i === 0 && (
-          <div class="flex items-center gap-4">
-            <h2 class="shrink-0 font-display text-sm font-semibold uppercase tracking-[0.3em] text-brand-text-dark">Our Karahi, BBQ &amp; Desi Cooking</h2>
+          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
+            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Our Karahi &amp; BBQ</h2>
             <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
           </div>
         )}
         {i === desiEnd && (
-          <div class="flex items-center gap-4 pt-4">
-            <h2 class="shrink-0 font-display text-sm font-semibold uppercase tracking-[0.3em] text-brand-text-dark">Fast Food</h2>
+          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
+            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Fast Food</h2>
             <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
           </div>
         )}
         {i === fastFoodEnd && (
-          <div class="flex items-center gap-4 pt-4">
-            <h2 class="shrink-0 font-display text-sm font-semibold uppercase tracking-[0.3em] text-brand-text-dark">Deals</h2>
+          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
+            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Deals</h2>
             <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
           </div>
         )}

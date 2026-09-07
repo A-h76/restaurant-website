@@ -76,7 +76,7 @@ const faqs = [
     <h1 class="font-display text-heading font-semibold text-brand-cream">Contact Us</h1>
   </section>
 
-  <section class="bg-brand-off-white px-5 py-section-md md:px-10">
+  <section class="bg-brand-cream px-5 py-section-md md:px-10">
     <div class="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
       <InfoCard
         icon='<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.36 11.36 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.57 1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg>'
@@ -106,22 +106,19 @@ const faqs = [
       <InfoCard
         icon='<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>'
         heading="Address"
-        tone="light"
       >
         <p>{ADDRESS_LINE}</p>
-        <p class="mt-1 text-brand-text-muted">Plus Code: {PLUS_CODE}</p>
+        <p class="mt-1 text-brand-cream/60">Plus Code: {PLUS_CODE}</p>
       </InfoCard>
       <InfoCard
         icon='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
         heading="Opening Hours"
-        tone="light"
       >
         <p>{HOURS_DISPLAY}</p>
       </InfoCard>
       <InfoCard
         icon='<svg width="26" height="26" viewBox="0 0 40 40" fill="none"><path d="M11 34V21a9 9 0 0118 0v13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 34h26" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="20" cy="9" r="1.6" fill="currentColor"/></svg>'
         heading="Mosque on Premises"
-        tone="light"
       >
         <p>Dedicated mosque with Imam. All 5 daily prayers. Open to all visitors.</p>
         <a href="/prayer-facility" class="mt-1 inline-block text-brand-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent">Learn more →</a>
@@ -135,7 +132,7 @@ const faqs = [
     <Cta href={PHONE_TEL} variant="secondary" class="mt-5">Call Manager</Cta>
   </section>
 
-  <div class="bg-brand-off-white px-5 py-section-sm md:px-10 lg:px-20">
+  <div class="bg-brand-cream px-5 py-section-sm md:px-10 lg:px-20">
     <div class="mx-auto max-w-4xl overflow-hidden rounded-[20px]">
       <iframe
         src={MAPS_EMBED_URL}
@@ -148,7 +145,7 @@ const faqs = [
     </div>
   </div>
 
-  <section class="bg-brand-off-white px-5 py-section-md md:px-10">
+  <section class="bg-brand-cream px-5 py-section-md md:px-10">
     <div class="mx-auto max-w-3xl">
       <SectionLabel label="FAQ" />
       <h2 class="text-center font-display text-heading font-semibold text-brand-text-dark">Common Questions</h2>

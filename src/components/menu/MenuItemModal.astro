@@ -12,7 +12,7 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
       aria-modal="true"
       aria-labelledby="menu-item-title"
       tabindex="-1"
-      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-t-2xl bg-brand-off-white opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[720px] sm:scale-95 sm:rounded-2xl"
+      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-t-2xl bg-brand-cream opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[720px] sm:scale-95 sm:rounded-2xl"
     >
       <button
         type="button"
@@ -76,7 +76,7 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
     const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
     let lastFocused = null;
 
-    function renderImage(src, thumb, alt, status) {
+    function renderImage(src, thumb, alt, status, fit) {
       imageSlot.innerHTML = '';
       if (status === 'verified' && src) {
         const img = document.createElement('img');
@@ -84,11 +84,21 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
         img.srcset = thumb && thumb !== src ? `${thumb} 480w, ${src} 960w` : '';
         img.sizes = '(max-width: 640px) 100vw, 720px';
         img.alt = alt || '';
-        img.width = 960;
-        img.height = 720;
         img.decoding = 'async';
-        img.className = 'h-full w-full object-cover object-center';
-        imageSlot.appendChild(img);
+        if (fit === 'product') {
+          img.width = 960;
+          img.height = 960;
+          img.className = 'h-full w-full object-contain object-center';
+          const wrap = document.createElement('div');
+          wrap.className = 'flex h-full w-full items-center justify-center bg-brand-dark p-6';
+          wrap.appendChild(img);
+          imageSlot.appendChild(wrap);
+        } else {
+          img.width = 960;
+          img.height = 720;
+          img.className = 'h-full w-full object-cover object-center';
+          imageSlot.appendChild(img);
+        }
         return;
       }
 
@@ -159,14 +169,14 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
     }
 
     function openModal(trigger) {
-      const { name, category, urdu, price, note, items, description, image, imageThumb, imageStatus } = trigger.dataset;
+      const { name, category, urdu, price, note, items, description, image, imageThumb, imageStatus, imageFit } = trigger.dataset;
 
       titleEl.textContent = name || '';
       categoryEl.textContent = category || '';
       urduEl.textContent = urdu || '';
       descriptionEl.textContent = description || '';
       descriptionEl.classList.toggle('hidden', !description);
-      renderImage(image, imageThumb, name, imageStatus);
+      renderImage(image, imageThumb, name, imageStatus, imageFit);
       renderPricing(price, note);
       renderList(items);
 
