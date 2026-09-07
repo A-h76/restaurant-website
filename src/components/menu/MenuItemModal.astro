@@ -1,0 +1,228 @@
+---
+import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../consts.js';
+---
+
+<div id="menu-item-modal" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-brand-dark/60 backdrop-blur-[2px]" data-modal-close></div>
+
+  <div class="pointer-events-none relative flex h-full items-end justify-center sm:items-center sm:p-4">
+    <div
+      id="menu-item-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="menu-item-title"
+      tabindex="-1"
+      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-t-2xl bg-brand-off-white opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[720px] sm:scale-95 sm:rounded-2xl"
+    >
+      <button
+        type="button"
+        data-modal-close
+        aria-label="Close"
+        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-brand-dark/70 text-lg text-brand-cream backdrop-blur transition-colors hover:bg-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+      >
+        ✕
+      </button>
+
+      <div id="menu-item-image" class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-green sm:h-72"></div>
+
+      <div class="px-5 py-5 md:px-8 md:py-6">
+        <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          <span id="menu-item-category" class="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-brand-accent"></span>
+          <span id="menu-item-urdu" class="font-urdu-display text-sm text-brand-text-muted" dir="rtl"></span>
+        </div>
+        <h2 id="menu-item-title" class="mt-1 font-display text-2xl font-bold text-brand-text-dark md:text-3xl"></h2>
+        <p id="menu-item-description" class="mt-3 font-sans text-sm leading-relaxed text-brand-text-muted"></p>
+
+        <div id="menu-item-pricing" class="mt-5 border-t border-brand-accent/15 pt-4"></div>
+        <ul id="menu-item-list" class="mt-4 space-y-1.5 font-sans text-sm text-brand-text-dark"></ul>
+
+        <div class="mt-6 flex flex-col gap-2.5 sm:flex-row">
+          <a
+            id="menu-item-call"
+            href={PHONE_TEL}
+            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-accent px-6 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-accent-light"
+          >
+            Call to Order · {PHONE_DISPLAY}
+          </a>
+          <a
+            id="menu-item-whatsapp"
+            href={WHATSAPP_URL}
+            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-whatsapp px-6 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-white transition-all duration-200 hover:-translate-y-0.5"
+          >
+            WhatsApp · {WHATSAPP_DISPLAY}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { priceSegments, formatPrice } from '../../lib/menu.js';
+  import { WHATSAPP_URL } from '../../consts.js';
+
+  const modal = document.getElementById('menu-item-modal');
+  const dialog = document.getElementById('menu-item-dialog');
+  const imageSlot = document.getElementById('menu-item-image');
+  const categoryEl = document.getElementById('menu-item-category');
+  const urduEl = document.getElementById('menu-item-urdu');
+  const titleEl = document.getElementById('menu-item-title');
+  const descriptionEl = document.getElementById('menu-item-description');
+  const pricingEl = document.getElementById('menu-item-pricing');
+  const listEl = document.getElementById('menu-item-list');
+  const whatsappEl = document.getElementById('menu-item-whatsapp');
+
+  if (modal && dialog && imageSlot && categoryEl && urduEl && titleEl && descriptionEl && pricingEl && listEl && whatsappEl) {
+    const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    let lastFocused = null;
+
+    function renderImage(src, thumb, alt, status) {
+      imageSlot.innerHTML = '';
+      if (status === 'verified' && src) {
+        const img = document.createElement('img');
+        img.src = thumb || src;
+        img.srcset = thumb && thumb !== src ? `${thumb} 480w, ${src} 960w` : '';
+        img.sizes = '(max-width: 640px) 100vw, 720px';
+        img.alt = alt || '';
+        img.width = 960;
+        img.height = 720;
+        img.decoding = 'async';
+        img.className = 'h-full w-full object-cover object-center';
+        imageSlot.appendChild(img);
+        return;
+      }
+
+      const fallback = document.createElement('div');
+      fallback.className = 'flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-brand-mid via-brand-green to-brand-dark';
+      fallback.innerHTML = `
+        <svg width="56" height="56" viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-40">
+          <path d="M8 20a12 12 0 0024 0" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M6 20h28" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M15 9c-1.4-1.6-1.4-3 0-4.6M20 8c-1.4-1.6-1.4-3 0-4.6M25 9c-1.4-1.6-1.4-3 0-4.6" stroke="#F6F0DF" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+        <span class="mt-2 font-sans text-xs font-semibold uppercase tracking-[0.18em] text-brand-cream/70">Image coming soon</span>
+      `;
+      imageSlot.appendChild(fallback);
+    }
+
+    function renderPricing(price, note) {
+      pricingEl.innerHTML = '';
+      const segs = priceSegments(price);
+
+      if (segs.length === 0) {
+        if (note) {
+          const p = document.createElement('p');
+          p.className = 'font-sans text-sm text-brand-text-muted';
+          p.textContent = `Pricing: ${formatPrice(note)}`;
+          pricingEl.appendChild(p);
+        }
+        return;
+      }
+
+      const bare = segs.length === 1 && !segs[0].label;
+      const wrap = document.createElement('div');
+      wrap.className = bare ? '' : 'flex flex-wrap gap-x-8 gap-y-3';
+
+      segs.forEach((seg) => {
+        const cell = document.createElement('div');
+        if (!bare) cell.className = 'flex flex-col items-start';
+        if (seg.label) {
+          const label = document.createElement('span');
+          label.className = 'font-sans text-xs font-semibold uppercase tracking-wide text-brand-text-muted';
+          label.textContent = seg.label;
+          cell.appendChild(label);
+        }
+        const priceEl = document.createElement('span');
+        priceEl.className = `font-display font-bold tabular-nums text-brand-accent ${bare ? 'text-3xl' : 'text-2xl'}`;
+        priceEl.textContent = seg.price;
+        cell.appendChild(priceEl);
+        wrap.appendChild(cell);
+      });
+
+      pricingEl.appendChild(wrap);
+    }
+
+    function renderList(itemsAttr) {
+      listEl.innerHTML = '';
+      if (!itemsAttr) return;
+      itemsAttr.split('||').forEach((line) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-baseline gap-2';
+        const check = document.createElement('span');
+        check.setAttribute('aria-hidden', 'true');
+        check.textContent = '✓';
+        const text = document.createElement('span');
+        text.textContent = line;
+        li.append(check, text);
+        listEl.appendChild(li);
+      });
+    }
+
+    function openModal(trigger) {
+      const { name, category, urdu, price, note, items, description, image, imageThumb, imageStatus } = trigger.dataset;
+
+      titleEl.textContent = name || '';
+      categoryEl.textContent = category || '';
+      urduEl.textContent = urdu || '';
+      descriptionEl.textContent = description || '';
+      descriptionEl.classList.toggle('hidden', !description);
+      renderImage(image, imageThumb, name, imageStatus);
+      renderPricing(price, note);
+      renderList(items);
+
+      const orderText = encodeURIComponent(`I'd like to order ${name} from Smart Cook Dera.`);
+      whatsappEl.setAttribute('href', `${WHATSAPP_URL}?text=${orderText}`);
+
+      lastFocused = trigger;
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      requestAnimationFrame(() => {
+        dialog.classList.remove('opacity-0', 'translate-y-4', 'sm:scale-95');
+        dialog.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+      });
+
+      dialog.querySelector('[data-modal-close]')?.focus();
+    }
+
+    function closeModal() {
+      dialog.classList.add('opacity-0', 'translate-y-4', 'sm:scale-95');
+      dialog.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+      document.body.classList.remove('overflow-hidden');
+      window.setTimeout(() => modal.classList.add('hidden'), 200);
+      lastFocused?.focus();
+    }
+
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-menu-item]');
+      if (trigger) {
+        openModal(trigger);
+        return;
+      }
+      if (e.target.closest('[data-modal-close]')) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (modal.classList.contains('hidden')) return;
+
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = Array.from(dialog.querySelectorAll(FOCUSABLE));
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  }
+</script>

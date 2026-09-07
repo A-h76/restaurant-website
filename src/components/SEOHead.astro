@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonicalURL: string;
+  schema?: string;
+}
+
+const { title, description, canonicalURL, schema } = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+{schema && <script type="application/ld+json" set:html={schema} />}

@@ -1,0 +1,183 @@
+---
+import { PHONE_TEL, PHONE_DISPLAY, MAPS_DIRECTIONS_URL } from '../consts.js';
+
+interface Props {
+  variant?: 'utility' | 'compact';
+  sticky?: boolean;
+  menuHref?: string;
+}
+
+const { variant = 'compact', sticky = true, menuHref = '/menu' } = Astro.props;
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/location', label: 'Location' },
+  { href: '/prayer-facility', label: 'Prayer Facility' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
+const isUtility = variant === 'utility';
+const headerPosition = sticky ? 'sticky top-0 z-40' : 'relative z-40';
+---
+
+<header class={`${headerPosition} border-b border-brand-accent/15 bg-brand-dark/95 backdrop-blur-sm ${isUtility ? 'h-14 md:h-[4.25rem]' : 'h-16 md:h-20'}`}>
+  {isUtility ? (
+    <div class="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 md:px-6 lg:px-10">
+      <div class="flex min-w-0 items-center gap-4">
+        <a
+          href={MAPS_DIRECTIONS_URL}
+          class="hidden min-w-0 items-center gap-2 font-sans text-xs uppercase tracking-wider text-brand-cream/80 hover:text-brand-accent lg:flex"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="shrink-0 text-brand-accent">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
+          </svg>
+          <span class="truncate">Sahiwal–Arifwala Road</span>
+        </a>
+        <a
+          href={PHONE_TEL}
+          class="hidden items-center gap-2 font-sans text-xs uppercase tracking-wider text-brand-cream/80 hover:text-brand-accent md:flex"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="text-brand-accent">
+            <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.36 11.36 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.57 1 1 0 0 1-.25 1.02l-2.2 2.2z"/>
+          </svg>
+          {PHONE_DISPLAY}
+        </a>
+      </div>
+
+      <a href="/" class="flex items-center leading-tight">
+        <span class="font-urdu-display text-xl leading-none text-brand-accent md:text-2xl">سمارٹ کک ڈیرہ</span>
+        <span class="sr-only">Smart Cook Dera</span>
+      </a>
+
+      <div class="flex items-center justify-end gap-2">
+        <a
+          href={menuHref}
+          class="hidden rounded-lg bg-brand-accent px-4 py-2 font-sans text-xs font-semibold uppercase tracking-widest text-brand-dark hover:bg-brand-accent-light md:inline-flex"
+        >
+          View Menu
+        </a>
+        <a
+          href={PHONE_TEL}
+          class="inline-flex h-10 items-center rounded-lg bg-brand-accent px-3 font-sans text-xs font-semibold uppercase tracking-widest text-brand-dark md:hidden"
+        >
+          Call
+        </a>
+        <button
+          id="menu-toggle"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Toggle menu"
+          class="flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:hidden"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A84E" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  ) : (
+    <div class="mx-auto flex h-full max-w-6xl items-center justify-between px-5 md:px-10 lg:px-20">
+      <a href="/" class="flex items-center leading-tight">
+        <span class="font-urdu-display text-2xl leading-none text-brand-accent md:text-3xl">سمارٹ کک ڈیرہ</span>
+        <span class="sr-only">Smart Cook Dera</span>
+      </a>
+
+      <nav class="hidden md:block">
+        <ul class="flex items-center gap-8">
+          {navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class="relative py-1 font-sans text-sm uppercase tracking-wider text-brand-cream transition-colors duration-200 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-brand-accent after:transition-all after:duration-300 hover:text-brand-accent hover:after:w-full aria-[current=page]:text-brand-accent aria-[current=page]:after:w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent focus-visible:rounded-sm"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <a
+        href={PHONE_TEL}
+        class="hidden items-center gap-2 rounded-xl bg-brand-accent px-7 py-2.5 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark md:inline-flex"
+      >
+        Call Now
+      </a>
+
+      <button
+        id="menu-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Toggle menu"
+        class="flex h-11 w-11 items-center justify-center md:hidden"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9A84E" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  )}
+</header>
+
+<!-- Rendered outside <header> deliberately: header has backdrop-blur-sm
+     (backdrop-filter), which creates a containing block for fixed-position
+     descendants — a nav fixed here would size against the header's own
+     box instead of the viewport and never visibly cover the screen. -->
+<nav id="mobile-menu" class="fixed inset-0 z-50 hidden overflow-y-auto bg-brand-dark md:hidden">
+  <div class="flex justify-end px-3 pt-3">
+    <button
+      type="button"
+      data-menu-close
+      aria-label="Close menu"
+      class="flex h-11 w-11 items-center justify-center text-2xl text-brand-accent"
+    >
+      ✕
+    </button>
+  </div>
+  <ul class="flex flex-col items-center gap-2 px-5 pb-10">
+    {navItems.map((item) => (
+      <li class="w-full text-center">
+        <a
+          href={item.href}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+          class="block py-4 font-display text-2xl text-brand-cream aria-[current=page]:text-brand-accent"
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+    <li class="mt-4 flex w-full max-w-xs flex-col gap-3">
+      <a href={PHONE_TEL} class="rounded-xl bg-brand-accent px-8 py-3 text-center font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark">
+        Call Now
+      </a>
+      <a href={MAPS_DIRECTIONS_URL} class="rounded-xl border border-brand-accent/60 px-8 py-3 text-center font-sans text-sm font-semibold uppercase tracking-widest text-brand-accent">
+        Get Directions
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const closeBtn = menu?.querySelector('[data-menu-close]');
+
+  function setOpen(isOpen) {
+    menu?.classList.toggle('hidden', !isOpen);
+    btn?.setAttribute('aria-expanded', String(isOpen));
+    document.body.classList.toggle('overflow-hidden', isOpen);
+  }
+
+  btn?.addEventListener('click', () => {
+    setOpen(menu?.classList.contains('hidden') === true);
+  });
+  closeBtn?.addEventListener('click', () => setOpen(false));
+</script>

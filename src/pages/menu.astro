@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MenuBrowse from '../components/MenuBrowse.astro';
+import MenuItemModal from '../components/menu/MenuItemModal.astro';
+import Cta from '../components/Cta.astro';
+import { allMenuCategories } from '../data/menu-catalog.js';
+import { PHONE_TEL, PHONE_DISPLAY, PHONE_TEL_2, PHONE_DISPLAY_2, WHATSAPP_URL } from '../consts.js';
+
+const browseCategories = allMenuCategories();
+---
+
+<BaseLayout
+  title="Menu — Smart Cook Dera | Karahi, BBQ, Fast Food | Sahiwal-Arifwala Road"
+  description="Full menu at Smart Cook Dera. Fresh Mutton Karahi, Chicken Karahi, BBQ, Seekh Kabab, Naan, Fast Food and Drinks. Sahiwal-Arifwala Road, near Arifwala."
+  headerVariant="utility"
+  headerSticky={false}
+  menuHref="#menu"
+>
+  <section class="bg-brand-dark px-5 py-section-sm text-center">
+    <span class="font-sans text-xs font-semibold uppercase tracking-[0.25em] text-brand-accent">Smart Cook Dera</span>
+    <h1 class="mt-2 font-display text-3xl font-bold text-brand-cream md:text-4xl">Our Menu</h1>
+    <p class="mt-1.5 font-sans text-sm text-brand-cream/70">Karahi, BBQ, biryani, pizzas, deals and more</p>
+  </section>
+
+  <MenuBrowse categories={browseCategories} />
+
+  <p class="bg-brand-off-white px-5 pb-8 text-center font-sans text-sm text-brand-text-muted">
+    Prices may vary. Contact us to confirm current prices.<br />
+    <a href={PHONE_TEL} class="text-brand-accent">{PHONE_DISPLAY}</a> · <a href={PHONE_TEL_2} class="text-brand-accent">{PHONE_DISPLAY_2}</a>
+  </p>
+
+  <section class="bg-brand-green px-5 py-section-sm text-center md:px-10">
+    <p class="font-display text-lg font-semibold text-brand-cream md:text-xl">Ready to order?</p>
+    <div class="mt-4 flex flex-wrap justify-center gap-3">
+      <Cta href={PHONE_TEL}>Call Now</Cta>
+      <Cta href={WHATSAPP_URL} variant="secondary" target="_blank" rel="noopener noreferrer">WhatsApp</Cta>
+    </div>
+  </section>
+
+  <MenuItemModal />
+</BaseLayout>

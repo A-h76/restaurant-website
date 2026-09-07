@@ -1,0 +1,44 @@
+---
+import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL, WHATSAPP_DISPLAY, ADDRESS_LINE, HOURS_DISPLAY } from '../consts.js';
+const year = new Date().getFullYear();
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/location', label: 'Location' },
+  { href: '/prayer-facility', label: 'Prayer Facility' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<footer class="border-t border-brand-accent/20 bg-brand-dark pb-[4.75rem] md:pb-0">
+  <div class="mx-auto grid max-w-6xl gap-8 px-5 py-8 md:grid-cols-3 md:gap-10 md:px-10 md:py-10 lg:px-16">
+    <div>
+      <a href="/" class="font-urdu-display text-2xl leading-none text-brand-accent">سمارٹ کک ڈیرہ</a>
+      <p class="mt-2 font-sans text-sm text-brand-cream/70">Your Favourite Food, A Comfortable Stop.</p>
+      <p class="mt-3 font-sans text-xs leading-relaxed text-brand-cream/50">{ADDRESS_LINE}</p>
+    </div>
+
+    <div>
+      <span class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-accent">Quick Links</span>
+      <ul class="mt-3 space-y-1.5">
+        {navItems.map((item) => (
+          <li><a href={item.href} class="font-sans text-sm text-brand-cream/85 transition-colors hover:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent focus-visible:rounded-sm">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <span class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-accent">Contact</span>
+      <ul class="mt-3 space-y-1.5 font-sans text-sm text-brand-cream/85">
+        <li><a href={PHONE_TEL} class="transition-colors hover:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent focus-visible:rounded-sm">Phone: {PHONE_DISPLAY}</a></li>
+        <li><a href={WHATSAPP_URL} class="transition-colors hover:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent focus-visible:rounded-sm">WhatsApp: {WHATSAPP_DISPLAY}</a></li>
+        <li class="text-brand-cream/60">Hours: {HOURS_DISPLAY}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-brand-accent/15 px-5 py-4 text-center font-sans text-xs text-brand-cream/45">
+    &copy; {year} Smart Cook Dera. All rights reserved.
+  </div>
+</footer>

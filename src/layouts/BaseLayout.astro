@@ -1,0 +1,40 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingButtons from '../components/FloatingButtons.astro';
+import SEOHead from '../components/SEOHead.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  schema?: string;
+  headerVariant?: 'utility' | 'compact';
+  headerSticky?: boolean;
+  menuHref?: string;
+}
+
+const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEOHead title={title} description={description} canonicalURL={canonicalURL} schema={schema} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex min-h-screen flex-col overflow-x-clip bg-brand-off-white font-sans text-brand-text-dark">
+    <Header variant={headerVariant} sticky={headerSticky} menuHref={menuHref} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <FloatingButtons />
+  </body>
+</html>

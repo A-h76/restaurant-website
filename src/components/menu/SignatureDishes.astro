@@ -1,0 +1,70 @@
+---
+import DishImage from './DishImage.astro';
+import { isVerifiedImage } from '../../lib/menu.js';
+
+interface Props {
+  dishes: {
+    name: string;
+    price: string | null;
+    category: string;
+    urdu?: string;
+    description?: string;
+    image?: string;
+    imageThumb?: string;
+    imageStatus?: string;
+    note?: string;
+    items?: string[];
+  }[];
+}
+
+const { dishes } = Astro.props;
+---
+
+{dishes.length > 0 && (
+  <section class="bg-brand-cream px-5 py-8 md:px-10 md:py-10 lg:px-20">
+    <div class="mx-auto max-w-[1200px]">
+      <h2 class="font-display text-xl font-bold text-brand-text-dark md:text-2xl">Popular Choices</h2>
+
+      <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {dishes.map((dish) => (
+          <button
+            type="button"
+            data-menu-item
+            data-name={dish.name}
+            data-category={dish.category}
+            data-urdu={dish.urdu ?? ''}
+            data-price={dish.price ?? ''}
+            data-note={dish.note ?? ''}
+            data-description={dish.description ?? ''}
+            data-image={isVerifiedImage(dish) ? dish.image : ''}
+            data-image-thumb={isVerifiedImage(dish) ? (dish.imageThumb || dish.image) : ''}
+            data-image-status={dish.imageStatus ?? 'needs-review'}
+            data-items={dish.items ? dish.items.join('||') : ''}
+            aria-haspopup="dialog"
+            class="group flex items-center gap-3 rounded-xl border border-brand-accent/20 bg-white p-2.5 text-left shadow-sm transition-colors duration-200 hover:border-brand-accent/50"
+          >
+            <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-brand-green">
+              <DishImage
+                src={dish.image}
+                thumbSrc={dish.imageThumb}
+                alt={dish.name}
+                verified={isVerifiedImage(dish)}
+                sizes="80px"
+                imgClass="transition-transform duration-500 group-hover:scale-105"
+                iconSize={32}
+              />
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <span class="shrink-0 rounded bg-brand-accent/15 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wide text-brand-accent">Popular</span>
+                <span class="truncate font-sans text-[10px] uppercase tracking-wide text-brand-text-muted">{dish.category}</span>
+              </div>
+              <h3 class="mt-0.5 truncate font-display text-base font-semibold text-brand-text-dark">{dish.name}</h3>
+            </div>
+            <span class="shrink-0 font-sans text-brand-accent transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true">→</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,86 @@
+---
+import { restaurantImages, hasImage } from '../lib/images.js';
+
+interface Props {
+  imageKey: string;
+  eager?: boolean;
+  imgClass?: string;
+  iconSize?: number;
+  sizes?: string;
+  /** When set, the "photo not available yet" fallback shows this caption
+      (+ optional sub-line) over a subtle geometric pattern instead of the
+      plain icon-only gradient — used for venue photos like the mosque
+      where a bare icon reads as broken rather than "coming soon". */
+  caption?: string;
+  captionSub?: string;
+}
+
+const { imageKey, eager = false, imgClass = '', iconSize = 96, sizes, caption, captionSub } = Astro.props;
+const img = restaurantImages[imageKey];
+const available = hasImage(imageKey);
+---
+
+{available ? (
+  <img
+    src={img.src}
+    alt={img.alt}
+    width={img.width ?? 960}
+    height={img.height ?? 720}
+    sizes={sizes}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+    class={`h-full w-full object-cover ${imgClass}`}
+  />
+) : caption ? (
+  <div class={`bg-geo flex h-full w-full flex-col items-center justify-center bg-brand-dark px-6 text-center ${imgClass}`}>
+    {img?.icon === 'mosque' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="text-brand-accent opacity-60">
+        <path d="M11 34V21a9 9 0 0118 0v13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 34h26" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="20" cy="9" r="1.6" fill="currentColor"/>
+      </svg>
+    )}
+    <p class="mt-4 font-display text-xl text-brand-cream">{caption}</p>
+    {captionSub && <p class="mt-1 font-sans text-xs uppercase tracking-[0.2em] text-brand-accent">{captionSub}</p>}
+  </div>
+) : (
+  <div class={`flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-mid via-brand-green to-brand-dark ${imgClass}`}>
+    {img?.icon === 'karahi' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-25">
+        <path d="M8 20a12 12 0 0024 0" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M6 20h28" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M15 9c-1.4-1.6-1.4-3 0-4.6M20 8c-1.4-1.6-1.4-3 0-4.6M25 9c-1.4-1.6-1.4-3 0-4.6" stroke="#F6F0DF" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    )}
+    {img?.icon === 'bbq' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-25">
+        <line x1="4" y1="20" x2="36" y2="20" stroke="#F6F0DF" stroke-width="1.3" stroke-linecap="round"/>
+        <ellipse cx="12" cy="20" rx="3.2" ry="5.5" stroke="#F6F0DF" stroke-width="1.1"/>
+        <ellipse cx="20" cy="20" rx="3.2" ry="5.5" stroke="#F6F0DF" stroke-width="1.1"/>
+        <ellipse cx="28" cy="20" rx="3.2" ry="5.5" stroke="#F6F0DF" stroke-width="1.1"/>
+      </svg>
+    )}
+    {img?.icon === 'mosque' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-25">
+        <path d="M11 34V21a9 9 0 0118 0v13" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 34h26" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="20" cy="9" r="1.4" fill="#F6F0DF"/>
+      </svg>
+    )}
+    {img?.icon === 'rice' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-25">
+        <path d="M6 20a14 14 0 0028 0" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M4 20h32" stroke="#F6F0DF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M14 17v-3M20 17v-4M26 17v-3" stroke="#F6F0DF" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    )}
+    {img?.icon === 'cup' && (
+      <svg width={iconSize} height={iconSize} viewBox="0 0 40 40" fill="none" aria-hidden="true" class="opacity-25">
+        <path d="M10 15h16v9a8 8 0 01-16 0v-9z" stroke="#F6F0DF" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M26 18h2.5a3.5 3.5 0 010 7H26" stroke="#F6F0DF" stroke-width="1.2"/>
+        <path d="M14 11c-1-1-1-1.8 0-2.8M19 10c-1-1-1-1.8 0-2.8" stroke="#F6F0DF" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    )}
+  </div>
+)}

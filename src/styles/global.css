@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-urdu-display: 'Noto Nastaliq Urdu', 'Playfair Display', serif;
+
+  /* Refined per redesign brief; text-muted kept slightly darker than the
+     brief's exact value (#B8B3A4) to hold WCAG AA contrast on cream/white. */
+  --color-brand-dark: #071C14;
+  --color-brand-green: #0D2B1E;
+  --color-brand-mid: #173D2A;
+  --color-brand-accent: #C9A84E;
+  --color-brand-accent-light: #D8B85A;
+  --color-brand-cream: #F6F0DF;
+  /* Aliased to cream — kept as a separate token only so existing bg-brand-off-white
+     classes don't need a repo-wide rename; the two are no longer meant to differ. */
+  --color-brand-off-white: #F6F0DF;
+  --color-brand-text-dark: #10251B;
+  --color-brand-text-light: #F6F0DF;
+  --color-brand-text-muted: #8B7355;
+  --color-brand-gold-line: #C9A84E;
+  --color-whatsapp: #25D366;
+  --color-call: #0D2B1E;
+
+  --text-display: clamp(2.25rem, 4vw, 3.75rem);
+  --text-heading: clamp(1.8rem, 4vw, 3rem);
+  --text-subheading: clamp(1.2rem, 2.5vw, 1.75rem);
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+  --text-label: 0.75rem;
+
+  /* Section-rhythm scale — every section/hero on the site should use one of
+     these three, not a one-off py-* value. sm = compact bands/strips,
+     md = standard content sections, lg = page heroes only. */
+  --spacing-section-sm: 2.5rem;
+  --spacing-section-md: 4rem;
+  --spacing-section-lg: 5.5rem;
+}
+
+@layer utilities {
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Visual cue that a horizontally-scrolling strip has more content past the
+     edge (mobile category nav) — fades the last ~24px instead of a hard
+     clip, so a cut-off pill reads as "scrollable" rather than "broken". */
+  .fade-edges {
+    mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 24px), transparent);
+  }
+
+  .bg-geo {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23C9A84E' stroke-width='1' opacity='0.08'%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Ccircle cx='32' cy='32' r='14'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 64px 64px;
+  }
+
+  /* Visible by default: safe if JS never runs (slow 3G, blocked script).
+     JS only ever ADDS .reveal-pending to below-fold elements at load time,
+     then removes it on scroll-into-view — never the other way around. */
+  .reveal {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.reveal-pending {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal.reveal-pending {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Pure-CSS hero entrance: no JS dependency, degrades to fully visible if
+     animations are unsupported (the keyframe opacity only applies while
+     the animation runs). */
+  .hero-in {
+    animation: fade-in-up 0.8s ease-out both;
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-in {
+      animation: none;
+    }
+  }
+}
+
+[data-menu-section] {
+  scroll-margin-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

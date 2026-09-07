@@ -1,0 +1,39 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'dark' | 'whatsapp';
+  class?: string;
+  target?: string;
+  rel?: string;
+}
+
+const { href, variant = 'primary', class: className = '', target, rel } = Astro.props;
+
+function variantClass(kind: NonNullable<Props['variant']>) {
+  switch (kind) {
+    case 'primary':
+      return 'bg-brand-accent text-brand-dark hover:bg-brand-accent-light shadow-[0_8px_24px_-8px_rgba(201,168,78,0.45)]';
+    case 'secondary':
+      return 'border border-brand-accent/70 text-brand-accent hover:bg-brand-accent hover:text-brand-dark';
+    case 'ghost':
+      return 'text-current underline underline-offset-4 hover:text-brand-accent';
+    case 'dark':
+      return 'bg-brand-dark text-brand-cream hover:bg-brand-green';
+    case 'whatsapp':
+      return 'bg-whatsapp text-white hover:brightness-110';
+    default: {
+      const _exhaustive: never = kind;
+      return _exhaustive;
+    }
+  }
+}
+---
+
+<a
+  href={href}
+  target={target}
+  rel={rel}
+  class={`inline-flex min-h-11 items-center justify-center rounded-xl px-6 py-3 font-sans text-sm font-semibold uppercase tracking-widest transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent ${variantClass(variant)} ${className}`}
+>
+  <slot />
+</a>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  label: string;
+  urdu?: string;
+}
+
+const { label, urdu } = Astro.props;
+---
+
+<div class="text-center mb-6">
+  <span class="text-brand-accent text-label uppercase tracking-widest font-semibold font-sans">
+    {label}
+  </span>
+  <div class="w-12 h-px bg-brand-accent mx-auto mt-2 mb-3"></div>
+  {urdu && <span class="text-brand-text-muted text-sm italic font-display">{urdu}</span>}
+</div>

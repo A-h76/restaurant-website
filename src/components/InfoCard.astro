@@ -1,0 +1,25 @@
+---
+// Shared "icon + heading + text" card — the one pattern /location, /contact
+// and /prayer-facility should all use instead of hand-rolling their own.
+interface Props {
+  icon: string; // raw inline <svg>...</svg> markup, stroke set to currentColor
+  heading: string;
+  tone?: 'dark' | 'light';
+  align?: 'left' | 'center';
+  class?: string;
+}
+
+const { icon, heading, tone = 'dark', align = 'left', class: className = '' } = Astro.props;
+const toneClass = tone === 'dark'
+  ? 'bg-brand-green text-brand-cream'
+  : 'bg-white text-brand-text-dark shadow-[0_1px_8px_-4px_rgba(7,28,20,0.12)]';
+const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
+---
+
+<div class={`flex flex-col rounded-2xl p-6 md:p-8 ${toneClass} ${alignClass} ${className}`}>
+  <span class={`text-brand-accent ${align === 'center' ? '' : ''}`} aria-hidden="true" set:html={icon} />
+  <h3 class="mt-3 font-display text-xl font-semibold">{heading}</h3>
+  <div class="mt-2 font-sans text-sm leading-relaxed opacity-80">
+    <slot />
+  </div>
+</div>

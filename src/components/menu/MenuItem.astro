@@ -1,0 +1,56 @@
+---
+import DishImage from './DishImage.astro';
+import { isVerifiedImage } from '../../lib/menu.js';
+
+interface Props {
+  item: {
+    id?: string;
+    name: string;
+    price: string | null;
+    description?: string;
+    image?: string;
+    imageThumb?: string;
+    imageStatus?: string;
+    items?: string[];
+  };
+  category: string;
+  urdu?: string;
+  note?: string;
+}
+
+const { item, category, urdu = '', note = '' } = Astro.props;
+const display = item.name || category;
+const verified = isVerifiedImage(item);
+---
+
+<button
+  type="button"
+  data-menu-item
+  data-id={item.id ?? ''}
+  data-name={display}
+  data-category={category}
+  data-urdu={urdu}
+  data-price={item.price ?? ''}
+  data-note={note}
+  data-description={item.description ?? ''}
+  data-image={verified ? item.image : ''}
+  data-image-thumb={verified ? (item.imageThumb || item.image) : ''}
+  data-image-status={item.imageStatus ?? 'needs-review'}
+  data-items={item.items ? item.items.join('||') : ''}
+  aria-haspopup="dialog"
+  class="group flex w-full items-center gap-3 rounded-lg border border-brand-accent/15 bg-white p-2 pr-3 text-left transition-all duration-150 hover:-translate-y-0.5 hover:border-brand-accent/50 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+>
+  <div class="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-md bg-brand-green">
+    <DishImage
+      src={item.image}
+      thumbSrc={item.imageThumb}
+      alt={display}
+      verified={verified}
+      sizes="72px"
+      imgClass="transition-transform duration-500 group-hover:scale-105"
+      iconSize={28}
+    />
+  </div>
+  <span class="min-w-0 flex-1 font-sans text-[15px] font-medium text-brand-text-dark md:text-base">{display}</span>
+  <span class="shrink-0 font-sans text-brand-accent transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true">→</span>
+</button>

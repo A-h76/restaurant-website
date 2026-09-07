@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import FoodImage from '../components/FoodImage.astro';
+import Cta from '../components/Cta.astro';
+
+const prayers = [
+  { name: 'Fajr', arabic: 'فجر', time: 'Dawn' },
+  { name: 'Zuhr', arabic: 'ظہر', time: 'Midday' },
+  { name: 'Asr', arabic: 'عصر', time: 'Afternoon' },
+  { name: 'Maghrib', arabic: 'مغرب', time: 'Sunset' },
+  { name: 'Isha', arabic: 'عشاء', time: 'Night' },
+];
+
+const features = [
+  'Dedicated separate mosque structure within Smart Cook Dera premises',
+  'Resident Imam leads all five daily prayers in congregation',
+  'Capacity for approximately 200–300 worshippers',
+  'Open to all travellers and visitors — not restricted to restaurant customers',
+  // TODO: Uncomment after verifying — 'Wuzu/ablution facilities available',
+];
+---
+
+<BaseLayout
+  title="Prayer Facility at Smart Cook Dera | Dedicated Mosque | Sahiwal-Arifwala Road"
+  description="Smart Cook Dera has a dedicated mosque with resident Imam for all 5 daily prayers. Capacity 200-300. Open to all travellers on Sahiwal-Arifwala Road near Arifwala."
+  headerVariant="utility"
+>
+  <section class="bg-brand-dark px-5 py-section-lg text-center">
+    <h1 class="font-display text-heading font-semibold text-brand-cream">Prayer Facility</h1>
+    <p class="mt-2 font-sans text-sm uppercase tracking-widest text-brand-accent">For Travellers on Sahiwal–Arifwala Road</p>
+    <div class="mx-auto mt-4 h-px w-24 bg-brand-accent"></div>
+  </section>
+
+  <section class="bg-brand-off-white px-5 py-section-md md:px-10">
+    <div class="mx-auto max-w-3xl space-y-6 text-center font-sans text-lg leading-relaxed text-brand-text-dark">
+      <p>
+        Smart Cook Dera has a dedicated mosque within its premises — a proper separate mosque structure, not a
+        prayer corner. A resident Imam leads all five daily prayers in congregation.
+      </p>
+      <p>
+        Whether you are travelling between Sahiwal and Arifwala, or passing through on a longer journey, you do not
+        need to search for a mosque separately. Stop here, pray in congregation, and continue your journey with a
+        fresh meal.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-brand-green px-5 py-section-md md:px-10">
+    <div class="mx-auto max-w-3xl">
+      <SectionLabel label="FACILITIES" urdu="سہولیات" />
+      <h2 class="text-center font-display text-heading font-semibold text-brand-cream">What We Offer</h2>
+      <div class="mt-8">
+        {features.map((f) => (
+          <div class="flex items-start gap-4 border-b border-brand-accent/20 py-4">
+            <span class="text-brand-accent">✓</span>
+            <span class="font-sans text-brand-cream/90">{f}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-brand-cream px-5 py-section-md text-center md:px-10">
+    <SectionLabel label="DAILY PRAYERS" urdu="نماز کے اوقات" />
+    <h2 class="font-display text-heading font-semibold text-brand-text-dark">Prayer Times</h2>
+    <div class="mx-auto mt-8 max-w-lg overflow-x-auto">
+      <table class="w-full text-center">
+        <thead>
+          <tr class="border-b-2 border-brand-accent font-sans text-sm uppercase tracking-widest text-brand-text-muted">
+            <th class="py-2">Prayer</th>
+            <th class="py-2">Arabic</th>
+            <th class="py-2">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {prayers.map((p) => (
+            <tr class="border-b border-brand-accent/20">
+              <td class="py-3 font-sans font-medium text-brand-text-dark">{p.name}</td>
+              <td class="py-3 font-display">{p.arabic}</td>
+              <td class="py-3 font-sans text-brand-text-muted">{p.time}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-6 font-sans text-sm italic text-brand-text-muted">
+      Prayer times vary by season. Imam leads congregation for all prayers.
+    </p>
+  </section>
+
+  <div class="h-72 w-full">
+    <FoodImage imageKey="mosque" iconSize={72} caption="A quiet place to pray" captionSub="Open to travellers" />
+  </div>
+
+  <section class="bg-brand-dark px-5 py-section-sm text-center">
+    <p class="mx-auto max-w-xl font-sans text-brand-cream/80">
+      Smart Cook Dera is located on Sahiwal-Arifwala Road, 8 km from Arifwala. Easy parking available for all vehicles.
+    </p>
+    <Cta href="/location" variant="secondary" class="mt-6">Get Directions →</Cta>
+  </section>
+</BaseLayout>
