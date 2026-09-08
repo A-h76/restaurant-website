@@ -12,16 +12,17 @@ interface Props {
   headerVariant?: 'utility' | 'compact';
   headerSticky?: boolean;
   menuHref?: string;
+  noindex?: boolean;
 }
 
-const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu' } = Astro.props;
+const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu', noindex = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <SEOHead title={title} description={description} canonicalURL={canonicalURL} schema={schema} />
+    <SEOHead title={title} description={description} canonicalURL={canonicalURL} schema={schema} noindex={noindex} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Cta from '../components/Cta.astro';
+import { PHONE_TEL } from '../consts.js';
+---
+
+<BaseLayout
+  title="Page Not Found | Smart Cook Dera"
+  description="The page you're looking for doesn't exist. Find Smart Cook Dera's menu, location and contact details here."
+  headerVariant="utility"
+  noindex
+>
+  <section class="bg-brand-dark px-5 py-section-lg text-center">
+    <p class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-accent">404</p>
+    <h1 class="mt-2 font-display text-heading font-semibold text-brand-cream">Page Not Found</h1>
+    <p class="mx-auto mt-4 max-w-md font-sans text-brand-cream/75">
+      That page doesn't exist. Here's how to find what you're looking for instead.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Cta href="/">Back to Home</Cta>
+      <Cta href="/menu" variant="secondary">View Menu</Cta>
+      <Cta href={PHONE_TEL} variant="ghost" tone="cream">Call Us</Cta>
+    </div>
+  </section>
+</BaseLayout>

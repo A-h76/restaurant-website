@@ -4,14 +4,15 @@ interface Props {
   description: string;
   canonicalURL: string;
   schema?: string;
+  noindex?: boolean;
 }
 
-const { title, description, canonicalURL, schema } = Astro.props;
+const { title, description, canonicalURL, schema, noindex = false } = Astro.props;
 ---
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
