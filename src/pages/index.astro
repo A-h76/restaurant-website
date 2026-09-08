@@ -83,9 +83,10 @@ const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, fami
         Fresh food, family-friendly dining, ample parking, and a dedicated mosque — everything you need for a comfortable stop on the Sahiwal–Arifwala Road.
       </p>
       <div class="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
-        <Cta href={PHONE_TEL}>Call Now</Cta>
-        <Cta href={MAPS_DIRECTIONS_URL} variant="secondary">Get Directions</Cta>
-        <Cta href="/menu" variant="ghost" tone="accent">View Menu →</Cta>
+        <Cta href={PHONE_TEL} class="hidden! md:inline-flex!">Call Now</Cta>
+        <Cta href={MAPS_DIRECTIONS_URL} variant="secondary" class="hidden! md:inline-flex!">Get Directions</Cta>
+        <Cta href="/menu" variant="primary" class="md:hidden!">View Menu →</Cta>
+        <Cta href="/menu" variant="ghost" tone="accent" class="hidden! md:inline-flex!">View Menu →</Cta>
       </div>
     </div>
   </section>
