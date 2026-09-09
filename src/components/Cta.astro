@@ -21,16 +21,16 @@ const toneClass: Record<NonNullable<Props['tone']>, string> = {
 function variantClass(kind: NonNullable<Props['variant']>) {
   switch (kind) {
     case 'primary':
-      return 'bg-brand-accent text-brand-cream hover:bg-brand-accent-light active:translate-y-px shadow-cta';
+      return 'bg-brand-accent text-brand-cream hover:bg-brand-accent-light hover:-translate-y-0.5 active:translate-y-0 shadow-cta';
     case 'secondary':
-      return 'border border-brand-text-dark/30 text-brand-text-dark hover:bg-brand-text-dark hover:text-brand-cream active:translate-y-px';
+      return 'border border-brand-text-dark/30 text-brand-text-dark hover:bg-brand-text-dark hover:text-brand-cream hover:-translate-y-0.5 active:translate-y-0';
     case 'ghost':
       // Ghost is an inline mono link — its underline draws from the left.
       return `${toneClass[tone]} link-draw !px-0 !py-0 !min-h-0 hover:text-brand-accent`;
     case 'dark':
-      return 'bg-brand-dark text-brand-cream hover:bg-brand-green active:translate-y-px';
+      return 'bg-brand-dark text-brand-cream hover:bg-brand-green hover:-translate-y-0.5 active:translate-y-0';
     case 'whatsapp':
-      return 'bg-whatsapp text-white hover:brightness-110 active:translate-y-px';
+      return 'bg-whatsapp text-white hover:brightness-110 hover:-translate-y-0.5 active:translate-y-0';
     default: {
       const _exhaustive: never = kind;
       return _exhaustive;

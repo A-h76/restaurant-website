@@ -214,14 +214,15 @@ const specs = [
             >
               <span class="w-7 shrink-0 font-mono text-sm text-brand-text-muted transition-colors group-hover:text-brand-accent">{String(i + 1).padStart(2, '0')}</span>
 
-              <span class="hidden h-16 w-[5.5rem] shrink-0 overflow-hidden bg-brand-dark md:block" data-media>
+              <span class="hidden h-20 w-28 shrink-0 overflow-hidden bg-brand-dark shadow-soft md:block" data-media>
                 <DishImage
                   src={item.image}
                   thumbSrc={item.imageThumb}
                   alt={item.name}
                   verified={verified}
-                  sizes="88px"
-                  iconSize={26}
+                  sizes="112px"
+                  iconSize={28}
+                  imgClass="transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                   fit={item.imageFit ?? 'cover'}
                 />
               </span>

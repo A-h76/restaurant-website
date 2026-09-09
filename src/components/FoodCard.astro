@@ -42,19 +42,20 @@ const priceLabel = item.price ? formatPrice(item.price) : fromPrice ? `From ${fr
   data-image-fit={item.imageFit ?? 'cover'}
   data-items={item.items ? item.items.join('||') : ''}
   aria-haspopup="dialog"
-  class="group flex w-full flex-col border border-brand-text-dark/15 bg-paper-bright text-left transition-colors duration-200 hover:border-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+  class="group flex w-full flex-col border border-brand-text-dark/15 bg-paper-bright text-left shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-brand-accent/70 hover:shadow-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
 >
-  <div class="relative aspect-[16/10] w-full overflow-hidden bg-brand-dark sm:aspect-[4/3]">
+  <div class="relative aspect-[3/2] w-full overflow-hidden bg-brand-dark sm:aspect-[4/3]">
     <DishImage
       src={item.image}
       thumbSrc={item.imageThumb}
       alt={display}
       verified={verified}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 320px"
-      imgClass="transition-transform duration-[600ms] ease-out group-hover:scale-[1.05]"
+      imgClass="transition-transform duration-[750ms] ease-out group-hover:scale-[1.07]"
       iconSize={40}
       fit={item.imageFit ?? 'cover'}
     />
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-dark/25 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
   </div>
   <div class="flex min-w-0 flex-1 flex-col p-3.5">
     <h3 class="font-display text-lg font-medium leading-snug text-brand-text-dark sm:text-xl">{display}</h3>
