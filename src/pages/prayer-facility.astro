@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionLabel from '../components/SectionLabel.astro';
 import FoodImage from '../components/FoodImage.astro';
+import PageHeader from '../components/PageHeader.astro';
 import Cta from '../components/Cta.astro';
 
 const prayers = [
@@ -26,13 +27,14 @@ const features = [
   description="Smart Cook Dera has a dedicated mosque with resident Imam for all 5 daily prayers. Capacity 200-300. Open to all travellers on Sahiwal-Arifwala Road near Arifwala."
   headerVariant="utility"
 >
-  <section class="bg-brand-green px-5 py-section-md md:px-10 lg:px-16">
-    <div class="mx-auto max-w-6xl">
-      <p class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent-light">On the premises · احاطے میں</p>
-      <h1 class="mt-3 font-display text-display font-medium leading-none text-brand-cream">Prayer Facility</h1>
-      <p class="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-cream/55">For travellers on the Sahiwal–Arifwala Road</p>
-    </div>
-  </section>
+  <PageHeader
+    tone="green"
+    kicker="On the premises"
+    kickerUrdu="احاطے میں"
+    title="Prayer Facility"
+    sub="For travellers on the Sahiwal–Arifwala Road"
+    meta={['5 daily prayers', 'Resident Imam', 'Open to all travellers']}
+  />
 
   <section class="bg-brand-cream px-5 py-section-md md:px-10">
     <div class="mx-auto max-w-3xl space-y-6 text-center font-sans text-lg leading-relaxed text-brand-text-dark">

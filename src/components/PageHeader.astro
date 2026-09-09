@@ -1,0 +1,53 @@
+---
+// Shared masthead for the sub-pages (menu, location, prayer, contact, 404).
+// An editorial header: kicker + title on the left, a page-relevant meta column
+// on the right, a baseline rule, and a faint geometric texture — so the dark
+// band reads as an intentional masthead rather than empty space.
+interface Props {
+  kicker: string;
+  kickerUrdu?: string;
+  title: string;
+  sub?: string;
+  meta?: string[];
+  tone?: 'dark' | 'green';
+}
+
+const { kicker, kickerUrdu, title, sub, meta = [], tone = 'dark' } = Astro.props;
+const bg = tone === 'green' ? 'bg-brand-green' : 'bg-brand-dark';
+const kickerColor = tone === 'green' ? 'text-brand-accent-light' : 'text-brand-accent';
+---
+
+<section class={`relative isolate overflow-hidden ${bg} px-5 md:px-10 lg:px-16`}>
+  <div class="bg-geo pointer-events-none absolute inset-0 opacity-[0.6]" aria-hidden="true"></div>
+  <div class="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-6xl">
+    <div class="flex flex-col gap-8 pt-14 pb-7 md:flex-row md:items-end md:justify-between md:gap-12 md:pt-20 md:pb-9">
+      <div class="min-w-0">
+        <p class={`flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] ${kickerColor}`}>
+          {kicker}
+          {kickerUrdu && <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-cream/60" dir="rtl">{kickerUrdu}</span>}
+        </p>
+        <h1 class="mt-4 font-display text-display font-medium leading-[0.95] text-brand-cream">{title}</h1>
+        {sub && (
+          <p class="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-cream/55">{sub}</p>
+        )}
+      </div>
+
+      {meta.length > 0 && (
+        <ul class="flex shrink-0 flex-col gap-2 border-l border-brand-cream/15 pl-5 md:items-end md:border-l-0 md:border-none md:pl-0 md:text-right">
+          {meta.map((m) => (
+            <li class="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-cream/60 md:flex-row-reverse">
+              <span class="h-1 w-1 shrink-0 bg-brand-accent" aria-hidden="true"></span>
+              <span dir="ltr">{m}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div class="relative h-px w-full bg-brand-cream/15">
+      <span class="absolute left-0 top-0 h-px w-16 bg-brand-accent" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
