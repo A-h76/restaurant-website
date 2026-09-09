@@ -13,9 +13,11 @@ interface Props {
   headerSticky?: boolean;
   menuHref?: string;
   noindex?: boolean;
+  /** Transparent header overlaid on a dark hero, condensing on scroll. */
+  heroHeader?: boolean;
 }
 
-const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu', noindex = false } = Astro.props;
+const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu', noindex = false, heroHeader = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
@@ -38,7 +40,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
          reference, kept near-invisible so it's felt, not seen. -->
     <div class="grain pointer-events-none fixed inset-0 z-[100] opacity-[0.035] mix-blend-multiply" aria-hidden="true"></div>
 
-    <Header variant={headerVariant} sticky={headerSticky} menuHref={menuHref} />
+    <Header variant={headerVariant} sticky={headerSticky} menuHref={menuHref} overlay={heroHeader} />
     <main class="flex-1">
       <slot />
     </main>

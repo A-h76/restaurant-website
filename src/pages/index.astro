@@ -72,9 +72,10 @@ const specs = [
   description="Family restaurant with a dedicated mosque on Sahiwal-Arifwala Road. Fresh Karahi, BBQ, family dining and parking. 8 km from Arifwala. Call now."
   schema={schema}
   headerVariant="utility"
+  heroHeader
 >
   <!-- ═══════════════ HERO — roadside masthead ═══════════════ -->
-  <section class="relative isolate overflow-hidden bg-brand-dark" id="hero">
+  <section class="relative isolate overflow-hidden bg-brand-dark pt-16 md:pt-[4.75rem]" id="hero">
     <div class="absolute inset-0 -z-10 overflow-hidden">
       <img
         src="/images/hero.webp"
@@ -110,10 +111,9 @@ const specs = [
           Good food, good rest — one memorable stop on the road between Sahiwal and Arifwala.
         </p>
 
-        <div data-rise class="mt-9 flex flex-wrap items-center gap-3">
+        <div data-rise class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
           <Cta href="/menu" variant="primary">View the Menu</Cta>
-          <Cta href={PHONE_TEL} variant="secondary" class="border-brand-cream/40! text-brand-cream! hover:bg-brand-cream! hover:text-brand-dark!">Call to Order</Cta>
-          <Cta href={MAPS_DIRECTIONS_URL} variant="ghost" tone="cream" class="ml-1">Directions →</Cta>
+          <Cta href={MAPS_DIRECTIONS_URL} variant="ghost" tone="cream">Directions →</Cta>
         </div>
       </div>
     </div>
