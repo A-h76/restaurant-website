@@ -139,9 +139,9 @@ const specs = [
   <!-- ═══════════════ STATEMENT + SPECS ═══════════════ -->
   <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16">
     <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.5fr_1fr] md:gap-16">
-      <div>
-        <p data-rise class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">
-          <span class="align-middle">01</span> — The Dera
+      <div data-stagger="90">
+        <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">
+          01 — The Dera <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">ڈیرہ</span>
         </p>
         <h2 class="mt-5 font-display text-heading font-medium leading-[1.08] text-brand-text-dark">
           <span class="line-mask"><span>A roadside kitchen where</span></span>
@@ -178,7 +178,7 @@ const specs = [
     <div class="mx-auto max-w-6xl">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p data-rise class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">02 — Signature</p>
+          <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">02 — Signature <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">خاص پکوان</span></p>
           <h2 data-rise class="mt-4 font-display text-display font-medium leading-none text-brand-text-dark">From the pan &amp; coals</h2>
         </div>
         <p data-rise class="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-text-muted">Tap any dish to order</p>
@@ -203,9 +203,9 @@ const specs = [
               data-image-fit={item.imageFit ?? 'cover'}
               data-items={item.items ? item.items.join('||') : ''}
               aria-haspopup="dialog"
-              class="group grid w-full grid-cols-[2.5rem_1fr_auto] items-center gap-4 py-4 text-left transition-colors hover:bg-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:grid-cols-[3.5rem_5.5rem_1fr_auto] md:gap-6"
+              class="group flex w-full items-center gap-4 py-4 text-left transition-colors hover:bg-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:gap-6"
             >
-              <span class="font-mono text-sm text-brand-text-muted transition-colors group-hover:text-brand-accent">{String(i + 1).padStart(2, '0')}</span>
+              <span class="w-7 shrink-0 font-mono text-sm text-brand-text-muted transition-colors group-hover:text-brand-accent">{String(i + 1).padStart(2, '0')}</span>
 
               <span class="hidden h-16 w-[5.5rem] shrink-0 overflow-hidden bg-brand-dark md:block" data-media>
                 <DishImage
@@ -219,18 +219,21 @@ const specs = [
                 />
               </span>
 
-              <span class="min-w-0">
+              <span class="min-w-0 flex-1">
                 <span class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
                   <span class="font-display text-xl font-medium text-brand-text-dark md:text-2xl">{item.name}</span>
                   {item.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{item.urdu}</span>}
                 </span>
                 <span class="mt-0.5 block font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-text-muted">{item.category}</span>
+                {priceLabel && <span class="mt-1.5 block font-mono text-sm font-bold text-brand-text-dark md:hidden" dir="ltr">{priceLabel}</span>}
               </span>
 
-              <span class="flex items-center gap-4 justify-self-end">
+              <span class="hidden shrink-0 items-center gap-4 md:flex">
                 {priceLabel && <span class="font-mono text-sm font-bold tabular-nums text-brand-text-dark" dir="ltr">{priceLabel}</span>}
                 <span class="font-mono text-brand-accent transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
               </span>
+
+              <span class="shrink-0 self-center font-mono text-brand-accent md:hidden" aria-hidden="true">→</span>
             </button>
           </li>
         ))}
@@ -246,7 +249,7 @@ const specs = [
   <section class="relative overflow-hidden bg-brand-green px-5 py-section-lg text-brand-cream md:px-10 lg:px-16">
     <div class="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
     <div class="relative mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
-      <div>
+      <div data-stagger="90">
         <p data-rise class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent-light">03 — On the premises · احاطے میں</p>
         <h2 class="mt-5 font-display text-display font-medium leading-[1.05]">
           <span class="line-mask"><span>A mosque for</span></span>
@@ -275,7 +278,7 @@ const specs = [
   <!-- ═══════════════ LOCATION — the milestone ═══════════════ -->
   <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16">
     <div class="mx-auto max-w-6xl">
-      <p data-rise class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">04 — Find the dera</p>
+      <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">04 — Find the Dera <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">پتہ</span></p>
       <h2 data-rise class="mt-4 max-w-2xl font-display text-display font-medium leading-[1.05] text-brand-text-dark">
         A milestone between two towns.
       </h2>
