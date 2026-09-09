@@ -72,8 +72,12 @@ const faqs = [
   schema={schema}
   headerVariant="utility"
 >
-  <section class="bg-brand-dark px-5 py-section-lg text-center">
-    <h1 class="font-display text-heading font-semibold text-brand-cream">Contact Us</h1>
+  <section class="bg-brand-dark px-5 py-section-md md:px-10 lg:px-16">
+    <div class="mx-auto max-w-6xl">
+      <p class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">Get in touch</p>
+      <h1 class="mt-3 font-display text-display font-medium leading-none text-brand-cream">Contact</h1>
+      <p class="mt-4 max-w-md font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.16em] text-brand-cream/55">Call, WhatsApp, or drop by on the Sahiwal–Arifwala Road.</p>
+    </div>
   </section>
 
   <section class="bg-brand-cream px-5 py-section-md md:px-10">
@@ -83,7 +87,7 @@ const faqs = [
         heading="Call Us"
         align="center"
       >
-        <p class="font-display text-3xl font-bold text-brand-accent">{PHONE_DISPLAY}</p>
+        <p class="font-mono text-2xl font-bold tracking-tight text-brand-accent">{PHONE_DISPLAY}</p>
         <p class="mt-1 text-brand-cream/60">
           or <a href={PHONE_TEL_2} class="underline hover:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent">{PHONE_DISPLAY_2}</a>
         </p>
@@ -95,7 +99,7 @@ const faqs = [
         heading="WhatsApp"
         align="center"
       >
-        <p class="font-display text-3xl font-bold text-brand-accent">{WHATSAPP_DISPLAY}</p>
+        <p class="font-mono text-2xl font-bold tracking-tight text-brand-accent">{WHATSAPP_DISPLAY}</p>
         <Cta href={WHATSAPP_URL} variant="whatsapp" target="_blank" rel="noopener noreferrer" class="mt-5 w-full">Open WhatsApp</Cta>
       </InfoCard>
     </div>
@@ -126,14 +130,14 @@ const faqs = [
     </div>
   </section>
 
-  <section class="bg-brand-green px-5 py-section-sm text-center md:px-10">
-    <h2 class="font-display text-xl text-brand-cream">Had an issue with your visit?</h2>
-    <p class="mt-2 font-sans text-brand-cream/70">We want to make it right. Call us directly and speak to the manager.</p>
-    <Cta href={PHONE_TEL} variant="secondary" class="mt-5">Call Manager</Cta>
+  <section class="bg-brand-green px-5 py-section-md text-center md:px-10">
+    <h2 class="font-display text-2xl font-medium text-brand-cream">Had an issue with your visit?</h2>
+    <p class="mx-auto mt-2 max-w-md text-brand-cream/70">We want to make it right. Call us directly and speak to the manager.</p>
+    <Cta href={PHONE_TEL} variant="primary" class="mt-6">Call the Manager</Cta>
   </section>
 
   <div class="bg-brand-cream px-5 py-section-sm md:px-10 lg:px-20">
-    <div class="mx-auto max-w-4xl overflow-hidden rounded-[20px]">
+    <div class="mx-auto max-w-4xl overflow-hidden border border-brand-text-dark/15" data-media>
       <iframe
         src={MAPS_EMBED_URL}
         width="100%"
@@ -147,15 +151,16 @@ const faqs = [
 
   <section class="bg-brand-cream px-5 py-section-md md:px-10">
     <div class="mx-auto max-w-3xl">
-      <SectionLabel label="FAQ" />
-      <h2 class="text-center font-display text-heading font-semibold text-brand-text-dark">Common Questions</h2>
-      <div class="mt-8">
+      <SectionLabel label="FAQ" urdu="عمومی سوالات" />
+      <h2 class="text-center font-display text-heading font-medium text-brand-text-dark">Common Questions</h2>
+      <div class="mt-10 border-t border-brand-text-dark/15">
         {faqs.map((faq) => (
-          <details class="group border-b border-brand-accent/20">
-            <summary class="cursor-pointer list-none py-4 font-sans font-medium text-brand-text-dark group-open:text-brand-accent">
+          <details class="group border-b border-brand-text-dark/15">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-display text-lg font-medium text-brand-text-dark transition-colors group-open:text-brand-accent">
               {faq.q}
+              <span class="font-mono text-brand-accent transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
-            <p class="pb-4 font-sans text-brand-text-muted">{faq.a}</p>
+            <p class="pb-5 text-brand-text-muted">{faq.a}</p>
           </details>
         ))}
       </div>

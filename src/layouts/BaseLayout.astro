@@ -23,19 +23,118 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 <html lang="en">
   <head>
     <SEOHead title={title} description={description} canonicalURL={canonicalURL} schema={schema} noindex={noindex} />
+    <!-- Set .js before first paint so scroll-reveal initial (hidden) states
+         only apply when JS can undo them. No-JS renders fully visible. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@700&display=swap"
       rel="stylesheet"
     />
   </head>
-  <body class="flex min-h-screen flex-col overflow-x-clip bg-brand-cream font-sans text-brand-text-dark">
+  <body class="flex min-h-screen flex-col overflow-x-clip bg-brand-cream font-sans text-body text-brand-text-dark antialiased">
+    <!-- Film grain: fixed, above content, non-interactive. A print-culture
+         reference, kept near-invisible so it's felt, not seen. -->
+    <div class="grain pointer-events-none fixed inset-0 z-[100] opacity-[0.035] mix-blend-multiply" aria-hidden="true"></div>
+
     <Header variant={headerVariant} sticky={headerSticky} menuHref={menuHref} />
     <main class="flex-1">
       <slot />
     </main>
     <Footer />
     <FloatingButtons />
+
+    <script>
+      // ── Motion runtime ─────────────────────────────────────────────────
+      // One IntersectionObserver drives every scroll entrance on the site:
+      // rise, headline line-masks, image wipes and route-line draws. Stagger
+      // is applied via CSSOM property setters (no inline style attributes —
+      // the site ships a strict CSP with no 'unsafe-inline' for styles).
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduce) {
+        const selector = '[data-rise],[data-media],[data-route-y],[data-route-x],.line-mask';
+
+        function delayTarget(el) {
+          return el.classList.contains('line-mask') ? el.firstElementChild : el;
+        }
+
+        function applyStagger(el) {
+          const group = el.closest('[data-stagger]');
+          if (!group) return;
+          const items = Array.from(group.querySelectorAll(selector));
+          const idx = items.indexOf(el);
+          if (idx <= 0) return;
+          const step = Number(group.getAttribute('data-stagger')) || 80;
+          const t = delayTarget(el);
+          if (t) t.style.transitionDelay = idx * step + 'ms';
+        }
+
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const el = entry.target;
+              applyStagger(el);
+              el.classList.add('is-in');
+              obs.unobserve(el);
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+        );
+
+        document.querySelectorAll(selector).forEach((el) => io.observe(el));
+
+        // Count-up "odometer" for milestone figures.
+        const countIO = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const el = entry.target;
+              obs.unobserve(el);
+              const target = Number(el.getAttribute('data-count')) || 0;
+              const dur = 1100;
+              const start = performance.now();
+              const suffix = el.getAttribute('data-count-suffix') || '';
+              function tick(now) {
+                const p = Math.min(1, (now - start) / dur);
+                const eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(target * eased) + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+              }
+              requestAnimationFrame(tick);
+            }
+          },
+          { threshold: 0.6 },
+        );
+        document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
+
+        // Lightweight parallax for elements tagged [data-parallax="<speed>"].
+        const parallax = Array.from(document.querySelectorAll('[data-parallax]'));
+        if (parallax.length) {
+          let ticking = false;
+          const update = () => {
+            const vh = window.innerHeight;
+            for (const el of parallax) {
+              const speed = Number(el.getAttribute('data-parallax')) || 0.12;
+              const rect = el.getBoundingClientRect();
+              const offset = (rect.top + rect.height / 2 - vh / 2) * -speed;
+              el.style.transform = 'translate3d(0,' + offset.toFixed(1) + 'px,0)';
+            }
+            ticking = false;
+          };
+          const onScroll = () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          };
+          window.addEventListener('scroll', onScroll, { passive: true });
+          window.addEventListener('resize', onScroll, { passive: true });
+          update();
+        }
+      }
+    </script>
   </body>
 </html>

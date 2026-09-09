@@ -10,16 +10,19 @@ import { PHONE_TEL } from '../consts.js';
   headerVariant="utility"
   noindex
 >
-  <section class="bg-brand-dark px-5 py-section-lg text-center">
-    <p class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-accent">404</p>
-    <h1 class="mt-2 font-display text-heading font-semibold text-brand-cream">Page Not Found</h1>
-    <p class="mx-auto mt-4 max-w-md font-sans text-brand-cream/75">
-      That page doesn't exist. Here's how to find what you're looking for instead.
-    </p>
-    <div class="mt-8 flex flex-wrap justify-center gap-3">
-      <Cta href="/">Back to Home</Cta>
-      <Cta href="/menu" variant="secondary">View Menu</Cta>
-      <Cta href={PHONE_TEL} variant="ghost" tone="cream">Call Us</Cta>
+  <section class="flex min-h-[70vh] items-center bg-brand-dark px-5 py-section-lg text-center">
+    <div class="mx-auto max-w-xl">
+      <p class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">Off the map · 404</p>
+      <p class="mt-4 font-display text-mega font-medium leading-none text-brand-cream">404</p>
+      <h1 class="mt-4 font-display text-2xl font-medium text-brand-cream/90">You've left the road.</h1>
+      <p class="mx-auto mt-3 max-w-md text-brand-cream/70">
+        That page doesn't exist — here's the way back.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <Cta href="/" variant="primary">Back to Home</Cta>
+        <Cta href="/menu" variant="ghost" tone="cream">View Menu</Cta>
+        <Cta href={PHONE_TEL} variant="ghost" tone="cream">Call Us</Cta>
+      </div>
     </div>
   </section>
 </BaseLayout>

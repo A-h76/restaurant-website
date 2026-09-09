@@ -42,31 +42,34 @@ const priceLabel = item.price ? formatPrice(item.price) : fromPrice ? `From ${fr
   data-image-fit={item.imageFit ?? 'cover'}
   data-items={item.items ? item.items.join('||') : ''}
   aria-haspopup="dialog"
-  class="group flex w-full flex-col rounded-2xl border border-brand-accent/15 bg-white p-2 text-left shadow-card transition-colors duration-200 hover:border-brand-accent/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent sm:p-3"
+  class="group flex w-full flex-col border border-brand-text-dark/15 bg-paper-bright text-left transition-colors duration-200 hover:border-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
 >
-  <div class="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-brand-green sm:aspect-[4/3]">
+  <div class="relative aspect-[16/10] w-full overflow-hidden bg-brand-dark sm:aspect-[4/3]">
     <DishImage
       src={item.image}
       thumbSrc={item.imageThumb}
       alt={display}
       verified={verified}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 320px"
-      imgClass=""
+      imgClass="transition-transform duration-[600ms] ease-out group-hover:scale-[1.05]"
       iconSize={40}
       fit={item.imageFit ?? 'cover'}
     />
   </div>
-  <div class="flex min-w-0 flex-1 flex-col px-1 pb-1 pt-2.5">
-    <h3 class="font-display text-lg font-semibold leading-snug text-brand-text-dark sm:text-xl">{display}</h3>
+  <div class="flex min-w-0 flex-1 flex-col p-3.5">
+    <h3 class="font-display text-lg font-medium leading-snug text-brand-text-dark sm:text-xl">{display}</h3>
     {item.description && (
-      <p class="mt-1 line-clamp-2 font-sans text-sm leading-relaxed text-brand-text-muted">{item.description}</p>
+      <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-brand-text-muted">{item.description}</p>
     )}
-    <div class="mt-auto flex items-end justify-between gap-2 pt-2">
-      {priceLabel && (
-        <span class="font-display text-base font-semibold tabular-nums text-brand-accent sm:text-lg" dir="ltr">{priceLabel}</span>
+    <div class="mt-auto flex items-end justify-between gap-2 border-t border-brand-text-dark/12 pt-3">
+      {priceLabel ? (
+        <span class="font-mono text-sm font-bold tabular-nums text-brand-text-dark" dir="ltr">{priceLabel}</span>
+      ) : (
+        <span></span>
       )}
-      <span class="inline-flex min-h-9 shrink-0 items-center rounded-full bg-brand-dark px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-widest text-brand-cream">
+      <span class="inline-flex items-center gap-1.5 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-brand-accent">
         Order
+        <span class="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">→</span>
       </span>
     </div>
   </div>

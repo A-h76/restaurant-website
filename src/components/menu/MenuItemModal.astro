@@ -3,7 +3,7 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
 ---
 
 <div id="menu-item-modal" class="fixed inset-0 z-[60] hidden">
-  <div class="absolute inset-0 bg-brand-dark/60 backdrop-blur-[2px]" data-modal-close></div>
+  <div class="absolute inset-0 bg-brand-dark/70 backdrop-blur-[2px]" data-modal-close></div>
 
   <div class="pointer-events-none relative flex h-full items-end justify-center sm:items-center sm:p-4">
     <div
@@ -12,42 +12,42 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
       aria-modal="true"
       aria-labelledby="menu-item-title"
       tabindex="-1"
-      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-t-2xl bg-brand-cream opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[720px] sm:scale-95 sm:rounded-2xl"
+      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-none border-t-2 border-brand-accent bg-brand-cream opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[680px] sm:scale-95 sm:border sm:border-brand-text-dark/20"
     >
       <button
         type="button"
         data-modal-close
         aria-label="Close"
-        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-brand-dark/70 text-lg text-brand-cream backdrop-blur transition-colors hover:bg-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-none bg-brand-dark text-lg text-brand-cream transition-colors hover:bg-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
       >
         ✕
       </button>
 
       <div id="menu-item-image" class="relative h-56 w-full shrink-0 overflow-hidden bg-brand-green sm:h-72"></div>
 
-      <div class="px-5 py-5 md:px-8 md:py-6">
-        <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span id="menu-item-category" class="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-brand-accent"></span>
+      <div class="px-5 py-6 md:px-8 md:py-7">
+        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span id="menu-item-category" class="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-brand-accent"></span>
           <span id="menu-item-urdu" class="font-urdu-display text-sm text-brand-text-muted" dir="rtl"></span>
         </div>
-        <h2 id="menu-item-title" class="mt-1 font-display text-2xl font-bold text-brand-text-dark md:text-3xl"></h2>
-        <p id="menu-item-description" class="mt-3 font-sans text-sm leading-relaxed text-brand-text-muted"></p>
+        <h2 id="menu-item-title" class="mt-2 font-display text-3xl font-medium text-brand-text-dark md:text-4xl"></h2>
+        <p id="menu-item-description" class="mt-3 text-sm leading-relaxed text-brand-text-muted"></p>
 
-        <div id="menu-item-pricing" class="mt-5 border-t border-brand-accent/15 pt-4"></div>
-        <ul id="menu-item-list" class="mt-4 space-y-1.5 font-sans text-sm text-brand-text-dark"></ul>
+        <div id="menu-item-pricing" class="mt-6 border-t border-brand-text-dark/15 pt-5"></div>
+        <ul id="menu-item-list" class="mt-4 space-y-1.5 text-sm text-brand-text-dark"></ul>
 
-        <div class="mt-6 flex flex-col gap-2.5 sm:flex-row">
+        <div class="mt-7 flex flex-col gap-2.5 sm:flex-row">
           <a
             id="menu-item-call"
             href={PHONE_TEL}
-            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand-accent px-6 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-accent-light"
+            class="flex flex-1 items-center justify-center gap-2 rounded-none bg-brand-accent px-6 py-3.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-brand-cream transition-colors duration-200 hover:bg-brand-accent-light"
           >
             Call to Order · {PHONE_DISPLAY}
           </a>
           <a
             id="menu-item-whatsapp"
             href={WHATSAPP_URL}
-            class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-whatsapp px-6 py-3.5 font-sans text-sm font-semibold uppercase tracking-widest text-white transition-all duration-200 hover:-translate-y-0.5"
+            class="flex flex-1 items-center justify-center gap-2 rounded-none bg-whatsapp px-6 py-3.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:brightness-110"
           >
             WhatsApp · {WHATSAPP_DISPLAY}
           </a>
@@ -138,12 +138,12 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
         if (!bare) cell.className = 'flex flex-col items-start';
         if (seg.label) {
           const label = document.createElement('span');
-          label.className = 'font-sans text-xs font-semibold uppercase tracking-wide text-brand-text-muted';
+          label.className = 'font-mono text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-brand-text-muted';
           label.textContent = seg.label;
           cell.appendChild(label);
         }
         const priceEl = document.createElement('span');
-        priceEl.className = `font-display font-bold tabular-nums text-brand-accent ${bare ? 'text-3xl' : 'text-2xl'}`;
+        priceEl.className = `font-mono font-bold tabular-nums text-brand-text-dark ${bare ? 'text-3xl' : 'text-2xl'} ${seg.label ? 'mt-1' : ''}`;
         priceEl.textContent = seg.price;
         cell.appendChild(priceEl);
         wrap.appendChild(cell);

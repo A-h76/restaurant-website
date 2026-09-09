@@ -32,34 +32,35 @@ const fastFoodEnd = desiEnd + fastFoodCategories.length;
 <StickyCategoryNav categories={sections.map((c) => ({ id: c.id, label: c.name }))} />
 
 <div class="bg-brand-cream px-4 py-section-md md:px-8 lg:px-16">
-  <div class="mx-auto max-w-6xl space-y-12">
+  <div class="mx-auto max-w-6xl space-y-14">
     {sections.map((cat, i) => (
       <>
         {i === 0 && (
-          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
-            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Our Karahi &amp; BBQ</h2>
-            <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
+          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
+            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 01</span>
+            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Karahi &amp; BBQ</h2>
           </div>
         )}
         {i === desiEnd && (
-          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
-            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Fast Food</h2>
-            <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
+          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
+            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 02</span>
+            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Fast Food</h2>
           </div>
         )}
         {i === fastFoodEnd && (
-          <div class="-mx-4 flex items-center gap-4 bg-brand-dark px-4 py-3 md:-mx-8 md:px-8 lg:-mx-16 lg:px-16">
-            <h2 class="shrink-0 font-display text-base font-semibold uppercase tracking-[0.3em] text-brand-accent">Deals</h2>
-            <span class="h-px flex-1 bg-brand-accent/30" aria-hidden="true"></span>
+          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
+            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 03</span>
+            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Deals</h2>
           </div>
         )}
         <section id={cat.id} data-menu-section>
-        <div class="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-4 border-brand-accent pl-3">
-          <h3 class="font-display text-xl font-bold text-brand-text-dark md:text-2xl">{cat.name}</h3>
+        <div class="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h3 class="font-display text-xl font-medium text-brand-text-dark md:text-2xl">{cat.name}</h3>
           {cat.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{cat.urdu}</span>}
+          <span class="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.16em] text-brand-text-muted">{cat.items.length} {cat.items.length === 1 ? 'item' : 'items'}</span>
         </div>
         {cat.note && (
-          <p class="mb-4 font-sans text-sm text-brand-text-muted">{formatPrice(cat.note)}</p>
+          <p class="mb-4 font-mono text-xs text-brand-text-muted">{formatPrice(cat.note)}</p>
         )}
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {cat.items.map((item) => (

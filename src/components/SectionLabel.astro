@@ -2,15 +2,18 @@
 interface Props {
   label: string;
   urdu?: string;
+  tone?: 'light' | 'dark';
 }
 
-const { label, urdu } = Astro.props;
+const { label, urdu, tone = 'light' } = Astro.props;
+const labelColor = tone === 'dark' ? 'text-brand-accent-light' : 'text-brand-accent';
+const ruleColor = tone === 'dark' ? 'bg-brand-accent-light' : 'bg-brand-accent';
+const urduColor = tone === 'dark' ? 'text-brand-cream/70' : 'text-brand-text-muted';
 ---
 
-<div class="text-center mb-6">
-  <span class="text-brand-accent text-label uppercase tracking-widest font-semibold font-sans">
-    {label}
-  </span>
-  <div class="w-12 h-px bg-brand-accent mx-auto mt-2 mb-3"></div>
-  {urdu && <span class="text-brand-text-muted text-sm italic font-display">{urdu}</span>}
+<div class="mb-6 flex items-center justify-center gap-3">
+  <span class={`h-px w-8 ${ruleColor}`} aria-hidden="true"></span>
+  <span class={`font-mono text-[0.66rem] font-semibold uppercase tracking-[0.24em] ${labelColor}`}>{label}</span>
+  {urdu && <span class={`font-urdu-display text-sm ${urduColor}`} dir="rtl">{urdu}</span>}
+  <span class={`h-px w-8 ${ruleColor}`} aria-hidden="true"></span>
 </div>
