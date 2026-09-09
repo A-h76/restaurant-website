@@ -4,8 +4,8 @@ src/lib/images.js.
 
 Venue / homepage images:
 
-- hero.webp — real Smart Cook Dera storefront photo (from hero.png), used at ~787x477
-- hero.png — original storefront photograph (kept as source)
+- hero.webp — real Smart Cook Dera storefront photo, 1485x595 (full, desktop)
+- hero-sm.webp — 820x329 mobile variant of the hero (srcset)
 - karahi.webp — Mutton Karahi, used at ~600x450
 - bbq.webp — BBQ mix platter, used at ~600x450
 - mosque.webp — mosque exterior/interior, used at ~1200x400
