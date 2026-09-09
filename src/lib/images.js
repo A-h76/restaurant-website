@@ -5,7 +5,7 @@ import { join } from 'node:path';
 // public/images/menu/ and are mapped in src/data/menu-catalog.js.
 export const restaurantImages = {
   hero: {
-    src: '/images/hero.webp',
+    src: '/images/storefront.webp',
     alt: 'Smart Cook Dera family restaurant storefront lit up at night',
     icon: 'karahi',
     width: 1485,
