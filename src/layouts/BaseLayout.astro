@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import FloatingButtons from '../components/FloatingButtons.astro';
+import Glovebox from '../components/Glovebox.astro';
 import SEOHead from '../components/SEOHead.astro';
 import '../styles/global.css';
 
@@ -45,7 +45,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
       <slot />
     </main>
     <Footer />
-    <FloatingButtons />
+    <Glovebox />
 
     <script>
       // ── Motion runtime ─────────────────────────────────────────────────

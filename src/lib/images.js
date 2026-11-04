@@ -8,8 +8,8 @@ export const restaurantImages = {
     src: '/images/hero.webp',
     alt: 'Smart Cook Dera restaurant storefront lit up at night',
     icon: 'karahi',
-    width: 787,
-    height: 477,
+    width: 1485,
+    height: 595,
   },
   karahi: {
     src: '/images/karahi.webp',

@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Cta from '../components/Cta.astro';
+import Stone from '../components/Stone.astro';
 import DishImage from '../components/menu/DishImage.astro';
 import FoodImage from '../components/FoodImage.astro';
 import MenuItemModal from '../components/menu/MenuItemModal.astro';
 import { findItem, formatPrice, priceSegments, isVerifiedImage } from '../lib/menu.js';
 import { desiCategories, dealCategory } from '../data/menu-catalog.js';
+import { PRAYERS } from '../lib/prayer.js';
 import { PHONE_TEL, PHONE_DISPLAY, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, PLUS_CODE } from '../consts.js';
 
 const schema = JSON.stringify({
@@ -35,6 +37,7 @@ const schema = JSON.stringify({
   sameAs: ['https://www.facebook.com/smartcookdera'],
 });
 
+// ── Signature dishes (modal data contract identical to FoodCard/MenuItem) ──
 const muttonKarahi = findItem(desiCategories, 'Mutton', 'Mutton Karahi');
 const chickenKarahi = findItem(desiCategories, 'Chicken Karahi', 'Chicken Karahi');
 const bbqMix = findItem(desiCategories, 'BBQ', 'BBQ Mix Platter');
@@ -45,12 +48,12 @@ const familyDeal = findItem([dealCategory], 'Deals', 'Deal A');
 const seekhKabab = muttonKebab ? { ...muttonKebab, name: 'Seekh Kabab' } : null;
 const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, familyDeal].filter(Boolean);
 
-// Precompute the display + modal fields for each featured dish so the markup
-// stays clean and the modal data-* contract is identical to FoodCard/MenuItem.
+// Parchi lines show ONE price: "from ₨X" when a dish has sizes (full list lives in the modal).
 const featuredRows = featured.map((item) => {
   const verified = isVerifiedImage(item);
+  const segs = priceSegments(item.price);
   const fromNote = item.note ? priceSegments(item.note)[0]?.price : '';
-  const priceLabel = item.price ? formatPrice(item.price) : fromNote ? `From ${fromNote}` : '';
+  const priceLabel = segs.length > 1 ? `from ${segs[0].price}` : item.price ? formatPrice(item.price) : fromNote ? `from ${fromNote}` : '';
   return { item, verified, priceLabel };
 });
 
@@ -65,6 +68,39 @@ const specs = [
   { k: 'Seating', v: 'Family & Private' },
   { k: 'Parking', v: 'Cars · Buses · Trucks' },
 ];
+
+// ── The journey: five km stones, 8 → 0. Rail, eyebrows and dial all read from this. ──
+const stops = [
+  { id: 'hero', km: 8, label: 'Approach' },
+  { id: 'dera', km: 6, label: 'The Dera' },
+  { id: 'signature', km: 4, label: 'Signature' },
+  { id: 'prayer', km: 2, label: 'Prayer' },
+  { id: 'find', km: 0, label: 'Find us' },
+];
+const stopTop = ['top-0', 'top-1/4', 'top-1/2', 'top-3/4', 'top-full'];
+
+// ── Speedometer geometry: 0 km at −120°, 8 km at +120° (clockwise from 12 o'clock). ──
+const C = 120;
+const pt = (deg, r) => {
+  const a = (deg * Math.PI) / 180;
+  return [C + r * Math.sin(a), C - r * Math.cos(a)];
+};
+const kmAngle = (km) => -120 + 30 * km;
+const ticks = Array.from({ length: 17 }, (_, i) => {
+  const major = i % 2 === 0;
+  const [x1, y1] = pt(kmAngle(i / 2), major ? 90 : 97);
+  const [x2, y2] = pt(kmAngle(i / 2), 105);
+  return { x1, y1, x2, y2, major };
+});
+const labels = Array.from({ length: 9 }, (_, k) => {
+  const [x, y] = pt(kmAngle(k), 76);
+  return { k, x, y };
+});
+const arc = (a0, a1, r) => {
+  const [x0, y0] = pt(a0, r);
+  const [x1, y1] = pt(a1, r);
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+};
 ---
 
 <BaseLayout
@@ -74,52 +110,125 @@ const specs = [
   headerVariant="utility"
   heroHeader
 >
-  <!-- ═══════════════ HERO — roadside masthead ═══════════════ -->
-  <section class="relative isolate overflow-hidden bg-brand-dark pt-16 md:pt-[4.75rem]" id="hero">
-    <div class="absolute inset-0 -z-10 overflow-hidden">
-      <img
-        src="/images/hero.webp"
-        alt="Smart Cook Dera restaurant storefront lit up at night"
-        width="787"
-        height="477"
-        fetchpriority="high"
-        decoding="async"
-        data-parallax="0.14"
-        class="h-[115%] w-full object-cover object-[center_35%]"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-brand-dark/40"></div>
-      <div class="absolute inset-0 bg-brand-dark/25"></div>
+  <!-- ═══ KM RAIL (desktop): the page is the 8 km approach; the marker travels it ═══ -->
+  <nav id="km-rail" aria-label="Page sections" class="fixed left-3 top-1/2 z-30 hidden -translate-y-[55%] lg:block xl:left-5">
+    <div class="relative h-[50vh] w-10">
+      <span class="absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-2 border-dashed border-brand-accent/70" aria-hidden="true"></span>
+      {stops.map((s, i) => (
+        <a
+          href={`#${s.id}`}
+          data-km-stop={s.id}
+          title={s.label}
+          aria-label={`${s.label}, ${s.km} kilometres to go`}
+          class={`stone absolute left-1/2 -translate-x-1/2 -translate-y-1/2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent ${stopTop[i]}`}
+        >
+          <small>km</small><b>{s.km}</b>
+        </a>
+      ))}
+      <span data-km-marker class="pointer-events-none absolute left-[calc(50%+1.5rem)] top-0 -translate-y-1/2 border-y-[7px] border-r-[10px] border-y-transparent border-r-brand-accent" aria-hidden="true"></span>
     </div>
+    <p class="mt-6 w-10 bg-brand-dark/90 py-1.5 text-center font-mono text-brand-cream" aria-hidden="true">
+      <b data-km-readout class="block text-xs">8.0</b>
+      <span class="text-[0.46rem] uppercase tracking-[0.08em]">km left</span>
+    </p>
+  </nav>
 
-    <!-- Masthead dateline -->
+  <!-- KM PILL (mobile/tablet): same journey, one small chip -->
+  <div id="km-pill" class="fixed left-3 z-30 bottom-[calc(5.625rem+env(safe-area-inset-bottom))] md:bottom-6 lg:hidden" aria-hidden="true">
+    <div class="relative flex min-h-12 items-center gap-2.5 overflow-hidden border border-brand-cream/20 bg-brand-dark/95 px-3 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-brand-cream shadow-lg">
+      <span class="stone !min-w-0 !px-1.5"><small>km</small><b data-km-now>8</b></span>
+      <span data-km-label>Approach</span>
+      <span data-km-bar class="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-brand-accent"></span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ KM 8 — HERO: highway sign + speedometer + storefront ═══════════════ -->
+  <section class="relative isolate overflow-hidden bg-brand-dark pt-16 md:pt-[4.75rem]" id="hero">
+    <div class="grain pointer-events-none absolute inset-0 -z-10 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
+
     <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-brand-cream/12 px-5 py-3 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-cream/60 md:px-10 lg:px-16">
       <span class="hero-in">Est. Roadside · Punjab</span>
       <span class="hero-in hidden sm:inline">Sahiwal — Arifwala Rd</span>
       <span class="hero-in" dir="ltr">{PLUS_CODE}</span>
     </div>
 
-    <div class="mx-auto flex min-h-[78vh] max-w-6xl flex-col justify-end px-5 pb-12 pt-24 md:px-10 md:pb-20 lg:px-16">
-      <div class="max-w-3xl" data-stagger="110">
-        <p class="hero-in font-urdu-display text-2xl leading-tight text-brand-accent sm:text-4xl">سمارٹ کک ڈیرہ</p>
+    <div class="mx-auto grid max-w-6xl gap-8 px-5 pb-8 pt-7 md:px-10 md:pt-9 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-14 lg:px-16 lg:pb-9">
+      <div data-stagger="110">
+        <div class="hero-in"><Stone km={8} label="Approaching the Dera" tone="dark" /></div>
 
-        <h1 class="mt-3 font-display text-mega font-medium uppercase leading-[0.86] tracking-[-0.01em] text-brand-cream">
-          <span class="line-mask"><span>Smart Cook</span></span>
-          <span class="line-mask"><span class="text-brand-accent">Dera</span></span>
-        </h1>
+        <!-- The sign -->
+        <div class="hero-in relative mt-5 max-w-3xl rounded-2xl bg-brand-mid p-2 shadow-2xl ring-1 ring-brand-cream/10">
+          <div class="relative rounded-xl border-2 border-brand-cream/90 px-5 py-6 sm:px-8 sm:py-7">
+            <span class="absolute left-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
+            <span class="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
+            <span class="absolute bottom-2.5 left-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
+            <span class="absolute bottom-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
 
-        <p data-rise class="mt-6 max-w-xl font-display text-lg italic leading-relaxed text-brand-cream/85 md:text-2xl">
+            <div class="flex items-center justify-between gap-4 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-brand-cream/75 sm:text-[0.62rem]">
+              <span>Family Restaurant</span>
+              <span>Arifwala 8 km →</span>
+            </div>
+            <p class="mt-4 font-urdu-display text-2xl leading-tight text-marigold sm:text-4xl">سمارٹ کک ڈیرہ</p>
+            <h1 class="mt-2 font-display text-[clamp(2.2rem,8vw,5.75rem)] font-semibold uppercase leading-[0.9] text-brand-cream">
+              <span class="line-mask"><span>Smart Cook</span></span>
+              <span class="line-mask"><span class="text-marigold">Dera</span></span>
+            </h1>
+            <p class="mt-5 border-t border-brand-cream/40 pt-3 font-mono text-[0.58rem] uppercase tracking-[0.2em] text-brand-cream/75 sm:text-[0.62rem]">
+              Halal Kitchen · Charcoal BBQ · Mosque on Site
+            </p>
+          </div>
+        </div>
+
+        <p data-rise class="mt-6 max-w-xl font-display text-lg italic leading-relaxed text-brand-cream/85 md:text-xl">
           Good food, good rest — one memorable stop on the road between Sahiwal and Arifwala.
         </p>
 
-        <div data-rise class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div data-rise class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
           <Cta href="/menu" variant="primary">View the Menu</Cta>
           <Cta href={MAPS_DIRECTIONS_URL} variant="ghost" tone="cream">Directions →</Cta>
         </div>
       </div>
+
+      <!-- Speedometer: counts the km left as you scroll down the page -->
+      <div class="hero-in relative mx-auto w-48 sm:w-56 lg:mx-0 lg:w-64">
+        <svg viewBox="0 0 240 240" class="h-auto w-full" role="img" aria-label="Speedometer showing the distance left to the Dera, in kilometres">
+          <circle cx="120" cy="120" r="117" fill="none" stroke="#D9A441" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7" />
+          <circle cx="120" cy="120" r="111" fill="#2A241C" stroke="#E7E1D3" stroke-opacity="0.22" stroke-width="1.5" />
+          <path d={arc(-120, 120, 108)} fill="none" stroke="#E7E1D3" stroke-opacity="0.18" stroke-width="3" />
+          <path d={arc(-120, -90, 108)} fill="none" stroke="#D9A441" stroke-width="4" />
+          {ticks.map((t) => (
+            <line x1={t.x1.toFixed(2)} y1={t.y1.toFixed(2)} x2={t.x2.toFixed(2)} y2={t.y2.toFixed(2)} stroke="#E7E1D3" stroke-opacity={t.major ? 0.9 : 0.4} stroke-width={t.major ? 2 : 1.2} />
+          ))}
+          {labels.map((l) => (
+            <text x={l.x.toFixed(2)} y={(l.y + 4).toFixed(2)} text-anchor="middle" font-size="11" class="fill-brand-cream/80 font-mono">{l.k}</text>
+          ))}
+          <text x="120" y="168" text-anchor="middle" font-size="9" letter-spacing="2.2" class="fill-brand-cream/60 font-mono">KM TO THE DERA</text>
+          <text data-dial-readout x="120" y="196" text-anchor="middle" font-size="26" font-weight="700" class="fill-brand-cream font-mono">8.0</text>
+          <g data-needle transform="rotate(120 120 120)">
+            <polygon points="116.5,124 123.5,124 120,34" fill="#C33F26" />
+            <polygon points="118.6,124 121.4,124 120,60" fill="#F1ECE0" fill-opacity="0.35" />
+          </g>
+          <circle cx="120" cy="120" r="9" fill="#1B1712" stroke="#D9A441" stroke-width="2" />
+          <circle cx="120" cy="120" r="3" fill="#D9A441" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- The storefront, uncropped: the night sky melts into the hero ground -->
+    <div class="relative">
+      <img
+        src="/images/hero.webp"
+        alt="Smart Cook Dera restaurant storefront lit up at night"
+        width="1485"
+        height="595"
+        decoding="async"
+        class="block aspect-[2/1] max-h-[58vh] w-full object-cover object-[center_45%] md:aspect-[5/2]"
+      />
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-brand-dark to-transparent"></div>
     </div>
   </section>
 
-  <!-- ═══════════════ TICKER ═══════════════ -->
+  <!-- ═══════════════ TICKER + hanging fringe (truck-art jhalar) ═══════════════ -->
   <div class="marquee-host relative overflow-hidden border-y border-brand-dark bg-brand-accent py-3 text-brand-cream">
     <div class="marquee" aria-hidden="true">
       {[0, 1].map(() => (
@@ -127,7 +236,7 @@ const specs = [
           {ticker.map((t) => (
             <span class="flex items-center font-mono text-[0.72rem] font-semibold uppercase tracking-[0.16em]">
               <span class="px-6">{t}</span>
-              <span class="text-brand-cream/50">✦</span>
+              <span class="text-marigold">✦</span>
             </span>
           ))}
         </div>
@@ -135,14 +244,13 @@ const specs = [
     </div>
     <span class="sr-only">Fresh karahi, charcoal BBQ, handmade naan, halal kitchen, mosque on site, family seating and parking for trucks and buses.</span>
   </div>
+  <div class="fringe" aria-hidden="true"></div>
 
-  <!-- ═══════════════ STATEMENT + SPECS ═══════════════ -->
-  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16">
+  <!-- ═══════════════ KM 6 — THE DERA: statement + spec sheet ═══════════════ -->
+  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16" id="dera">
     <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.5fr_1fr] md:gap-16">
       <div data-stagger="90">
-        <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">
-          01 — The Dera <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">ڈیرہ</span>
-        </p>
+        <div data-rise><Stone km={6} label="The Dera" urdu="ڈیرہ" /></div>
         <h2 class="mt-5 font-display text-heading font-medium leading-[1.08] text-brand-text-dark">
           <span class="line-mask"><span>A roadside kitchen where</span></span>
           <span class="line-mask"><span>the karahi is fresh and</span></span>
@@ -156,8 +264,7 @@ const specs = [
         </div>
       </div>
 
-      <!-- Spec sheet -->
-      <aside class="md:pt-1" data-stagger="70">
+      <aside class="md:pt-1" data-stagger="70" aria-label="At a glance">
         <div class="mb-4 h-px w-full origin-left bg-brand-text-dark/20" data-route-x></div>
         {specs.map((s) => (
           <div data-rise class="flex items-baseline justify-between gap-4 border-b border-brand-text-dark/12 py-3.5">
@@ -165,92 +272,110 @@ const specs = [
             <span class="text-right font-display text-lg font-medium text-brand-text-dark">{s.v}</span>
           </div>
         ))}
-        <div data-rise class="mt-8 flex items-end gap-3">
-          <span class="font-display text-6xl font-semibold leading-none text-brand-accent" data-count="8" data-count-suffix="">8</span>
-          <span class="pb-1 font-mono text-[0.64rem] uppercase leading-tight tracking-[0.16em] text-brand-text-muted">km from<br />Arifwala</span>
-        </div>
       </aside>
     </div>
   </section>
 
-  <!-- ═══════════════ SIGNATURE — the index ═══════════════ -->
-  <section class="border-t border-brand-text-dark/10 bg-paper-dim px-5 py-section-lg md:px-10 lg:px-16">
+  <!-- ═══════════════ KM 4 — SIGNATURE: the dera parchi, heated by the tandoor ═══════════════ -->
+  <section class="heat-section border-t border-brand-text-dark/10 px-5 py-section-lg md:px-10 lg:px-16" id="signature" data-heat>
     <div class="mx-auto max-w-6xl">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">02 — Signature <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">خاص پکوان</span></p>
-          <h2 data-rise class="mt-4 font-display text-display font-medium leading-none text-brand-text-dark">From the pan &amp; coals</h2>
+      <div data-rise><Stone km={4} label="Signature" urdu="خاص پکوان" /></div>
+      <h2 data-rise class="mt-4 font-display text-display font-medium leading-none text-brand-text-dark">From the pan &amp; coals</h2>
+
+      <div class="mt-14 grid items-start gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
+        <!-- The parchi -->
+        <div data-rise class="parchi bg-paper-bright pb-6 pt-7" id="parchi">
+          <div class="flex items-start justify-between gap-4 px-5 md:px-8">
+            <div>
+              <p class="font-display text-3xl font-semibold uppercase leading-none tracking-wide text-brand-text-dark md:text-4xl">Dera Parchi</p>
+              <p class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Today’s picks · tap a line to order</p>
+            </div>
+            <span class="mt-1 -rotate-12 shrink-0 select-none rounded-full border-2 border-brand-accent px-2 py-3 text-center font-mono text-[0.5rem] font-bold uppercase leading-tight tracking-[0.14em] text-brand-accent opacity-90 md:text-[0.56rem]" aria-hidden="true">
+              Fresh<br />Halal<br />Daily
+            </span>
+          </div>
+
+          <ol class="mt-6 border-t-2 border-dashed border-brand-text-dark/25" data-stagger="60">
+            {featuredRows.map(({ item, verified, priceLabel }, i) => (
+              <li data-rise class="border-b border-dashed border-brand-text-dark/15">
+                <button
+                  type="button"
+                  data-menu-item
+                  data-line
+                  data-id={item.id ?? ''}
+                  data-name={item.name}
+                  data-category={item.category}
+                  data-urdu={item.urdu ?? ''}
+                  data-price={item.price ?? ''}
+                  data-note={item.note ?? ''}
+                  data-description={item.description ?? ''}
+                  data-image={verified ? item.image : ''}
+                  data-image-thumb={verified ? (item.imageThumb || item.image) : ''}
+                  data-image-status={item.imageStatus ?? 'needs-review'}
+                  data-image-fit={item.imageFit ?? 'cover'}
+                  data-items={item.items ? item.items.join('||') : ''}
+                  aria-haspopup="dialog"
+                  class="group flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-brand-cream focus-visible:bg-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-accent md:gap-4 md:px-8"
+                >
+                  <span class="hidden w-6 shrink-0 font-mono text-xs text-brand-text-muted transition-colors group-hover:text-brand-accent sm:block">{String(i + 1).padStart(2, '0')}</span>
+
+                  <!-- Mobile: every dish keeps its photo as a small polaroid -->
+                  <span class="block h-14 w-[4.5rem] shrink-0 -rotate-2 bg-white p-1 shadow-sm lg:hidden">
+                    <span class="block h-full w-full overflow-hidden bg-brand-dark">
+                      <DishImage src={item.image} thumbSrc={item.imageThumb} alt="" verified={verified} sizes="72px" iconSize={20} fit={item.imageFit ?? 'cover'} />
+                    </span>
+                  </span>
+
+                  <span class="min-w-0 flex-1 sm:flex-none">
+                    <span class="flex flex-wrap items-baseline gap-x-3">
+                      <span class="font-display text-lg font-medium leading-tight text-brand-text-dark md:text-2xl">{item.name}</span>
+                      {item.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{item.urdu}</span>}
+                    </span>
+                    <span class="mt-0.5 block font-mono text-[0.58rem] uppercase tracking-[0.16em] text-brand-text-muted">{item.category}</span>
+                  </span>
+
+                  <span class="leader mb-2 hidden min-w-6 flex-1 self-end sm:block" aria-hidden="true"></span>
+
+                  {priceLabel && <span class="shrink-0 text-right font-mono text-[0.8rem] font-bold tabular-nums text-brand-text-dark md:text-sm" dir="ltr">{priceLabel}</span>}
+                  <span class="hidden shrink-0 font-mono text-brand-accent transition-transform duration-200 group-hover:translate-x-1 md:inline" aria-hidden="true">→</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+
+          <div class="flex items-center justify-between gap-4 px-5 pt-5 md:px-8">
+            <p class="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-brand-text-muted">Cooked to order · Mutton &amp; Chicken</p>
+            <Cta href="/menu" variant="primary">Full Menu</Cta>
+          </div>
         </div>
-        <p data-rise class="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-text-muted">Tap any dish to order</p>
-      </div>
 
-      <ol class="mt-10 border-t border-brand-text-dark/15" data-stagger="60">
-        {featuredRows.map(({ item, verified, priceLabel }, i) => (
-          <li data-rise class="border-b border-brand-text-dark/15">
-            <button
-              type="button"
-              data-menu-item
-              data-id={item.id ?? ''}
-              data-name={item.name}
-              data-category={item.category}
-              data-urdu={item.urdu ?? ''}
-              data-price={item.price ?? ''}
-              data-note={item.note ?? ''}
-              data-description={item.description ?? ''}
-              data-image={verified ? item.image : ''}
-              data-image-thumb={verified ? (item.imageThumb || item.image) : ''}
-              data-image-status={item.imageStatus ?? 'needs-review'}
-              data-image-fit={item.imageFit ?? 'cover'}
-              data-items={item.items ? item.items.join('||') : ''}
-              aria-haspopup="dialog"
-              class="group flex w-full items-center gap-4 py-4 text-left transition-colors hover:bg-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:gap-6"
-            >
-              <span class="w-7 shrink-0 font-mono text-sm text-brand-text-muted transition-colors group-hover:text-brand-accent">{String(i + 1).padStart(2, '0')}</span>
-
-              <span class="hidden h-16 w-[5.5rem] shrink-0 overflow-hidden bg-brand-dark md:block" data-media>
-                <DishImage
-                  src={item.image}
-                  thumbSrc={item.imageThumb}
-                  alt={item.name}
-                  verified={verified}
-                  sizes="88px"
-                  iconSize={26}
-                  fit={item.imageFit ?? 'cover'}
-                />
-              </span>
-
-              <span class="min-w-0 flex-1">
-                <span class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                  <span class="font-display text-xl font-medium text-brand-text-dark md:text-2xl">{item.name}</span>
-                  {item.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{item.urdu}</span>}
-                </span>
-                <span class="mt-0.5 block font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-text-muted">{item.category}</span>
-                {priceLabel && <span class="mt-1.5 block font-mono text-sm font-bold text-brand-text-dark md:hidden" dir="ltr">{priceLabel}</span>}
-              </span>
-
-              <span class="hidden shrink-0 items-center gap-4 md:flex">
-                {priceLabel && <span class="font-mono text-sm font-bold tabular-nums text-brand-text-dark" dir="ltr">{priceLabel}</span>}
-                <span class="font-mono text-brand-accent transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">→</span>
-              </span>
-
-              <span class="shrink-0 self-center font-mono text-brand-accent md:hidden" aria-hidden="true">→</span>
-            </button>
-          </li>
-        ))}
-      </ol>
-
-      <div data-rise class="mt-10">
-        <Cta href="/menu" variant="primary">See the Full Menu</Cta>
+        <!-- Desktop stage: the dish lifts off the parchi as a polaroid -->
+        <div class="hidden lg:sticky lg:top-28 lg:block" aria-hidden="true">
+          <div class="mx-auto grid w-full max-w-sm">
+            {featuredRows.map(({ item, verified, priceLabel }, i) => (
+              <figure data-stage data-active={i === 0 ? '' : undefined} class="relative cursor-pointer bg-[#FBF8F0] p-3 pb-16 shadow-xl [grid-area:1/1]">
+                <span class="absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-3 bg-marigold/70"></span>
+                <div class="aspect-[4/3] overflow-hidden bg-brand-dark">
+                  <DishImage src={item.image} thumbSrc={item.imageThumb} alt="" verified={verified} sizes="384px" iconSize={40} fit={item.imageFit ?? 'cover'} />
+                </div>
+                <figcaption class="absolute inset-x-4 bottom-4 flex items-baseline justify-between gap-3">
+                  <span class="font-display text-xl italic leading-tight text-brand-text-dark">{item.name}</span>
+                  {priceLabel && <span class="shrink-0 font-mono text-[0.7rem] font-bold text-brand-accent" dir="ltr">{priceLabel}</span>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ MOSQUE — the quiet register ═══════════════ -->
-  <section class="relative overflow-hidden bg-brand-green px-5 py-section-lg text-brand-cream md:px-10 lg:px-16">
+  <!-- ═══════════════ KM 2 — PRAYER: the quiet register, aware of the hour ═══════════════ -->
+  <section class="relative overflow-hidden bg-brand-green px-5 py-section-lg text-brand-cream md:px-10 lg:px-16" id="prayer" data-prayer-section>
     <div class="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
-    <div class="relative mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
+    <div class="relative mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-16">
       <div data-stagger="90">
-        <p data-rise class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent-light">03 — On the premises · احاطے میں</p>
+        <div data-rise><Stone km={2} label="On the premises" urdu="احاطے میں" tone="dark" /></div>
         <h2 class="mt-5 font-display text-display font-medium leading-[1.05]">
           <span class="line-mask"><span>A mosque for</span></span>
           <span class="line-mask"><span>the traveller.</span></span>
@@ -258,44 +383,87 @@ const specs = [
         <p data-rise class="mt-6 max-w-md leading-relaxed text-brand-cream/75">
           Not a prayer corner — a dedicated mosque with a resident Imam leading all five daily prayers. Stop, pray in congregation, and continue your journey with a fresh meal.
         </p>
+
+        <!-- Live prayer panel: filled in by JS, hidden without it -->
+        <div data-prayer-panel hidden class="mt-8 max-w-md border border-brand-cream/20 bg-brand-dark/35 p-5">
+          <div class="flex items-center gap-4">
+            <svg class="crescent-glow h-12 w-12 shrink-0 text-marigold" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M32 6a18 18 0 1 0 10 32A14 14 0 0 1 32 6z" fill="currentColor" />
+              <circle cx="38" cy="14" r="1.6" fill="currentColor" />
+            </svg>
+            <div aria-live="polite">
+              <p data-pr-eyebrow class="font-mono text-[0.58rem] uppercase tracking-[0.24em] text-brand-accent-light">Next prayer</p>
+              <p class="mt-1 font-display text-2xl leading-tight sm:text-3xl">
+                <span data-pr-name>Asr</span> <span data-pr-urdu class="font-urdu-display text-lg text-brand-cream/70" dir="rtl"></span>
+              </p>
+              <p data-pr-when class="mt-0.5 font-mono text-xs text-brand-cream/80"></p>
+            </div>
+          </div>
+          <ol class="mt-5 grid grid-cols-5 border-t border-brand-cream/15 pt-3 text-center">
+            {PRAYERS.map((p) => (
+              <li data-pr-key={p.key} class="px-0.5 font-mono text-brand-cream/60 aria-[current=true]:text-marigold">
+                <span class="block text-[0.52rem] uppercase tracking-[0.14em] sm:text-[0.58rem]">{p.name}</span>
+                <span data-pr-time class="mt-1 block text-[0.62rem] font-bold sm:text-xs">—</span>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-4 font-mono text-[0.54rem] uppercase leading-relaxed tracking-[0.14em] text-brand-cream/50">
+            Calculated for Arifwala (Karachi method, Hanafi Asr) · approximate — jamaat times are set by the Imam
+          </p>
+        </div>
+
         <div data-rise class="mt-8">
           <Cta href="/prayer-facility" variant="primary">Prayer Facility →</Cta>
         </div>
       </div>
 
-      <div class="relative aspect-[4/3] overflow-hidden md:aspect-[5/4]" data-media>
-        <FoodImage
-          imageKey="mosque"
-          sizes="(max-width: 768px) 100vw, 560px"
-          iconSize={64}
-          captionUrdu="مسجد"
-          caption="A quiet place to pray"
-          captionSub="Open to all travellers"
-        />
+      <!-- Quiet, geometric cousin of the truck frame -->
+      <div data-rise class="truck-frame-quiet">
+        <div class="relative aspect-[4/3] overflow-hidden md:aspect-[5/4]" data-media>
+          <FoodImage
+            imageKey="mosque"
+            sizes="(max-width: 768px) 100vw, 560px"
+            iconSize={64}
+            captionUrdu="مسجد"
+            caption="A quiet place to pray"
+            captionSub="Open to all travellers"
+          />
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════ LOCATION — the milestone ═══════════════ -->
-  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16">
+  <!-- ═══════════════ KM 0 — ARRIVED: the road, the map ═══════════════ -->
+  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16" id="find">
     <div class="mx-auto max-w-6xl">
-      <p data-rise class="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">04 — Find the Dera <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-text-muted" dir="rtl">پتہ</span></p>
+      <div data-rise><Stone km={0} label="Arrived" urdu="پتہ" /></div>
       <h2 data-rise class="mt-4 max-w-2xl font-display text-display font-medium leading-[1.05] text-brand-text-dark">
         A milestone between two towns.
       </h2>
 
-      <!-- Route diagram -->
-      <div data-rise class="mt-12 flex items-center gap-3 md:gap-5">
-        <span class="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-text-muted">Sahiwal</span>
-        <span class="relative flex-1">
-          <span class="block h-px w-full origin-left bg-brand-text-dark/30" data-route-x></span>
-          <span class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
-            <span class="h-3 w-3 rounded-full bg-brand-accent ring-4 ring-brand-cream"></span>
-          </span>
-        </span>
-        <span class="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-text-muted">Arifwala</span>
+      <!-- The road: the truck drives in and parks at the Dera, 8 km before Arifwala -->
+      <div data-rise data-route-wrap class="mt-14" role="img" aria-label="Road from Sahiwal to Arifwala with Smart Cook Dera 8 kilometres before Arifwala">
+        <div class="relative pt-9">
+          <p class="absolute left-[80%] top-0 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-brand-accent">◆ Smart Cook Dera</p>
+          <div class="relative h-4 bg-brand-dark">
+            <span class="road-dash absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2"></span>
+            <span class="route-truck absolute left-[80%] top-1/2 -translate-x-1/2 -translate-y-[78%]">
+              <svg width="38" height="22" viewBox="0 0 38 22" aria-hidden="true">
+                <rect x="1" y="3" width="22" height="13" fill="#C33F26" />
+                <rect x="1" y="3" width="22" height="2.4" fill="#D9A441" />
+                <path d="M23 7h7l6 5v4H23z" fill="#D9A441" />
+                <circle cx="9" cy="17.5" r="3.4" fill="#1B1712" stroke="#E7E1D3" stroke-width="1.2" />
+                <circle cx="29" cy="17.5" r="3.4" fill="#1B1712" stroke="#E7E1D3" stroke-width="1.2" />
+              </svg>
+            </span>
+          </div>
+          <div class="absolute left-[80%] right-0 top-full mt-1.5 border-t-2 border-brand-accent pt-1 text-center font-mono text-[0.56rem] uppercase tracking-[0.2em] text-brand-accent">8 km</div>
+        </div>
+        <div class="mt-9 flex justify-between font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-text-muted">
+          <span>Sahiwal</span>
+          <span>Arifwala</span>
+        </div>
       </div>
-      <p data-rise class="mt-3 text-center font-mono text-[0.62rem] uppercase tracking-[0.2em] text-brand-accent">◆ Smart Cook Dera</p>
 
       <div class="mt-12 grid gap-10 md:grid-cols-[1fr_1.3fr] md:gap-14">
         <div data-stagger="70">
@@ -311,25 +479,171 @@ const specs = [
             <span class="block font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Parking</span>
             <span class="mt-1 block text-brand-text-dark">Ample space for cars, buses and trucks</span>
           </div>
-          <div data-rise class="mt-8 flex flex-wrap gap-3">
+          <div data-rise class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Cta href={MAPS_DIRECTIONS_URL} variant="primary">Get Directions</Cta>
             <Cta href={PHONE_TEL} variant="ghost" tone="dark">{PHONE_DISPLAY}</Cta>
           </div>
         </div>
 
-        <div data-media class="overflow-hidden border border-brand-text-dark/15">
-          <iframe
-            src={MAPS_EMBED_URL}
-            width="100%"
-            height="300"
-            class="block h-[300px] w-full border-0 md:h-full md:min-h-[340px]"
-            loading="lazy"
-            title="Smart Cook Dera location map"
-          ></iframe>
+        <div class="truck-frame">
+          <div data-media class="overflow-hidden">
+            <iframe
+              src={MAPS_EMBED_URL}
+              width="100%"
+              height="300"
+              class="block h-[300px] w-full border-0 md:h-full md:min-h-[340px]"
+              loading="lazy"
+              title="Smart Cook Dera location map"
+            ></iframe>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <MenuItemModal />
+
+  <script>
+    import { prayerState, fmtClock, PRAYERS } from '../lib/prayer.js';
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = (sel: string, root: ParentNode = document) => root.querySelector<HTMLElement>(sel);
+    const $$ = (sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<HTMLElement>(sel));
+
+    // ── THE JOURNEY: one scroll value (km left, 8 → 0) drives rail, pill and dial ──
+    const TOTAL_KM = 8;
+    const railStops = $$('#km-rail [data-km-stop]');
+    const sections = railStops.map((a) => document.getElementById(a.dataset.kmStop!)!);
+    const n = sections.length;
+    const marker = $('[data-km-marker]');
+    const railReadout = $('[data-km-readout]');
+    const pillNow = $('[data-km-now]');
+    const pillLabel = $('[data-km-label]');
+    const pillBar = $('[data-km-bar]');
+    const needle = document.querySelector('[data-needle]');
+    const dialReadout = document.querySelector('[data-dial-readout]');
+    const heatEl = $('[data-heat]');
+    const labels = ['Approach', 'The Dera', 'Signature', 'Prayer', 'Arrived'];
+
+    let tops: number[] = [];
+    let intro = reduce ? 1 : 0; // the speedometer revs up from 0 on load
+    let active = -1;
+
+    const measure = () => {
+      tops = sections.map((s) => s.getBoundingClientRect().top + window.scrollY);
+    };
+
+    const render = () => {
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      // Look-ahead line: pinned to the top at scroll 0, settles to 45% down the viewport.
+      const ref = y + Math.min(y, vh * 0.45);
+      const atBottom = y + vh >= document.documentElement.scrollHeight - 2;
+
+      let u: number;
+      if (atBottom || ref >= tops[n - 1]) u = n - 1;
+      else if (ref <= tops[0]) u = 0;
+      else {
+        let k = 0;
+        while (tops[k + 1] <= ref) k++;
+        u = k + (ref - tops[k]) / (tops[k + 1] - tops[k]);
+      }
+
+      const progress = u / (n - 1);
+      const km = TOTAL_KM * (1 - progress);
+      const arrived = km < 0.05;
+      const now = Math.round(u);
+
+      if (marker) marker.style.top = progress * 100 + '%';
+      if (railReadout) railReadout.textContent = arrived ? 'Here' : km.toFixed(1);
+      if (pillNow) pillNow.textContent = String(Math.round(km));
+      if (pillBar) pillBar.style.transform = `scaleX(${progress.toFixed(3)})`;
+      if (now !== active) {
+        active = now;
+        railStops.forEach((a, i) => a.setAttribute('aria-current', String(i === now)));
+        if (pillLabel) pillLabel.textContent = labels[now];
+      }
+
+      // Dial: same km, scaled by the rev-up intro.
+      const kmDial = km * intro;
+      needle?.setAttribute('transform', `rotate(${(-120 + 30 * kmDial).toFixed(2)} 120 120)`);
+      if (dialReadout) {
+        const done = intro >= 1 && arrived;
+        dialReadout.textContent = done ? 'ARRIVED' : kmDial.toFixed(1);
+        dialReadout.setAttribute('font-size', done ? '19' : '26');
+      }
+
+      // Tandoor heat peaks when the signature section is centred in view.
+      if (heatEl && !reduce) {
+        const r = heatEl.getBoundingClientRect();
+        const heat = Math.max(0, 1 - Math.abs(r.top + r.height / 2 - vh / 2) / (vh * 0.85));
+        heatEl.style.setProperty('--heat', heat.toFixed(3));
+      }
+    };
+
+    let queued = false;
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        render();
+      });
+    };
+
+    measure();
+    render();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', () => { measure(); schedule(); }, { passive: true });
+    new ResizeObserver(() => { measure(); schedule(); }).observe(document.body); // images/fonts shift layout
+
+    if (!reduce) {
+      const t0 = performance.now() + 250;
+      const rev = (t: number) => {
+        const p = Math.min(1, Math.max(0, (t - t0) / 1300));
+        intro = 1 - Math.pow(1 - p, 3);
+        render();
+        if (p < 1) requestAnimationFrame(rev);
+      };
+      requestAnimationFrame(rev);
+    }
+
+    // ── PARCHI → POLAROID: hovering/focusing a line lifts that dish onto the stage ──
+    const lines = $$('[data-line]');
+    const stages = $$('[data-stage]');
+    const setStage = (i: number) => stages.forEach((s, j) => s.toggleAttribute('data-active', i === j));
+    lines.forEach((l, i) => {
+      l.addEventListener('mouseenter', () => setStage(i));
+      l.addEventListener('focus', () => setStage(i));
+    });
+    stages.forEach((s, i) => s.addEventListener('click', () => lines[i]?.click()));
+
+    // ── PRAYER: next prayer + countdown, in Pakistan time whatever the device clock says ──
+    const panel = $('[data-prayer-panel]');
+    const section = $('[data-prayer-section]');
+    const humanLeft = (m: number) => {
+      const t = Math.ceil(m);
+      return t >= 60 ? `${Math.floor(t / 60)}h ${t % 60}m` : `${t} min`;
+    };
+    const paintPrayer = () => {
+      if (!panel) return;
+      const { times, next, minsLeft, active: live } = prayerState();
+      $('[data-pr-name]', panel)!.textContent = live ? live.name : next.name;
+      $('[data-pr-urdu]', panel)!.textContent = live ? live.urdu : next.urdu;
+      $('[data-pr-eyebrow]', panel)!.textContent = live ? 'Time for prayer' : 'Next prayer';
+      $('[data-pr-when]', panel)!.textContent = live
+        ? `${live.name} began at ${fmtClock(times[live.key])} · the mosque is open`
+        : `at ${fmtClock(times[next.key])} · in ${humanLeft(minsLeft)}`;
+      PRAYERS.forEach((p) => {
+        const li = $(`[data-pr-key="${p.key}"]`, panel)!;
+        $('[data-pr-time]', li)!.textContent = fmtClock(times[p.key]);
+        li.setAttribute('aria-current', String((live ?? next).key === p.key));
+      });
+      section?.setAttribute('data-prayer-active', String(Boolean(live)));
+      panel.hidden = false;
+    };
+    paintPrayer();
+    setInterval(paintPrayer, 30_000);
+    document.addEventListener('visibilitychange', () => !document.hidden && paintPrayer());
+  </script>
 </BaseLayout>
