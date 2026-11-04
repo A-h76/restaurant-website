@@ -9,15 +9,11 @@ interface Props {
   title: string;
   description: string;
   schema?: string;
-  headerVariant?: 'utility' | 'compact';
   headerSticky?: boolean;
-  menuHref?: string;
   noindex?: boolean;
-  /** Transparent header overlaid on a dark hero, condensing on scroll. */
-  heroHeader?: boolean;
 }
 
-const { title, description, schema, headerVariant = 'compact', headerSticky = true, menuHref = '/menu', noindex = false, heroHeader = false } = Astro.props;
+const { title, description, schema, headerSticky = true, noindex = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
@@ -31,7 +27,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..900,0..100,0..1;1,9..144,400..900,0..100,0..1&family=DM+Sans:opsz,wght@9..40,400..800&family=Noto+Nastaliq+Urdu:wght@700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -40,7 +36,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
          reference, kept near-invisible so it's felt, not seen. -->
     <div class="grain pointer-events-none fixed inset-0 z-[100] opacity-[0.05] mix-blend-multiply" aria-hidden="true"></div>
 
-    <Header variant={headerVariant} sticky={headerSticky} menuHref={menuHref} overlay={heroHeader} />
+    <Header sticky={headerSticky} />
     <main class="flex-1">
       <slot />
     </main>

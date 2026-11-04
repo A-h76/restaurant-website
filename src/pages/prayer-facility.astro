@@ -25,7 +25,6 @@ const features = [
 <BaseLayout
   title="Prayer Facility at Smart Cook Dera | Dedicated Mosque | Sahiwal-Arifwala Road"
   description="Smart Cook Dera has a dedicated mosque with resident Imam for all 5 daily prayers. Capacity 200-300. Open to all travellers on Sahiwal-Arifwala Road near Arifwala."
-  headerVariant="utility"
 >
   <PageHeader
     tone="green"
@@ -53,7 +52,7 @@ const features = [
   <section class="bg-brand-green px-5 py-section-md md:px-10">
     <div class="mx-auto max-w-3xl">
       <SectionLabel label="FACILITIES" urdu="سہولیات" tone="dark" />
-      <h2 class="text-center font-display text-heading font-medium text-brand-cream">What We Offer</h2>
+      <h2 class="text-center font-display text-heading text-brand-cream">What We Offer</h2>
       <div class="mt-10 border-t border-brand-cream/15">
         {features.map((f) => (
           <div class="flex items-start gap-4 border-b border-brand-cream/15 py-4">
@@ -67,7 +66,7 @@ const features = [
 
   <section class="bg-brand-cream px-5 py-section-md text-center md:px-10">
     <SectionLabel label="DAILY PRAYERS" urdu="نماز کے اوقات" />
-    <h2 class="font-display text-heading font-medium text-brand-text-dark">Prayer Times</h2>
+    <h2 class="font-display text-heading text-brand-text-dark">Prayer Times</h2>
     <div class="mx-auto mt-10 max-w-lg overflow-x-auto">
       <table class="w-full text-center">
         <thead>
@@ -80,7 +79,7 @@ const features = [
         <tbody>
           {prayers.map((p) => (
             <tr class="border-b border-brand-text-dark/12">
-              <td class="py-3.5 font-display text-lg font-medium text-brand-text-dark">{p.name}</td>
+              <td class="py-3.5 font-display text-lg text-brand-text-dark">{p.name}</td>
               <td class="py-3.5 font-urdu-display text-brand-accent" dir="rtl">{p.arabic}</td>
               <td class="py-3.5 font-mono text-sm text-brand-text-muted">{p.time}</td>
             </tr>

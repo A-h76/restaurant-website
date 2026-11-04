@@ -2,13 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Cta from '../components/Cta.astro';
 import Stone from '../components/Stone.astro';
+import Ticker from '../components/Ticker.astro';
+import RouteRoad from '../components/RouteRoad.astro';
 import DishImage from '../components/menu/DishImage.astro';
 import FoodImage from '../components/FoodImage.astro';
 import MenuItemModal from '../components/menu/MenuItemModal.astro';
 import { findItem, formatPrice, priceSegments, isVerifiedImage } from '../lib/menu.js';
 import { desiCategories, dealCategory } from '../data/menu-catalog.js';
 import { PRAYERS } from '../lib/prayer.js';
-import { PHONE_TEL, PHONE_DISPLAY, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, PLUS_CODE } from '../consts.js';
+import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, PLUS_CODE } from '../consts.js';
 
 const schema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -48,7 +50,7 @@ const familyDeal = findItem([dealCategory], 'Deals', 'Deal A');
 const seekhKabab = muttonKebab ? { ...muttonKebab, name: 'Seekh Kabab' } : null;
 const featured = [muttonKarahi, chickenKarahi, seekhKabab, bbqMix, biryani, familyDeal].filter(Boolean);
 
-// Parchi lines show ONE price: "from ₨X" when a dish has sizes (full list lives in the modal).
+// Ticket lines show ONE price: "from ₨X" when a dish has sizes (full list lives in the modal).
 const featuredRows = featured.map((item) => {
   const verified = isVerifiedImage(item);
   const segs = priceSegments(item.price);
@@ -57,16 +59,21 @@ const featuredRows = featured.map((item) => {
   return { item, verified, priceLabel };
 });
 
-const ticker = [
-  'Fresh Karahi', 'Charcoal BBQ', 'Handmade Naan', 'Mutton · Chicken',
-  'Halal Kitchen', 'Mosque on Site', 'Family Seating', 'Truck & Bus Parking', 'Doodh Patti Chai',
-];
+const heroBand = ['Mosque on site', 'Family hall', 'Truck & bus parking', 'Charcoal BBQ'];
+const menuBand = ['Fresh karahi', 'Charcoal BBQ', 'Tandoori naan', 'Mutton · Chicken · Beef', 'Doodh patti chai', 'Fast food & Chinese'];
 
 const specs = [
   { k: 'Kitchen', v: '100% Halal' },
-  { k: 'On site', v: 'Dedicated Mosque' },
-  { k: 'Seating', v: 'Family & Private' },
+  { k: 'On site', v: 'Dedicated mosque' },
+  { k: 'Seating', v: 'Family & private' },
   { k: 'Parking', v: 'Cars · Buses · Trucks' },
+];
+
+// Three crops of the one storefront photo, taped up as polaroids.
+const polaroids = [
+  { title: 'Open kitchen', text: 'Karahi, BBQ and the tandoor, all in view.', pos: 'object-[6%_50%]', rot: '-rotate-2', sh: '[--sh:var(--color-ink)]', tape: 'bg-marigold/80', head: 'text-brand-accent' },
+  { title: 'Family hall', text: 'A lit arch to walk through. Private seating inside.', pos: 'object-[52%_50%]', rot: 'rotate-1', sh: '[--sh:var(--color-vermilion)]', tape: 'bg-brand-mid/80', head: 'text-brand-mid' },
+  { title: 'Room to park', text: 'Cars, buses and trucks, straight off the road.', pos: 'object-[96%_50%]', rot: '-rotate-1 md:rotate-2', sh: '[--sh:var(--color-olive)]', tape: 'bg-brand-accent/70', head: 'text-brand-text-dark' },
 ];
 
 // ── The journey: five km stones, 8 → 0. Rail, eyebrows and dial all read from this. ──
@@ -79,41 +86,29 @@ const stops = [
 ];
 const stopTop = ['top-0', 'top-1/4', 'top-1/2', 'top-3/4', 'top-full'];
 
-// ── Speedometer geometry: 0 km at −120°, 8 km at +120° (clockwise from 12 o'clock). ──
-const C = 120;
-const pt = (deg, r) => {
+// ── Sunburst gauge geometry (viewBox 400): 24 wedges, every other one marigold. ──
+const pt = (deg: number, r: number) => {
   const a = (deg * Math.PI) / 180;
-  return [C + r * Math.sin(a), C - r * Math.cos(a)];
+  return `${(200 + r * Math.sin(a)).toFixed(2)} ${(200 - r * Math.cos(a)).toFixed(2)}`;
 };
-const kmAngle = (km) => -120 + 30 * km;
-const ticks = Array.from({ length: 17 }, (_, i) => {
-  const major = i % 2 === 0;
-  const [x1, y1] = pt(kmAngle(i / 2), major ? 90 : 97);
-  const [x2, y2] = pt(kmAngle(i / 2), 105);
-  return { x1, y1, x2, y2, major };
+const wedges = Array.from({ length: 24 }, (_, i) => {
+  const a0 = i * 15 + 1.2;
+  const a1 = i * 15 + 13.8;
+  const r1 = 120;
+  const r2 = 184;
+  return `M${pt(a0, r1)}L${pt(a0, r2)}A${r2} ${r2} 0 0 1 ${pt(a1, r2)}L${pt(a1, r1)}A${r1} ${r1} 0 0 0 ${pt(a0, r1)}Z`;
 });
-const labels = Array.from({ length: 9 }, (_, k) => {
-  const [x, y] = pt(kmAngle(k), 76);
-  return { k, x, y };
-});
-const arc = (a0, a1, r) => {
-  const [x0, y0] = pt(a0, r);
-  const [x1, y1] = pt(a1, r);
-  return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
-};
 ---
 
 <BaseLayout
   title="Smart Cook Dera | Restaurant & Mosque on Sahiwal-Arifwala Road | Near Arifwala"
   description="Family restaurant with a dedicated mosque on Sahiwal-Arifwala Road. Fresh Karahi, BBQ, family dining and parking. 8 km from Arifwala. Call now."
   schema={schema}
-  headerVariant="utility"
-  heroHeader
 >
   <!-- ═══ KM RAIL (desktop): the page is the 8 km approach; the marker travels it ═══ -->
   <nav id="km-rail" aria-label="Page sections" class="fixed left-3 top-1/2 z-30 hidden -translate-y-[55%] lg:block xl:left-5">
     <div class="relative h-[50vh] w-10">
-      <span class="absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-2 border-dashed border-brand-accent/70" aria-hidden="true"></span>
+      <span class="absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-[3px] border-dashed border-brand-accent/70" aria-hidden="true"></span>
       {stops.map((s, i) => (
         <a
           href={`#${s.id}`}
@@ -125,9 +120,9 @@ const arc = (a0, a1, r) => {
           <small>km</small><b>{s.km}</b>
         </a>
       ))}
-      <span data-km-marker class="pointer-events-none absolute left-[calc(50%+1.5rem)] top-0 -translate-y-1/2 border-y-[7px] border-r-[10px] border-y-transparent border-r-brand-accent" aria-hidden="true"></span>
+      <span data-km-marker class="pointer-events-none absolute left-[calc(50%+1.6rem)] top-0 -translate-y-1/2 border-y-[7px] border-r-[10px] border-y-transparent border-r-brand-accent" aria-hidden="true"></span>
     </div>
-    <p class="mt-6 w-10 bg-brand-dark/90 py-1.5 text-center font-mono text-brand-cream" aria-hidden="true">
+    <p class="mt-6 w-10 rounded-md border-2 border-brand-text-dark bg-paper-bright py-1.5 text-center font-mono text-brand-text-dark shadow-card-sm" aria-hidden="true">
       <b data-km-readout class="block text-xs">8.0</b>
       <span class="text-[0.46rem] uppercase tracking-[0.08em]">km left</span>
     </p>
@@ -135,171 +130,172 @@ const arc = (a0, a1, r) => {
 
   <!-- KM PILL (mobile/tablet): same journey, one small chip -->
   <div id="km-pill" class="fixed left-3 z-30 bottom-[calc(5.625rem+env(safe-area-inset-bottom))] md:bottom-6 lg:hidden" aria-hidden="true">
-    <div class="relative flex min-h-12 items-center gap-2.5 overflow-hidden border border-brand-cream/20 bg-brand-dark/95 px-3 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-brand-cream shadow-lg">
+    <div class="relative flex min-h-12 items-center gap-2 overflow-hidden rounded-full border-2 border-brand-text-dark bg-paper-bright py-1 pl-1.5 pr-3.5 text-[0.7rem] font-extrabold uppercase tracking-[0.1em] text-brand-text-dark shadow-soft">
       <span class="stone !min-w-0 !px-1.5"><small>km</small><b data-km-now>8</b></span>
       <span data-km-label>Approach</span>
-      <span data-km-bar class="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-brand-accent"></span>
     </div>
   </div>
 
-  <!-- ═══════════════ KM 8 — HERO: highway sign + speedometer + storefront ═══════════════ -->
-  <section class="relative isolate overflow-hidden bg-brand-dark pt-16 md:pt-[4.75rem]" id="hero">
-    <div class="grain pointer-events-none absolute inset-0 -z-10 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
+  <!-- ═══════════════ KM 8 — HERO: the sticker, the title, the sunburst gauge ═══════════════ -->
+  <section class="relative overflow-hidden bg-brand-cream" id="hero">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-9 md:px-10 md:pt-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10 lg:px-16 lg:pb-16">
+      <div data-stagger="100">
+        <div class="hero-in"><span class="sticker">★ Family Restaurant ★</span></div>
 
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-b border-brand-cream/12 px-5 py-3 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-cream/60 md:px-10 lg:px-16">
-      <span class="hero-in">Est. Roadside · Punjab</span>
-      <span class="hero-in hidden sm:inline">Sahiwal — Arifwala Rd</span>
-      <span class="hero-in" dir="ltr">{PLUS_CODE}</span>
-    </div>
+        <h1 class="mt-5 font-display text-[clamp(3.6rem,13.5vw,8.5rem)] font-black leading-[0.9] text-brand-text-dark text-pop">
+          <span class="line-mask"><span>Smart</span></span>
+          <span class="line-mask"><span>Cook</span></span>
+          <span class="line-mask"><span class="text-brand-accent text-pop-ink">Dera</span></span>
+        </h1>
+        <p class="sr-only">سمارٹ کک ڈیرہ</p>
 
-    <div class="mx-auto grid max-w-6xl gap-8 px-5 pb-8 pt-7 md:px-10 md:pt-9 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-14 lg:px-16 lg:pb-9">
-      <div data-stagger="110">
-        <div class="hero-in"><Stone km={8} label="Approaching the Dera" tone="dark" /></div>
-
-        <!-- The sign -->
-        <div class="hero-in relative mt-5 max-w-3xl rounded-2xl bg-brand-mid p-2 shadow-2xl ring-1 ring-brand-cream/10">
-          <div class="relative rounded-xl border-2 border-brand-cream/90 px-5 py-6 sm:px-8 sm:py-7">
-            <span class="absolute left-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
-            <span class="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
-            <span class="absolute bottom-2.5 left-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
-            <span class="absolute bottom-2.5 right-2.5 h-1.5 w-1.5 rounded-full bg-brand-cream/60" aria-hidden="true"></span>
-
-            <div class="flex items-center justify-between gap-4 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-brand-cream/75 sm:text-[0.62rem]">
-              <span>Family Restaurant</span>
-              <span>Arifwala 8 km →</span>
-            </div>
-            <p class="mt-4 font-urdu-display text-2xl leading-tight text-marigold sm:text-4xl">سمارٹ کک ڈیرہ</p>
-            <h1 class="mt-2 font-display text-[clamp(2.2rem,8vw,5.75rem)] font-semibold uppercase leading-[0.9] text-brand-cream">
-              <span class="line-mask"><span>Smart Cook</span></span>
-              <span class="line-mask"><span class="text-marigold">Dera</span></span>
-            </h1>
-            <p class="mt-5 border-t border-brand-cream/40 pt-3 font-mono text-[0.58rem] uppercase tracking-[0.2em] text-brand-cream/75 sm:text-[0.62rem]">
-              Halal Kitchen · Charcoal BBQ · Mosque on Site
-            </p>
-          </div>
-        </div>
-
-        <p data-rise class="mt-6 max-w-xl font-display text-lg italic leading-relaxed text-brand-cream/85 md:text-xl">
-          Good food, good rest — one memorable stop on the road between Sahiwal and Arifwala.
+        <p data-rise class="mt-6 max-w-lg text-balance font-display text-2xl font-black italic leading-tight text-brand-mid md:text-[1.9rem]">
+          Good food, good rest, one stop on the road.
+        </p>
+        <p data-rise class="mt-4 max-w-md text-base leading-relaxed text-brand-text-dark/85 md:text-lg">
+          Iron-pan karahi, coal-fired tikka and naan straight off the tandoor. A proper desi stop between Sahiwal and Arifwala, with family seating and a mosque on site.
         </p>
 
-        <div data-rise class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Cta href="/menu" variant="primary">View the Menu</Cta>
-          <Cta href={MAPS_DIRECTIONS_URL} variant="ghost" tone="cream">Directions →</Cta>
+        <div data-rise class="mt-8 flex flex-wrap items-center gap-4">
+          <Cta href="/menu" variant="primary">See the menu</Cta>
+          <Cta href={MAPS_DIRECTIONS_URL} variant="secondary">Get directions →</Cta>
         </div>
       </div>
 
-      <!-- Speedometer: counts the km left as you scroll down the page -->
-      <div class="hero-in relative mx-auto w-48 sm:w-56 lg:mx-0 lg:w-64">
-        <svg viewBox="0 0 240 240" class="h-auto w-full" role="img" aria-label="Speedometer showing the distance left to the Dera, in kilometres">
-          <circle cx="120" cy="120" r="117" fill="none" stroke="#D9A441" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7" />
-          <circle cx="120" cy="120" r="111" fill="#2A241C" stroke="#E7E1D3" stroke-opacity="0.22" stroke-width="1.5" />
-          <path d={arc(-120, 120, 108)} fill="none" stroke="#E7E1D3" stroke-opacity="0.18" stroke-width="3" />
-          <path d={arc(-120, -90, 108)} fill="none" stroke="#D9A441" stroke-width="4" />
-          {ticks.map((t) => (
-            <line x1={t.x1.toFixed(2)} y1={t.y1.toFixed(2)} x2={t.x2.toFixed(2)} y2={t.y2.toFixed(2)} stroke="#E7E1D3" stroke-opacity={t.major ? 0.9 : 0.4} stroke-width={t.major ? 2 : 1.2} />
-          ))}
-          {labels.map((l) => (
-            <text x={l.x.toFixed(2)} y={(l.y + 4).toFixed(2)} text-anchor="middle" font-size="11" class="fill-brand-cream/80 font-mono">{l.k}</text>
-          ))}
-          <text x="120" y="168" text-anchor="middle" font-size="9" letter-spacing="2.2" class="fill-brand-cream/60 font-mono">KM TO THE DERA</text>
-          <text data-dial-readout x="120" y="196" text-anchor="middle" font-size="26" font-weight="700" class="fill-brand-cream font-mono">8.0</text>
-          <g data-needle transform="rotate(120 120 120)">
-            <polygon points="116.5,124 123.5,124 120,34" fill="#C33F26" />
-            <polygon points="118.6,124 121.4,124 120,60" fill="#F1ECE0" fill-opacity="0.35" />
+      <!-- Sunburst gauge: spins as you "drive" and counts the km left -->
+      <div class="hero-in relative mx-auto w-full max-w-[24rem] lg:max-w-[28rem]">
+        <svg viewBox="0 0 400 400" class="h-auto w-full overflow-visible" role="img" aria-label="Gauge showing the kilometres left to the Dera, counting down as you scroll">
+          <circle cx="200" cy="200" r="190" fill="#3B2217" />
+          <circle cx="194" cy="194" r="190" fill="#FFFBF0" stroke="#3B2217" stroke-width="5" />
+          <g data-burst transform="rotate(0 200 200)">
+            {wedges.map((d, i) => (
+              <path d={d} fill={i % 2 ? '#E9A61A' : '#F4E8D0'} stroke="#3B2217" stroke-width="2.5" stroke-linejoin="round" />
+            ))}
           </g>
-          <circle cx="120" cy="120" r="9" fill="#1B1712" stroke="#D9A441" stroke-width="2" />
-          <circle cx="120" cy="120" r="3" fill="#D9A441" />
+          <circle cx="207" cy="207" r="112" fill="#3B2217" />
+          <circle cx="200" cy="200" r="112" fill="#FFFBF0" stroke="#3B2217" stroke-width="5" />
+          <text x="200" y="138" text-anchor="middle" font-size="14" letter-spacing="3" class="fill-brand-text-dark font-sans" font-weight="800">KM TO THE DERA</text>
+          <text data-dial-readout x="205" y="238" text-anchor="middle" font-size="104" font-weight="900" class="fill-brand-text-dark font-display">8</text>
+          <text data-dial-readout x="200" y="233" text-anchor="middle" font-size="104" font-weight="900" class="fill-brand-accent font-display">8</text>
+          <text x="200" y="270" text-anchor="middle" font-size="18" class="fill-brand-mid font-urdu-display">عارف والا سے پہلے</text>
+          <rect x="140" y="286" width="120" height="26" rx="13" fill="#FFFBF0" stroke="#3B2217" stroke-width="2.5" />
+          <text x="200" y="304" text-anchor="middle" font-size="12.5" letter-spacing="2" class="fill-brand-text-dark font-sans" font-weight="800">{PLUS_CODE}</text>
         </svg>
+        <!-- 100% Halal badge -->
+        <div class="absolute -right-1 -top-2 flex h-24 w-24 rotate-[14deg] flex-col items-center justify-center rounded-full border-2 border-brand-text-dark bg-brand-accent text-brand-cream shadow-soft md:h-28 md:w-28" aria-hidden="true">
+          <span class="font-display text-2xl font-black leading-none md:text-3xl">100%</span>
+          <span class="mt-0.5 text-[0.6rem] font-extrabold uppercase tracking-[0.2em] md:text-[0.68rem]">Halal</span>
+        </div>
       </div>
-    </div>
-
-    <!-- The storefront, uncropped: the night sky melts into the hero ground -->
-    <div class="relative">
-      <img
-        src="/images/storefront.webp"
-        srcset="/images/storefront-sm.webp 820w, /images/storefront.webp 1485w"
-        sizes="100vw"
-        alt="Smart Cook Dera family restaurant storefront lit up at night"
-        width="1485"
-        height="595"
-        decoding="async"
-        class="block aspect-[2/1] max-h-[58vh] w-full object-cover object-[center_45%] md:aspect-[5/2]"
-      />
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-brand-dark to-transparent"></div>
     </div>
   </section>
 
-  <!-- ═══════════════ TICKER + hanging fringe (truck-art jhalar) ═══════════════ -->
-  <div class="marquee-host relative overflow-hidden border-y border-brand-dark bg-brand-accent py-3 text-brand-cream">
-    <div class="marquee" aria-hidden="true">
-      {[0, 1].map(() => (
-        <div class="flex shrink-0 items-center">
-          {ticker.map((t) => (
-            <span class="flex items-center font-mono text-[0.72rem] font-semibold uppercase tracking-[0.16em]">
-              <span class="px-6">{t}</span>
-              <span class="text-marigold">✦</span>
-            </span>
-          ))}
-        </div>
-      ))}
-    </div>
-    <span class="sr-only">Fresh karahi, charcoal BBQ, handmade naan, halal kitchen, mosque on site, family seating and parking for trucks and buses.</span>
-  </div>
-  <div class="fringe" aria-hidden="true"></div>
+  <Ticker items={heroBand} label="Mosque on site, family hall, truck and bus parking, charcoal BBQ." />
 
-  <!-- ═══════════════ KM 6 — THE DERA: statement + spec sheet ═══════════════ -->
-  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16" id="dera">
-    <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.5fr_1fr] md:gap-16">
+  <!-- ═══════════════ KM 6 — THE STOP: three taped polaroids ═══════════════ -->
+  <section class="bg-paper-dim px-5 py-section-md md:px-10 lg:px-16" id="dera">
+    <div class="mx-auto max-w-6xl">
+      <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+        <div data-stagger="90">
+          <div data-rise><Stone km={6} label="The stop" /></div>
+          <h2 data-rise class="mt-5 font-display text-display font-black leading-[0.98] text-brand-text-dark text-pop-white">
+            Lit up after dark,<br /><span class="text-brand-accent">open for you.</span>
+          </h2>
+        </div>
+        <p data-rise class="font-urdu-display text-2xl leading-[1.8] text-brand-mid md:text-4xl" dir="rtl">رکیے، کھائیے، آرام کیجیے</p>
+      </div>
+
+      <div class="mt-14 grid gap-12 md:grid-cols-3 md:gap-8" data-stagger="120">
+        {polaroids.map((p) => (
+          <figure data-rise class={`polaroid relative px-3 pb-5 pt-3 ${p.rot} ${p.sh}`}>
+            <span class={`absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-3 ${p.tape}`} aria-hidden="true"></span>
+            <div class="aspect-square overflow-hidden border-2 border-brand-text-dark">
+              <img
+                src="/images/storefront.webp"
+                alt={`${p.title} at Smart Cook Dera`}
+                width="1485"
+                height="595"
+                loading="lazy"
+                decoding="async"
+                sizes="(min-width: 768px) 30vw, 90vw"
+                class={`h-full w-full origin-bottom scale-[1.28] object-cover ${p.pos}`}
+              />
+            </div>
+            <figcaption class="mt-4">
+              <p class={`font-display text-2xl font-black leading-tight ${p.head}`}>{p.title}</p>
+              <p class="mt-1 text-sm leading-snug text-brand-text-dark/85">{p.text}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Ticker items={menuBand} tone="red" label="Fresh karahi, charcoal BBQ, tandoori naan, mutton, chicken and beef, doodh patti chai, fast food and Chinese." />
+
+  <!-- ═══════════════ THE DERA: statement + ticket ═══════════════ -->
+  <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16">
+    <div class="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-[1.4fr_1fr] md:gap-16">
       <div data-stagger="90">
-        <div data-rise><Stone km={6} label="The Dera" urdu="ڈیرہ" /></div>
-        <h2 class="mt-5 font-display text-heading font-medium leading-[1.08] text-brand-text-dark">
-          <span class="line-mask"><span>A roadside kitchen where</span></span>
-          <span class="line-mask"><span>the karahi is fresh and</span></span>
-          <span class="line-mask"><span>the stop is yours to keep.</span></span>
+        <h2 class="font-display text-heading font-black leading-[1.05] text-brand-text-dark text-pop">
+          <span class="line-mask"><span>A roadside kitchen</span></span>
+          <span class="line-mask"><span>where the karahi is</span></span>
+          <span class="line-mask"><span>fresh and the stop is</span></span>
+          <span class="line-mask"><span class="text-brand-accent text-pop-ink">yours to keep.</span></span>
         </h2>
-        <p data-rise class="mt-6 max-w-xl text-brand-text-muted">
-          Between two towns, on a long highway, Smart Cook Dera is the place to pull over — bone-in mutton karahi from the iron pan, charcoal BBQ, hot naan straight off the tandoor, and a quiet mosque for prayer before you drive on.
+        <p data-rise class="mt-6 max-w-xl text-base leading-relaxed text-brand-text-dark/85 md:text-lg">
+          Between two towns on a long highway, this is the place to pull over: bone-in mutton karahi from the iron pan, charcoal BBQ, hot naan off the tandoor, and a quiet mosque for prayer before you drive on.
         </p>
-        <div data-rise class="mt-8">
-          <Cta href="/menu" variant="secondary">Explore the Menu</Cta>
+        <div data-rise class="mt-8 flex flex-wrap items-center gap-4">
+          <Cta href="/menu" variant="primary">Explore the menu</Cta>
+          <Cta href={WHATSAPP_URL} variant="secondary" target="_blank" rel="noopener noreferrer">WhatsApp <span dir="ltr">{WHATSAPP_DISPLAY}</span></Cta>
         </div>
       </div>
 
-      <aside class="md:pt-1" data-stagger="70" aria-label="At a glance">
-        <div class="mb-4 h-px w-full origin-left bg-brand-text-dark/20" data-route-x></div>
-        {specs.map((s) => (
-          <div data-rise class="flex items-baseline justify-between gap-4 border-b border-brand-text-dark/12 py-3.5">
-            <span class="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-brand-text-muted">{s.k}</span>
-            <span class="text-right font-display text-lg font-medium text-brand-text-dark">{s.v}</span>
-          </div>
-        ))}
+      <!-- Admit-all ticket -->
+      <aside data-rise class="ticket w-full max-w-sm rotate-2 overflow-hidden md:justify-self-end" aria-label="At a glance">
+        <div class="flex items-center justify-between gap-3 border-b-2 border-brand-text-dark bg-brand-mid px-5 py-3 text-brand-cream">
+          <span class="font-display text-2xl font-black italic">Admit all</span>
+          <span class="text-[0.68rem] font-extrabold uppercase tracking-[0.2em]">Smart Cook Dera</span>
+        </div>
+        <div class="px-5">
+          {specs.map((s) => (
+            <div class="flex items-baseline justify-between gap-4 border-b-2 border-dotted border-brand-text-dark/40 py-3.5 last:border-b-0">
+              <span class="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-brand-text-muted">{s.k}</span>
+              <span class="text-right font-display text-lg font-black text-brand-text-dark">{s.v}</span>
+            </div>
+          ))}
+        </div>
+        <div class="border-t-2 border-dashed border-brand-text-dark px-5 pb-5 pt-4">
+          <div class="barcode" aria-hidden="true"></div>
+          <p class="mt-2 text-center text-[0.7rem] font-extrabold tracking-[0.3em] text-brand-text-dark" dir="ltr">No. {PLUS_CODE}</p>
+        </div>
       </aside>
     </div>
   </section>
 
   <!-- ═══════════════ KM 4 — SIGNATURE: the dera parchi, heated by the tandoor ═══════════════ -->
-  <section class="heat-section border-t border-brand-text-dark/10 px-5 py-section-lg md:px-10 lg:px-16" id="signature" data-heat>
+  <section class="heat-section border-y-2 border-brand-text-dark px-5 py-section-lg md:px-10 lg:px-16" id="signature" data-heat>
     <div class="mx-auto max-w-6xl">
       <div data-rise><Stone km={4} label="Signature" urdu="خاص پکوان" /></div>
-      <h2 data-rise class="mt-4 font-display text-display font-medium leading-none text-brand-text-dark">From the pan &amp; coals</h2>
+      <h2 data-rise class="mt-5 font-display text-display font-black leading-none text-brand-text-dark text-pop-white">From the pan &amp; coals</h2>
 
       <div class="mt-14 grid items-start gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
         <!-- The parchi -->
-        <div data-rise class="parchi bg-paper-bright pb-6 pt-7" id="parchi">
+        <div data-rise class="ticket overflow-hidden pb-6 pt-7 [--sh:var(--color-olive)]" id="parchi">
           <div class="flex items-start justify-between gap-4 px-5 md:px-8">
             <div>
-              <p class="font-display text-3xl font-semibold uppercase leading-none tracking-wide text-brand-text-dark md:text-4xl">Dera Parchi</p>
-              <p class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Today’s picks · tap a line to order</p>
+              <p class="font-display text-3xl font-black uppercase leading-none tracking-wide text-brand-text-dark md:text-4xl">Dera Parchi</p>
+              <p class="mt-2 text-[0.7rem] font-extrabold uppercase tracking-[0.18em] text-brand-text-muted">Today’s picks · tap a line to order</p>
             </div>
-            <span class="mt-1 -rotate-12 shrink-0 select-none rounded-full border-2 border-brand-accent px-2 py-3 text-center font-mono text-[0.5rem] font-bold uppercase leading-tight tracking-[0.14em] text-brand-accent opacity-90 md:text-[0.56rem]" aria-hidden="true">
+            <span class="mt-1 -rotate-12 shrink-0 select-none rounded-full border-[3px] border-brand-accent px-2 py-3 text-center text-[0.52rem] font-black uppercase leading-tight tracking-[0.12em] text-brand-accent md:text-[0.58rem]" aria-hidden="true">
               Fresh<br />Halal<br />Daily
             </span>
           </div>
 
-          <ol class="mt-6 border-t-2 border-dashed border-brand-text-dark/25" data-stagger="60">
+          <ol class="mt-6 border-t-2 border-dashed border-brand-text-dark" data-stagger="60">
             {featuredRows.map(({ item, verified, priceLabel }, i) => (
-              <li data-rise class="border-b border-dashed border-brand-text-dark/15">
+              <li data-rise class="border-b-2 border-dashed border-brand-text-dark/25">
                 <button
                   type="button"
                   data-menu-item
@@ -317,12 +313,12 @@ const arc = (a0, a1, r) => {
                   data-image-fit={item.imageFit ?? 'cover'}
                   data-items={item.items ? item.items.join('||') : ''}
                   aria-haspopup="dialog"
-                  class="group flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-brand-cream focus-visible:bg-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-accent md:gap-4 md:px-8"
+                  class="group flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-paper-dim focus-visible:bg-paper-dim focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-accent md:gap-4 md:px-8"
                 >
-                  <span class="hidden w-6 shrink-0 font-mono text-xs text-brand-text-muted transition-colors group-hover:text-brand-accent sm:block">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="hidden w-6 shrink-0 font-mono text-sm text-brand-text-muted transition-colors group-hover:text-brand-accent sm:block">{String(i + 1).padStart(2, '0')}</span>
 
                   <!-- Mobile: every dish keeps its photo as a small polaroid -->
-                  <span class="block h-14 w-[4.5rem] shrink-0 -rotate-2 bg-white p-1 shadow-sm lg:hidden">
+                  <span class="block h-14 w-[4.5rem] shrink-0 -rotate-2 border-2 border-brand-text-dark bg-white p-0.5 shadow-card-sm lg:hidden">
                     <span class="block h-full w-full overflow-hidden bg-brand-dark">
                       <DishImage src={item.image} thumbSrc={item.imageThumb} alt="" verified={verified} sizes="72px" iconSize={20} fit={item.imageFit ?? 'cover'} />
                     </span>
@@ -330,39 +326,39 @@ const arc = (a0, a1, r) => {
 
                   <span class="min-w-0 flex-1 sm:flex-none">
                     <span class="flex flex-wrap items-baseline gap-x-3">
-                      <span class="font-display text-lg font-medium leading-tight text-brand-text-dark md:text-2xl">{item.name}</span>
+                      <span class="font-display text-lg font-black leading-tight text-brand-text-dark md:text-2xl">{item.name}</span>
                       {item.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{item.urdu}</span>}
                     </span>
-                    <span class="mt-0.5 block font-mono text-[0.58rem] uppercase tracking-[0.16em] text-brand-text-muted">{item.category}</span>
+                    <span class="mt-0.5 block text-[0.62rem] font-extrabold uppercase tracking-[0.16em] text-brand-text-muted">{item.category}</span>
                   </span>
 
                   <span class="leader mb-2 hidden min-w-6 flex-1 self-end sm:block" aria-hidden="true"></span>
 
-                  {priceLabel && <span class="shrink-0 text-right font-mono text-[0.8rem] font-bold tabular-nums text-brand-text-dark md:text-sm" dir="ltr">{priceLabel}</span>}
-                  <span class="hidden shrink-0 font-mono text-brand-accent transition-transform duration-200 group-hover:translate-x-1 md:inline" aria-hidden="true">→</span>
+                  {priceLabel && <span class="shrink-0 text-right text-[0.85rem] font-extrabold tabular-nums text-brand-text-dark md:text-base" dir="ltr">{priceLabel}</span>}
+                  <span class="hidden shrink-0 font-black text-brand-accent transition-transform duration-200 group-hover:translate-x-1 md:inline" aria-hidden="true">→</span>
                 </button>
               </li>
             ))}
           </ol>
 
-          <div class="flex items-center justify-between gap-4 px-5 pt-5 md:px-8">
-            <p class="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-brand-text-muted">Cooked to order · Mutton &amp; Chicken</p>
-            <Cta href="/menu" variant="primary">Full Menu</Cta>
+          <div class="flex flex-wrap items-center justify-between gap-4 px-5 pt-5 md:px-8">
+            <p class="text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-brand-text-muted">Cooked to order · Mutton &amp; Chicken</p>
+            <Cta href="/menu" variant="primary">Full menu</Cta>
           </div>
         </div>
 
-        <!-- Desktop stage: the dish lifts off the parchi as a polaroid -->
-        <div class="hidden lg:sticky lg:top-28 lg:block" aria-hidden="true">
+        <!-- Desktop stage: the dish lifts off the parchi as a taped polaroid -->
+        <div class="hidden lg:sticky lg:top-32 lg:block" aria-hidden="true">
           <div class="mx-auto grid w-full max-w-sm">
             {featuredRows.map(({ item, verified, priceLabel }, i) => (
-              <figure data-stage data-active={i === 0 ? '' : undefined} class="relative cursor-pointer bg-[#FBF8F0] p-3 pb-16 shadow-xl [grid-area:1/1]">
-                <span class="absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-3 bg-marigold/70"></span>
-                <div class="aspect-[4/3] overflow-hidden bg-brand-dark">
+              <figure data-stage data-active={i === 0 ? '' : undefined} class={`polaroid relative cursor-pointer px-3 pb-16 pt-3 [grid-area:1/1] ${i % 2 ? '[--sh:var(--color-vermilion)]' : '[--sh:var(--color-ink)]'}`}>
+                <span class="absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2 -rotate-3 bg-marigold/80"></span>
+                <div class="aspect-[4/3] overflow-hidden border-2 border-brand-text-dark bg-brand-dark">
                   <DishImage src={item.image} thumbSrc={item.imageThumb} alt="" verified={verified} sizes="384px" iconSize={40} fit={item.imageFit ?? 'cover'} />
                 </div>
                 <figcaption class="absolute inset-x-4 bottom-4 flex items-baseline justify-between gap-3">
-                  <span class="font-display text-xl italic leading-tight text-brand-text-dark">{item.name}</span>
-                  {priceLabel && <span class="shrink-0 font-mono text-[0.7rem] font-bold text-brand-accent" dir="ltr">{priceLabel}</span>}
+                  <span class="font-display text-xl font-black italic leading-tight text-brand-text-dark">{item.name}</span>
+                  {priceLabel && <span class="shrink-0 text-sm font-extrabold text-brand-accent" dir="ltr">{priceLabel}</span>}
                 </figcaption>
               </figure>
             ))}
@@ -373,49 +369,50 @@ const arc = (a0, a1, r) => {
   </section>
 
   <!-- ═══════════════ KM 2 — PRAYER: the quiet register, aware of the hour ═══════════════ -->
+  <div class="stripes" aria-hidden="true"></div>
   <section class="relative overflow-hidden bg-brand-green px-5 py-section-lg text-brand-cream md:px-10 lg:px-16" id="prayer" data-prayer-section>
-    <div class="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
+    <div class="bg-geo pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
     <div class="relative mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-16">
       <div data-stagger="90">
         <div data-rise><Stone km={2} label="On the premises" urdu="احاطے میں" tone="dark" /></div>
-        <h2 class="mt-5 font-display text-display font-medium leading-[1.05]">
+        <h2 class="mt-5 font-display text-display font-black leading-[1.02] text-brand-cream text-pop-red">
           <span class="line-mask"><span>A mosque for</span></span>
           <span class="line-mask"><span>the traveller.</span></span>
         </h2>
-        <p data-rise class="mt-6 max-w-md leading-relaxed text-brand-cream/75">
+        <p data-rise class="mt-6 max-w-md text-base leading-relaxed text-brand-cream/85 md:text-lg">
           Not a prayer corner — a dedicated mosque with a resident Imam leading all five daily prayers. Stop, pray in congregation, and continue your journey with a fresh meal.
         </p>
 
         <!-- Live prayer panel: filled in by JS, hidden without it -->
-        <div data-prayer-panel hidden class="mt-8 max-w-md border border-brand-cream/20 bg-brand-dark/35 p-5">
+        <div data-prayer-panel hidden class="mt-8 max-w-md rounded-2xl border-2 border-brand-cream/60 bg-brand-dark/30 p-5">
           <div class="flex items-center gap-4">
             <svg class="crescent-glow h-12 w-12 shrink-0 text-marigold" viewBox="0 0 48 48" aria-hidden="true">
               <path d="M32 6a18 18 0 1 0 10 32A14 14 0 0 1 32 6z" fill="currentColor" />
               <circle cx="38" cy="14" r="1.6" fill="currentColor" />
             </svg>
             <div aria-live="polite">
-              <p data-pr-eyebrow class="font-mono text-[0.58rem] uppercase tracking-[0.24em] text-brand-accent-light">Next prayer</p>
-              <p class="mt-1 font-display text-2xl leading-tight sm:text-3xl">
-                <span data-pr-name>Asr</span> <span data-pr-urdu class="font-urdu-display text-lg text-brand-cream/70" dir="rtl"></span>
+              <p data-pr-eyebrow class="text-[0.66rem] font-extrabold uppercase tracking-[0.22em] text-brand-accent-light">Next prayer</p>
+              <p class="mt-1 font-display text-3xl font-black leading-tight">
+                <span data-pr-name>Asr</span> <span data-pr-urdu class="font-urdu-display text-lg font-normal text-brand-cream/80" dir="rtl"></span>
               </p>
-              <p data-pr-when class="mt-0.5 font-mono text-xs text-brand-cream/80"></p>
+              <p data-pr-when class="mt-0.5 text-sm font-semibold text-brand-cream/90"></p>
             </div>
           </div>
-          <ol class="mt-5 grid grid-cols-5 border-t border-brand-cream/15 pt-3 text-center">
+          <ol class="mt-5 grid grid-cols-5 border-t-2 border-dashed border-brand-cream/30 pt-3 text-center">
             {PRAYERS.map((p) => (
-              <li data-pr-key={p.key} class="px-0.5 font-mono text-brand-cream/60 aria-[current=true]:text-marigold">
-                <span class="block text-[0.52rem] uppercase tracking-[0.14em] sm:text-[0.58rem]">{p.name}</span>
-                <span data-pr-time class="mt-1 block text-[0.62rem] font-bold sm:text-xs">—</span>
+              <li data-pr-key={p.key} class="px-0.5 text-brand-cream/70 aria-[current=true]:text-marigold">
+                <span class="block text-[0.56rem] font-extrabold uppercase tracking-[0.1em] sm:text-[0.64rem]">{p.name}</span>
+                <span data-pr-time class="mt-1 block text-[0.64rem] font-extrabold sm:text-xs">—</span>
               </li>
             ))}
           </ol>
-          <p class="mt-4 font-mono text-[0.54rem] uppercase leading-relaxed tracking-[0.14em] text-brand-cream/50">
+          <p class="mt-4 text-[0.6rem] font-bold uppercase leading-relaxed tracking-[0.12em] text-brand-cream/65">
             Calculated for Arifwala (Karachi method, Hanafi Asr) · approximate — jamaat times are set by the Imam
           </p>
         </div>
 
         <div data-rise class="mt-8">
-          <Cta href="/prayer-facility" variant="primary">Prayer Facility →</Cta>
+          <Cta href="/prayer-facility" variant="primary">Prayer facility →</Cta>
         </div>
       </div>
 
@@ -434,56 +431,35 @@ const arc = (a0, a1, r) => {
       </div>
     </div>
   </section>
+  <div class="stripes" aria-hidden="true"></div>
 
   <!-- ═══════════════ KM 0 — ARRIVED: the road, the map ═══════════════ -->
   <section class="bg-brand-cream px-5 py-section-lg md:px-10 lg:px-16" id="find">
     <div class="mx-auto max-w-6xl">
       <div data-rise><Stone km={0} label="Arrived" urdu="پتہ" /></div>
-      <h2 data-rise class="mt-4 max-w-2xl font-display text-display font-medium leading-[1.05] text-brand-text-dark">
+      <h2 data-rise class="mt-5 max-w-3xl font-display text-display font-black leading-[1.02] text-brand-text-dark text-pop">
         A milestone between two towns.
       </h2>
 
-      <!-- The road: the truck drives in and parks at the Dera, 8 km before Arifwala -->
-      <div data-rise data-route-wrap class="mt-14" role="img" aria-label="Road from Sahiwal to Arifwala with Smart Cook Dera 8 kilometres before Arifwala">
-        <div class="relative pt-9">
-          <p class="absolute left-[80%] top-0 -translate-x-1/2 whitespace-nowrap font-mono text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-brand-accent">◆ Smart Cook Dera</p>
-          <div class="relative h-4 bg-brand-dark">
-            <span class="road-dash absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2"></span>
-            <span class="route-truck absolute left-[80%] top-1/2 -translate-x-1/2 -translate-y-[78%]">
-              <svg width="38" height="22" viewBox="0 0 38 22" aria-hidden="true">
-                <rect x="1" y="3" width="22" height="13" fill="#C33F26" />
-                <rect x="1" y="3" width="22" height="2.4" fill="#D9A441" />
-                <path d="M23 7h7l6 5v4H23z" fill="#D9A441" />
-                <circle cx="9" cy="17.5" r="3.4" fill="#1B1712" stroke="#E7E1D3" stroke-width="1.2" />
-                <circle cx="29" cy="17.5" r="3.4" fill="#1B1712" stroke="#E7E1D3" stroke-width="1.2" />
-              </svg>
-            </span>
-          </div>
-          <div class="absolute left-[80%] right-0 top-full mt-1.5 border-t-2 border-brand-accent pt-1 text-center font-mono text-[0.56rem] uppercase tracking-[0.2em] text-brand-accent">8 km</div>
-        </div>
-        <div class="mt-9 flex justify-between font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-text-muted">
-          <span>Sahiwal</span>
-          <span>Arifwala</span>
-        </div>
-      </div>
+      <RouteRoad class="mt-14" />
 
       <div class="mt-12 grid gap-10 md:grid-cols-[1fr_1.3fr] md:gap-14">
         <div data-stagger="70">
-          <div data-rise class="border-b border-brand-text-dark/12 py-3.5">
-            <span class="block font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Address</span>
-            <span class="mt-1 block text-brand-text-dark">Sahiwal–Arifwala–Bahawalnagar Road, near Arifwala, Pakpattan District, Punjab</span>
+          <div data-rise class="border-b-2 border-dashed border-brand-text-dark/30 py-3.5">
+            <span class="block text-[0.66rem] font-extrabold uppercase tracking-[0.2em] text-brand-text-muted">Address</span>
+            <span class="mt-1 block font-semibold text-brand-text-dark">Sahiwal–Arifwala–Bahawalnagar Road, near Arifwala, Pakpattan District, Punjab</span>
           </div>
-          <div data-rise class="border-b border-brand-text-dark/12 py-3.5">
-            <span class="block font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Plus Code</span>
-            <span class="mt-1 block font-mono text-brand-text-dark" dir="ltr">{PLUS_CODE}</span>
+          <div data-rise class="border-b-2 border-dashed border-brand-text-dark/30 py-3.5">
+            <span class="block text-[0.66rem] font-extrabold uppercase tracking-[0.2em] text-brand-text-muted">Plus Code</span>
+            <span class="mt-1 block font-display text-xl font-black text-brand-text-dark" dir="ltr">{PLUS_CODE}</span>
           </div>
-          <div data-rise class="border-b border-brand-text-dark/12 py-3.5">
-            <span class="block font-mono text-[0.6rem] uppercase tracking-[0.2em] text-brand-text-muted">Parking</span>
-            <span class="mt-1 block text-brand-text-dark">Ample space for cars, buses and trucks</span>
+          <div data-rise class="border-b-2 border-dashed border-brand-text-dark/30 py-3.5">
+            <span class="block text-[0.66rem] font-extrabold uppercase tracking-[0.2em] text-brand-text-muted">Parking</span>
+            <span class="mt-1 block font-semibold text-brand-text-dark">Ample space for cars, buses and trucks</span>
           </div>
-          <div data-rise class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <Cta href={MAPS_DIRECTIONS_URL} variant="primary">Get Directions</Cta>
-            <Cta href={PHONE_TEL} variant="ghost" tone="dark">{PHONE_DISPLAY}</Cta>
+          <div data-rise class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <Cta href={MAPS_DIRECTIONS_URL} variant="primary">Get directions</Cta>
+            <Cta href={PHONE_TEL} variant="ghost" tone="dark"><span dir="ltr">{PHONE_DISPLAY}</span></Cta>
           </div>
         </div>
 
@@ -512,7 +488,7 @@ const arc = (a0, a1, r) => {
     const $ = (sel: string, root: ParentNode = document) => root.querySelector<HTMLElement>(sel);
     const $$ = (sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<HTMLElement>(sel));
 
-    // ── THE JOURNEY: one scroll value (km left, 8 → 0) drives rail, pill and dial ──
+    // ── THE JOURNEY: one scroll value (km left, 8 → 0) drives rail, pill and gauge ──
     const TOTAL_KM = 8;
     const railStops = $$('#km-rail [data-km-stop]');
     const sections = railStops.map((a) => document.getElementById(a.dataset.kmStop!)!);
@@ -521,14 +497,13 @@ const arc = (a0, a1, r) => {
     const railReadout = $('[data-km-readout]');
     const pillNow = $('[data-km-now]');
     const pillLabel = $('[data-km-label]');
-    const pillBar = $('[data-km-bar]');
-    const needle = document.querySelector('[data-needle]');
-    const dialReadout = document.querySelector('[data-dial-readout]');
+    const burst = document.querySelector('[data-burst]');
+    const dialReadouts = Array.from(document.querySelectorAll('[data-dial-readout]'));
     const heatEl = $('[data-heat]');
     const labels = ['Approach', 'The Dera', 'Signature', 'Prayer', 'Arrived'];
 
     let tops: number[] = [];
-    let intro = reduce ? 1 : 0; // the speedometer revs up from 0 on load
+    let intro = reduce ? 1 : 0; // the gauge spins up and counts from 0 on load
     let active = -1;
 
     const measure = () => {
@@ -559,21 +534,16 @@ const arc = (a0, a1, r) => {
       if (marker) marker.style.top = progress * 100 + '%';
       if (railReadout) railReadout.textContent = arrived ? 'Here' : km.toFixed(1);
       if (pillNow) pillNow.textContent = String(Math.round(km));
-      if (pillBar) pillBar.style.transform = `scaleX(${progress.toFixed(3)})`;
       if (now !== active) {
         active = now;
         railStops.forEach((a, i) => a.setAttribute('aria-current', String(i === now)));
         if (pillLabel) pillLabel.textContent = labels[now];
       }
 
-      // Dial: same km, scaled by the rev-up intro.
+      // Gauge: the sunburst turns as you "drive"; the big number is the same km.
       const kmDial = km * intro;
-      needle?.setAttribute('transform', `rotate(${(-120 + 30 * kmDial).toFixed(2)} 120 120)`);
-      if (dialReadout) {
-        const done = intro >= 1 && arrived;
-        dialReadout.textContent = done ? 'ARRIVED' : kmDial.toFixed(1);
-        dialReadout.setAttribute('font-size', done ? '19' : '26');
-      }
+      burst?.setAttribute('transform', `rotate(${(progress * 150 + (1 - intro) * 120).toFixed(2)} 200 200)`);
+      dialReadouts.forEach((t) => (t.textContent = String(Math.round(kmDial))));
 
       // Tandoor heat peaks when the signature section is centred in view.
       if (heatEl && !reduce) {

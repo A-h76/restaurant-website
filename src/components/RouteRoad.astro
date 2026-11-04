@@ -1,0 +1,31 @@
+---
+// The road between Sahiwal and Arifwala. The truck drives in on reveal and
+// parks at the Dera, 8 km before Arifwala. Used on the home and location pages.
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div data-rise data-route-wrap class={className} role="img" aria-label="Road from Sahiwal to Arifwala with Smart Cook Dera 8 kilometres before Arifwala">
+  <div class="relative pt-10">
+    <p class="absolute left-[80%] top-0 -translate-x-1/2 whitespace-nowrap rounded-full border-2 border-brand-text-dark bg-marigold px-3 py-0.5 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-brand-text-dark shadow-card-sm">★ Smart Cook Dera</p>
+    <div class="relative h-5 rounded-full border-2 border-brand-text-dark bg-brand-dark">
+      <span class="road-dash absolute inset-x-3 top-1/2 h-[3px] -translate-y-1/2"></span>
+      <span class="route-truck absolute left-[80%] top-1/2 -translate-x-1/2 -translate-y-[80%]">
+        <svg width="42" height="24" viewBox="0 0 38 22" aria-hidden="true">
+          <rect x="1" y="3" width="22" height="13" fill="#B83C0A" stroke="#3B2217" stroke-width="1.2" />
+          <rect x="1" y="3" width="22" height="2.4" fill="#E9A61A" />
+          <path d="M23 7h7l6 5v4H23z" fill="#E9A61A" stroke="#3B2217" stroke-width="1.2" />
+          <circle cx="9" cy="17.5" r="3.4" fill="#3B2217" stroke="#F4E8D0" stroke-width="1.2" />
+          <circle cx="29" cy="17.5" r="3.4" fill="#3B2217" stroke="#F4E8D0" stroke-width="1.2" />
+        </svg>
+      </span>
+    </div>
+    <div class="absolute left-[80%] right-0 top-full mt-1.5 border-t-[3px] border-brand-accent pt-1 text-center text-[0.64rem] font-extrabold uppercase tracking-[0.2em] text-brand-accent">8 km</div>
+  </div>
+  <div class="mt-10 flex justify-between text-[0.72rem] font-extrabold uppercase tracking-[0.16em] text-brand-text-muted">
+    <span>Sahiwal</span>
+    <span>Arifwala</span>
+  </div>
+</div>

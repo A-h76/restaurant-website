@@ -1,0 +1,28 @@
+---
+// Tri-stripe + signage band: a slow marquee of short claims. Duplicated track
+// for a seamless loop; stops under reduced-motion. Screen readers get `label`.
+interface Props {
+  items: string[];
+  label: string;
+  tone?: 'olive' | 'red';
+}
+const { items, label, tone = 'olive' } = Astro.props;
+const bg = tone === 'red' ? 'bg-brand-accent' : 'bg-brand-mid';
+---
+
+<div class="stripes" aria-hidden="true"></div>
+<div class={`marquee-host relative overflow-hidden ${bg} py-3.5 text-brand-cream`}>
+  <div class="marquee" aria-hidden="true">
+    {[0, 1].map(() => (
+      <div class="flex shrink-0 items-center">
+        {items.map((t) => (
+          <span class="flex items-center text-[0.8rem] font-extrabold uppercase tracking-[0.18em]">
+            <span class="px-6">{t}</span>
+            <span class="text-marigold">★</span>
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+  <span class="sr-only">{label}</span>
+</div>

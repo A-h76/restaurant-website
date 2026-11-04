@@ -1,6 +1,6 @@
 ---
 // Shared "icon + heading + text" card — used by /location, /contact and
-// /prayer-facility. Squared, hairline-bordered, editorial.
+// /prayer-facility. Inked outline with a hard offset shadow.
 interface Props {
   icon: string; // raw inline <svg>...</svg> markup, stroke set to currentColor
   heading: string;
@@ -10,16 +10,18 @@ interface Props {
 }
 
 const { icon, heading, tone = 'dark', align = 'left', class: className = '' } = Astro.props;
+// 'dark' = the olive card; 'light' = the white ticket.
 const toneClass = tone === 'dark'
-  ? 'bg-brand-green text-brand-cream border-brand-cream/15'
-  : 'bg-paper-bright text-brand-text-dark border-brand-text-dark/15';
+  ? 'bg-brand-green text-brand-cream shadow-hard-accent'
+  : 'bg-paper-bright text-brand-text-dark shadow-hard-olive';
+const iconClass = tone === 'dark' ? 'text-brand-accent-light' : 'text-brand-accent';
 const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 ---
 
-<div data-rise class={`flex flex-col border p-6 shadow-soft md:p-7 ${toneClass} ${alignClass} ${className}`}>
-  <span class="text-brand-accent" aria-hidden="true" set:html={icon} />
-  <h3 class="mt-4 font-display text-xl font-medium">{heading}</h3>
-  <div class="mt-2 text-sm leading-relaxed opacity-85">
+<div data-rise class={`flex flex-col rounded-2xl border-2 border-brand-text-dark p-6 md:p-7 ${toneClass} ${alignClass} ${className}`}>
+  <span class={iconClass} aria-hidden="true" set:html={icon} />
+  <h3 class="mt-4 font-display text-xl font-black">{heading}</h3>
+  <div class="mt-2 text-sm leading-relaxed opacity-90">
     <slot />
   </div>
 </div>

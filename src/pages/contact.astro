@@ -71,7 +71,6 @@ const faqs = [
   title="Contact Smart Cook Dera | Call or WhatsApp | Sahiwal-Arifwala Road"
   description="Contact Smart Cook Dera. Call or WhatsApp us directly. Located on Sahiwal-Arifwala Road near Arifwala. Open daily."
   schema={schema}
-  headerVariant="utility"
 >
   <PageHeader
     kicker="Get in touch"
@@ -134,13 +133,13 @@ const faqs = [
   </section>
 
   <section class="bg-brand-green px-5 py-section-md text-center md:px-10">
-    <h2 class="font-display text-2xl font-medium text-brand-cream">Had an issue with your visit?</h2>
+    <h2 class="font-display text-2xl text-brand-cream">Had an issue with your visit?</h2>
     <p class="mx-auto mt-2 max-w-md text-brand-cream/70">We want to make it right. Call us directly and speak to the manager.</p>
     <Cta href={PHONE_TEL} variant="primary" class="mt-6">Call the Manager</Cta>
   </section>
 
   <div class="bg-brand-cream px-5 py-section-sm md:px-10 lg:px-20">
-    <div class="mx-auto max-w-4xl overflow-hidden border border-brand-text-dark/15" data-media>
+    <div class="truck-frame mx-auto max-w-4xl"><div data-media class="overflow-hidden">
       <iframe
         src={MAPS_EMBED_URL}
         width="100%"
@@ -148,18 +147,18 @@ const faqs = [
         class="block border-0"
         loading="lazy"
         title="Smart Cook Dera map"
-      ></iframe>
+      ></iframe></div>
     </div>
   </div>
 
   <section class="bg-brand-cream px-5 py-section-md md:px-10">
     <div class="mx-auto max-w-3xl">
       <SectionLabel label="FAQ" urdu="عمومی سوالات" />
-      <h2 class="text-center font-display text-heading font-medium text-brand-text-dark">Common Questions</h2>
+      <h2 class="text-center font-display text-heading text-brand-text-dark">Common Questions</h2>
       <div class="mt-10 border-t border-brand-text-dark/15">
         {faqs.map((faq) => (
           <details class="group border-b border-brand-text-dark/15">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-display text-lg font-medium text-brand-text-dark transition-colors group-open:text-brand-accent">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-display text-lg text-brand-text-dark transition-colors group-open:text-brand-accent">
               {faq.q}
               <span class="font-mono text-brand-accent transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>

@@ -1,14 +1,11 @@
 ---
+import { PHONE_TEL, PHONE_DISPLAY } from '../consts.js';
+
 interface Props {
-  variant?: 'utility' | 'compact';
   sticky?: boolean;
-  menuHref?: string;
-  /** Transparent-over-hero header that condenses to solid on scroll. Used on
-      pages with a dark hero at the top (home). */
-  overlay?: boolean;
 }
 
-const { sticky = true, menuHref = '/menu', overlay = false } = Astro.props;
+const { sticky = true } = Astro.props;
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -20,33 +17,29 @@ const navItems = [
 
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
-
-const headerPosition = overlay ? 'fixed top-0 inset-x-0 z-40' : sticky ? 'sticky top-0 z-40' : 'relative z-40';
-const headerAppearance = overlay ? 'site-header' : 'border-brand-cream/12 bg-brand-dark/95 backdrop-blur-sm';
 ---
 
-<header data-site-header data-overlay={overlay ? 'true' : undefined} class={`${headerPosition} border-b ${headerAppearance}`}>
-  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 md:h-[4.75rem] md:px-8 lg:px-10">
+<header data-site-header class={`${sticky ? 'sticky top-0' : 'relative'} z-40 border-b-2 border-brand-text-dark bg-brand-cream`}>
+  <div class="stripes stripes-sm" aria-hidden="true"></div>
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 md:h-[4.5rem] md:px-8 lg:px-10">
     <!-- Wordmark -->
-    <a href="/" class="flex items-baseline gap-2.5 leading-none">
-      <span class="font-urdu-display text-xl leading-none text-brand-accent md:text-2xl">سمارٹ کک ڈیرہ</span>
-      <span class="hidden font-mono text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-brand-cream/45 sm:inline">
-        Smart&nbsp;Cook&nbsp;Dera
-      </span>
+    <a href="/" class="flex items-center gap-3 leading-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-accent">
+      <span class="whitespace-nowrap font-urdu-display text-xl leading-[1.6] text-brand-accent md:text-2xl">سمارٹ کک ڈیرہ</span>
+      <span class="hidden whitespace-nowrap font-display text-base font-black text-brand-text-dark sm:inline md:hidden md:text-lg lg:inline">Smart Cook Dera</span>
       <span class="sr-only">Smart Cook Dera — home</span>
     </a>
 
-    <!-- Desktop nav -->
+    <!-- Desktop nav: pills, the current page is a marigold pill -->
     <nav class="hidden md:block" aria-label="Primary">
-      <ul class="flex items-center gap-7">
+      <ul class="flex items-center gap-0.5 lg:gap-1.5">
         {navItems.map((item) => (
           <li>
             <a
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
-              class="group inline-flex items-baseline font-mono text-[0.7rem] font-medium uppercase tracking-[0.16em] text-brand-cream/80 transition-colors hover:text-brand-accent aria-[current=page]:text-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-accent"
+              class="inline-flex rounded-full border-2 border-transparent px-3 py-1.5 text-sm font-bold lg:px-4 text-brand-text-dark transition-colors hover:border-brand-text-dark aria-[current=page]:border-brand-text-dark aria-[current=page]:bg-marigold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
             >
-              <span class="link-draw">{item.label}</span>
+              {item.label}
             </a>
           </li>
         ))}
@@ -56,57 +49,67 @@ const headerAppearance = overlay ? 'site-header' : 'border-brand-cream/12 bg-bra
     <!-- Right cluster -->
     <div class="flex items-center gap-2">
       <a
-        href={menuHref}
-        class="hidden rounded-none bg-brand-accent px-4 py-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-brand-cream transition-colors hover:bg-brand-accent-light md:inline-flex"
+        href={PHONE_TEL}
+        class="hidden items-center gap-2 whitespace-nowrap rounded-full border-2 border-brand-text-dark bg-brand-accent px-4 py-2 text-sm font-bold text-brand-cream shadow-card transition-transform hover:-translate-y-0.5 hover:shadow-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:inline-flex"
       >
-        View Menu
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" />
+        </svg>
+        <span dir="ltr">{PHONE_DISPLAY}</span>
       </a>
       <button
         id="menu-toggle"
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label="Toggle menu"
-        class="flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:hidden"
+        class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-brand-text-dark bg-paper-bright shadow-card-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:hidden"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C33F26" stroke-width="1.75" stroke-linecap="round">
-          <line x1="3" y1="7" x2="21" y2="7"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="17" x2="21" y2="17"></line>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B2217" stroke-width="2.4" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
         </svg>
       </button>
     </div>
   </div>
 </header>
 
-<!-- Rendered outside <header> deliberately: the header's backdrop-filter
-     creates a containing block for fixed descendants. -->
-<nav id="mobile-menu" class="fixed inset-0 z-50 hidden overflow-y-auto bg-brand-dark md:hidden" aria-label="Primary mobile">
-  <div class="grain pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-screen" aria-hidden="true"></div>
-  <div class="relative flex items-center justify-between border-b border-brand-cream/12 px-4 py-3">
-    <span class="font-urdu-display text-xl leading-none text-brand-accent">سمارٹ کک ڈیرہ</span>
+<!-- Rendered outside <header> deliberately so it is never trapped by an ancestor's containing block. -->
+<nav id="mobile-menu" class="fixed inset-0 z-50 hidden overflow-y-auto bg-brand-cream md:hidden" aria-label="Primary mobile">
+  <div class="stripes stripes-sm" aria-hidden="true"></div>
+  <div class="flex items-center justify-between border-b-2 border-brand-text-dark px-4 py-2.5">
+    <span class="font-urdu-display text-xl leading-[1.6] text-brand-accent">سمارٹ کک ڈیرہ</span>
     <button
       type="button"
       data-menu-close
       aria-label="Close menu"
-      class="flex h-11 w-11 items-center justify-center text-2xl text-brand-accent"
+      class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-brand-text-dark bg-marigold text-xl font-black text-brand-text-dark shadow-card-sm"
     >
       ✕
     </button>
   </div>
-  <ul class="relative flex flex-col px-4 pb-10 pt-2">
+  <ul class="flex flex-col px-4 pb-6 pt-3">
     {navItems.map((item, i) => (
-      <li class="border-b border-brand-cream/10">
+      <li class="border-b-2 border-dashed border-brand-text-dark/25">
         <a
           href={item.href}
           aria-current={isActive(item.href) ? 'page' : undefined}
-          class="flex items-baseline gap-4 py-5 font-display text-3xl font-medium text-brand-cream aria-[current=page]:text-brand-accent"
+          class="flex items-baseline gap-4 py-4 font-display text-3xl font-black text-brand-text-dark aria-[current=page]:text-brand-accent"
         >
-          <span class="font-mono text-xs tracking-widest text-brand-accent/70">{String(i + 1).padStart(2, '0')}</span>
+          <span class="font-mono text-xs tracking-widest text-brand-accent">{String(i + 1).padStart(2, '0')}</span>
           {item.label}
         </a>
       </li>
     ))}
   </ul>
+  <div class="px-4 pb-10">
+    <a
+      href={PHONE_TEL}
+      class="flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-brand-text-dark bg-brand-accent px-6 py-3 text-base font-bold text-brand-cream shadow-soft"
+    >
+      Call <span dir="ltr">{PHONE_DISPLAY}</span>
+    </a>
+  </div>
 </nav>
 
 <script>
@@ -124,12 +127,4 @@ const headerAppearance = overlay ? 'site-header' : 'border-brand-cream/12 bg-bra
     setOpen(menu?.classList.contains('hidden') === true);
   });
   closeBtn?.addEventListener('click', () => setOpen(false));
-
-  // Overlay header: transparent over the hero, solid once scrolled.
-  const header = document.querySelector('[data-site-header][data-overlay="true"]');
-  if (header) {
-    const onScroll = () => header.classList.toggle('header-solid', window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
 </script>

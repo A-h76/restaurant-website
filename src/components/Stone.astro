@@ -1,21 +1,22 @@
 ---
-// Section eyebrow: a roadside km stone + label. Replaces "01 —" style numbering
-// so every section says how far you still are from the Dera.
+// Section eyebrow: a tilted sticker carrying the km stone number, so every
+// section says how far you still are from the Dera.
 interface Props {
   km: number | string;
   label: string;
   urdu?: string;
+  /** 'dark' = sits on a dark ground (white sticker so it still pops). */
   tone?: 'light' | 'dark';
 }
 const { km, label, urdu, tone = 'light' } = Astro.props;
-const text = tone === 'dark' ? 'text-brand-accent-light' : 'text-brand-accent';
-const urduText = tone === 'dark' ? 'text-brand-cream/70' : 'text-brand-text-muted';
+const urduText = tone === 'dark' ? 'text-brand-cream/80' : 'text-brand-text-muted';
 ---
 
-<p class="flex items-center gap-3">
-  <span class="stone" aria-hidden="true"><small>km</small><b>{km}</b></span>
-  <span class={`font-mono text-[0.66rem] font-semibold uppercase tracking-[0.28em] ${text}`}>
-    <span class="sr-only">{km} kilometres to go — </span>{label}
+<p class="flex flex-wrap items-center gap-x-3 gap-y-2">
+  <span class={`sticker ${tone === 'dark' ? 'sticker-white' : ''}`}>
+    <span aria-hidden="true">KM {km}</span>
+    <span aria-hidden="true">·</span>
+    <span><span class="sr-only">{km} kilometres to go — </span>{label}</span>
   </span>
-  {urdu && <span class={`font-urdu-display text-sm font-normal ${urduText}`} dir="rtl">{urdu}</span>}
+  {urdu && <span class={`font-urdu-display text-lg font-normal ${urduText}`} dir="rtl">{urdu}</span>}
 </p>

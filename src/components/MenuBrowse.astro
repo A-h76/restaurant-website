@@ -37,25 +37,25 @@ const fastFoodEnd = desiEnd + fastFoodCategories.length;
       <>
         {i === 0 && (
           <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 01</span>
-            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Karahi &amp; BBQ</h2>
+            <span class="sticker">§ 01</span>
+            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Karahi &amp; BBQ</h2>
           </div>
         )}
         {i === desiEnd && (
           <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 02</span>
-            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Fast Food</h2>
+            <span class="sticker">§ 02</span>
+            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Fast Food</h2>
           </div>
         )}
         {i === fastFoodEnd && (
           <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-accent">§ 03</span>
-            <h2 class="font-display text-2xl font-medium text-brand-text-dark md:text-3xl">Deals</h2>
+            <span class="sticker">§ 03</span>
+            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Deals</h2>
           </div>
         )}
         <section id={cat.id} data-menu-section>
         <div class="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 class="font-display text-xl font-medium text-brand-text-dark md:text-2xl">{cat.name}</h3>
+          <h3 class="font-display text-xl text-brand-text-dark md:text-2xl">{cat.name}</h3>
           {cat.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{cat.urdu}</span>}
           <span class="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.16em] text-brand-text-muted">{cat.items.length} {cat.items.length === 1 ? 'item' : 'items'}</span>
         </div>

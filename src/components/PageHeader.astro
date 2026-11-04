@@ -1,8 +1,7 @@
 ---
 // Shared masthead for the sub-pages (menu, location, prayer, contact, 404).
-// An editorial header: kicker + title on the left, a page-relevant meta column
-// on the right, a baseline rule, and a faint geometric texture — so the dark
-// band reads as an intentional masthead rather than empty space.
+// Retro poster header: tilted kicker sticker, chunky title with a hard offset
+// shadow, a sub line, and the page's key facts as little ticket chips.
 interface Props {
   kicker: string;
   kickerUrdu?: string;
@@ -13,41 +12,34 @@ interface Props {
 }
 
 const { kicker, kickerUrdu, title, sub, meta = [], tone = 'dark' } = Astro.props;
-const bg = tone === 'green' ? 'bg-brand-green' : 'bg-brand-dark';
-const kickerColor = tone === 'green' ? 'text-brand-accent-light' : 'text-brand-accent';
+// 'dark' = the default cream poster; 'green' = the quiet olive register (prayer).
+const quiet = tone === 'green';
 ---
 
-<section class={`relative isolate overflow-hidden ${bg} px-5 md:px-10 lg:px-16`}>
-  <div class="bg-geo pointer-events-none absolute inset-0 opacity-[0.6]" aria-hidden="true"></div>
-  <div class="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-screen" aria-hidden="true"></div>
+<section class={`relative isolate overflow-hidden ${quiet ? 'bg-brand-green text-brand-cream' : 'bg-paper-dim text-brand-text-dark'} px-5 md:px-10 lg:px-16`}>
+  {quiet && <div class="bg-geo pointer-events-none absolute inset-0 opacity-[0.6]" aria-hidden="true"></div>}
 
   <div class="relative mx-auto max-w-6xl">
-    <div class="flex flex-col gap-8 pt-14 pb-7 md:flex-row md:items-end md:justify-between md:gap-12 md:pt-20 md:pb-9">
+    <div class="flex flex-col gap-8 pb-10 pt-12 md:flex-row md:items-end md:justify-between md:gap-12 md:pb-12 md:pt-16">
       <div class="min-w-0">
-        <p class={`flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] ${kickerColor}`}>
-          {kicker}
-          {kickerUrdu && <span class="font-urdu-display text-sm font-normal tracking-normal text-brand-cream/60" dir="rtl">{kickerUrdu}</span>}
+        <p class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span class={`sticker ${quiet ? 'sticker-white' : ''}`}>★ {kicker}</span>
+          {kickerUrdu && <span class={`font-urdu-display text-lg font-normal ${quiet ? 'text-brand-cream/80' : 'text-brand-text-muted'}`} dir="rtl">{kickerUrdu}</span>}
         </p>
-        <h1 class="mt-4 font-display text-display font-medium leading-[0.95] text-brand-cream">{title}</h1>
-        {sub && (
-          <p class="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-brand-cream/55">{sub}</p>
-        )}
+        <h1 class={`mt-5 font-display text-[clamp(3rem,9vw,6.25rem)] font-black leading-[0.95] ${quiet ? 'text-brand-cream text-pop-red' : 'text-brand-text-dark text-pop'}`}>{title}</h1>
+        {sub && <p class={`mt-4 max-w-xl text-base font-semibold ${quiet ? 'text-brand-cream/85' : 'text-brand-text-muted'}`}>{sub}</p>}
       </div>
 
       {meta.length > 0 && (
-        <ul class="flex shrink-0 flex-col gap-2 border-l border-brand-cream/15 pl-5 md:items-end md:border-l-0 md:border-none md:pl-0 md:text-right">
-          {meta.map((m) => (
-            <li class="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-brand-cream/60 md:flex-row-reverse">
-              <span class="h-1 w-1 shrink-0 bg-brand-accent" aria-hidden="true"></span>
+        <ul class="flex shrink-0 flex-wrap gap-2.5 md:max-w-[18rem] md:flex-col md:items-end">
+          {meta.map((m, i) => (
+            <li class={`rounded-full border-2 border-brand-text-dark bg-paper-bright px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-[0.1em] text-brand-text-dark shadow-card-sm ${i % 2 ? 'rotate-1' : '-rotate-1'}`}>
               <span dir="ltr">{m}</span>
             </li>
           ))}
         </ul>
       )}
     </div>
-
-    <div class="relative h-px w-full bg-brand-cream/15">
-      <span class="absolute left-0 top-0 h-px w-16 bg-brand-accent" aria-hidden="true"></span>
-    </div>
   </div>
+  <div class="stripes -mx-5 md:-mx-10 lg:-mx-16" aria-hidden="true"></div>
 </section>

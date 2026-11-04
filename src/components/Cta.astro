@@ -1,9 +1,10 @@
 ---
+// Pill buttons, inked and lifted with a hard shadow. They press down on click.
 interface Props {
   href: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'dark' | 'whatsapp';
-  /** Only used by variant="ghost", which has no color of its own — every
-      other variant sets its own text color and this is ignored. */
+  /** Only used by variant="ghost", which has no colour of its own — every
+      other variant sets its own text colour and this is ignored. */
   tone?: 'cream' | 'accent' | 'dark';
   class?: string;
   target?: string;
@@ -18,19 +19,22 @@ const toneClass: Record<NonNullable<Props['tone']>, string> = {
   dark: 'text-brand-text-dark',
 };
 
+const pill =
+  'rounded-full border-2 border-brand-text-dark px-6 py-3 transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0.5 active:shadow-none';
+
 function variantClass(kind: NonNullable<Props['variant']>) {
   switch (kind) {
     case 'primary':
-      return 'bg-brand-accent text-brand-cream hover:bg-brand-accent-light hover:-translate-y-0.5 active:translate-y-0 shadow-cta';
+      return `${pill} bg-brand-accent text-brand-cream shadow-cta`;
     case 'secondary':
-      return 'border border-brand-text-dark/30 text-brand-text-dark hover:bg-brand-text-dark hover:text-brand-cream hover:-translate-y-0.5 active:translate-y-0';
-    case 'ghost':
-      // Ghost is an inline mono link — its underline draws from the left.
-      return `${toneClass[tone]} link-draw !px-0 !py-0 !min-h-0 hover:text-brand-accent`;
+      return `${pill} bg-paper-bright text-brand-text-dark shadow-hard-olive`;
     case 'dark':
-      return 'bg-brand-dark text-brand-cream hover:bg-brand-green hover:-translate-y-0.5 active:translate-y-0';
+      return `${pill} bg-brand-dark text-brand-cream shadow-cta`;
     case 'whatsapp':
-      return 'bg-whatsapp text-white hover:brightness-110 hover:-translate-y-0.5 active:translate-y-0';
+      return `${pill} bg-whatsapp text-white shadow-cta`;
+    case 'ghost':
+      // Ghost is an inline text link — its underline draws from the left.
+      return `${toneClass[tone]} link-draw !px-0 !py-0 !min-h-0 hover:text-brand-accent`;
     default: {
       const _exhaustive: never = kind;
       return _exhaustive;
@@ -43,7 +47,7 @@ function variantClass(kind: NonNullable<Props['variant']>) {
   href={href}
   target={target}
   rel={rel}
-  class={`inline-flex min-h-11 items-center justify-center gap-2 rounded-none px-6 py-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent ${variantClass(variant)} ${className}`}
+  class={`inline-flex min-h-11 items-center justify-center gap-2 text-[0.95rem] font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-accent ${variantClass(variant)} ${className}`}
 >
   <slot />
 </a>

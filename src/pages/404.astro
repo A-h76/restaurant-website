@@ -7,18 +7,17 @@ import { PHONE_TEL } from '../consts.js';
 <BaseLayout
   title="Page Not Found | Smart Cook Dera"
   description="The page you're looking for doesn't exist. Find Smart Cook Dera's menu, location and contact details here."
-  headerVariant="utility"
   noindex
 >
   <section class="flex min-h-[70vh] items-center bg-brand-dark px-5 py-section-lg text-center">
     <div class="mx-auto max-w-xl">
-      <p class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">Off the map · 404</p>
-      <p class="mt-4 font-display text-mega font-medium leading-none text-brand-cream">404</p>
-      <h1 class="mt-4 font-display text-2xl font-medium text-brand-cream/90">You've left the road.</h1>
+      <p class="sticker sticker-white">★ Off the map · 404</p>
+      <p class="mt-4 font-display text-mega font-black leading-none text-brand-cream text-pop-red">404</p>
+      <h1 class="mt-4 font-display text-2xl text-brand-cream/90">You've left the road.</h1>
       <p class="mx-auto mt-3 max-w-md text-brand-cream/70">
         That page doesn't exist — here's the way back.
       </p>
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
         <Cta href="/" variant="primary">Back to Home</Cta>
         <Cta href="/menu" variant="ghost" tone="cream">View Menu</Cta>
         <Cta href={PHONE_TEL} variant="ghost" tone="cream">Call Us</Cta>

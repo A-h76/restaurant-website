@@ -13,7 +13,7 @@ const { name, urdu, note, items } = Astro.props;
 
 <div class="mt-8 first:mt-0 md:mt-10">
   <div class="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-4 border-brand-accent pl-3 md:mb-4">
-    <h2 class="font-display text-xl font-bold text-brand-text-dark md:text-2xl">{name}</h2>
+    <h2 class="font-display text-xl text-brand-text-dark md:text-2xl">{name}</h2>
     {urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{urdu}</span>}
     <span class="ml-auto shrink-0 font-sans text-xs text-brand-text-muted">{items.length} {items.length === 1 ? 'item' : 'items'}</span>
   </div>

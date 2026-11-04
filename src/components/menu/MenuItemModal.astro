@@ -12,13 +12,13 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
       aria-modal="true"
       aria-labelledby="menu-item-title"
       tabindex="-1"
-      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-none border-t-2 border-brand-accent bg-brand-cream opacity-0 shadow-2xl transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[680px] sm:scale-95 sm:border sm:border-brand-text-dark/20"
+      class="pointer-events-auto relative flex max-h-[92vh] w-full translate-y-4 flex-col overflow-y-auto rounded-t-3xl border-2 border-brand-text-dark bg-brand-cream opacity-0 shadow-lift transition-all duration-200 ease-out sm:max-h-[85vh] sm:max-w-[680px] sm:scale-95 sm:rounded-3xl"
     >
       <button
         type="button"
         data-modal-close
         aria-label="Close"
-        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-none bg-brand-dark text-lg text-brand-cream transition-colors hover:bg-brand-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+        class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-text-dark bg-marigold text-lg font-black text-brand-text-dark transition-colors hover:bg-brand-accent hover:text-brand-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
       >
         ✕
       </button>
@@ -30,7 +30,7 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
           <span id="menu-item-category" class="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-brand-accent"></span>
           <span id="menu-item-urdu" class="font-urdu-display text-sm text-brand-text-muted" dir="rtl"></span>
         </div>
-        <h2 id="menu-item-title" class="mt-2 font-display text-3xl font-medium text-brand-text-dark md:text-4xl"></h2>
+        <h2 id="menu-item-title" class="mt-2 font-display text-3xl text-brand-text-dark md:text-4xl"></h2>
         <p id="menu-item-description" class="mt-3 text-sm leading-relaxed text-brand-text-muted"></p>
 
         <div id="menu-item-pricing" class="mt-6 border-t border-brand-text-dark/15 pt-5"></div>
@@ -40,14 +40,14 @@ import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL, WHATSAPP_DISPLAY } from '../../
           <a
             id="menu-item-call"
             href={PHONE_TEL}
-            class="flex flex-1 items-center justify-center gap-2 rounded-none bg-brand-accent px-6 py-3.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-brand-cream transition-colors duration-200 hover:bg-brand-accent-light"
+            class="flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-brand-text-dark bg-brand-accent px-6 py-3.5 text-sm font-bold text-brand-cream shadow-card transition-colors duration-200 hover:bg-brand-accent-light"
           >
             Call to Order · {PHONE_DISPLAY}
           </a>
           <a
             id="menu-item-whatsapp"
             href={WHATSAPP_URL}
-            class="flex flex-1 items-center justify-center gap-2 rounded-none bg-whatsapp px-6 py-3.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:brightness-110"
+            class="flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-brand-text-dark bg-whatsapp px-6 py-3.5 text-sm font-bold text-white shadow-card transition-colors duration-200 hover:brightness-110"
           >
             WhatsApp · {WHATSAPP_DISPLAY}
           </a>

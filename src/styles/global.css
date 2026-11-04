@@ -1,57 +1,31 @@
 @import "tailwindcss";
 
 /* =========================================================================
-   SMART COOK DERA — "The Roadside Ledger"
-   Art direction: minimalist retro-editorial. A Pakistani highway dera framed
-   like a piece of vintage roadside print — enamel signage, milestone markers,
-   a dhaba receipt. Ink on paper with a single hot vermilion accent; deep pine
-   reserved for the quiet (prayer) register.
+   SMART COOK DERA — "Roadside Retro"
+   Art direction: a 1970s highway-diner / truck-art skin. Warm cream paper
+   with a dot grid, chunky soft-serif headlines with hard offset shadows,
+   tri-stripe bands (vermilion · marigold · olive), tilted stickers, taped
+   polaroids and ticket stubs. Everything is outlined in brown ink and lifted
+   with a HARD (zero-blur) shadow — depth comes from print offsets, not glow.
 
-   Type: Fraunces (display + prose, warm high-contrast old-style serif) paired
-   with Space Mono (labels, meta, prices, coordinates — the "printed docket"
-   voice). Noto Nastaliq Urdu for the Urdu wordmark.
+   Type: Fraunces at its heaviest weight with SOFT=100 (the Cooper-style
+   display), DM Sans for body + labels, Noto Nastaliq Urdu for the wordmark.
 
-   Note on tokens: the brand-* names are kept so the whole component tree keeps
-   compiling, but every VALUE is re-pitched to the new palette. brand-accent is
-   now vermilion (was gold); brand-cream is now a cooler paper stock.
+   Token note: brand-* names are kept so the component tree keeps compiling;
+   every VALUE is re-pitched. brand-dark is now warm brown ink, brand-cream
+   is the dotted paper, brand-green is deep olive, brand-accent is vermilion.
    ========================================================================= */
 
 @theme {
   --font-display: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-sans: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-urdu-display: 'Noto Nastaliq Urdu', 'Fraunces', serif;
 
-  /* --- Core palette ------------------------------------------------------ */
-  --color-ink: #1B1712;            /* warm near-black — primary text + dark grounds */
-  --color-ink-2: #2A241C;          /* raised ink surface */
-  --color-paper: #E7E1D3;          /* cool newsprint stock — the default ground */
-  --color-paper-dim: #DED7C6;      /* alternating band, insets */
-  --color-paper-bright: #F1ECE0;   /* cards / raised paper */
-  --color-vermilion: #C33F26;      /* the one hot accent — enamel/chili red */
-  --color-vermilion-deep: #A02F1B; /* small text + hover (AA on paper) */
-  --color-marigold: #D9A441;       /* truck-art second tone — frames, stripes, sign lettering only */
-  --color-pine: #16281E;           /* the quiet register (prayer) */
-  --color-pine-2: #1E3628;
-
-  /* --- brand-* aliases (kept for existing class references) -------------- */
-  --color-brand-dark: #1B1712;
-  --color-brand-green: #16281E;
-  --color-brand-mid: #1E3628;
-  --color-brand-accent: #C33F26;
-  --color-brand-accent-light: #D9542F;
-  --color-brand-cream: #E7E1D3;
-  --color-brand-text-dark: #1B1712;
-  --color-brand-text-light: #E7E1D3;
-  --color-brand-text-muted: #6A6152;   /* AA (>4.5:1) on paper */
-  --color-brand-gold-line: #C33F26;
-  --color-whatsapp: #1F7A4D;           /* muted, so it sits inside the palette */
-  --color-call: #16281E;
-
-  /* --- Type scale — editorial, fluid ------------------------------------ */
-  --text-mega: clamp(3rem, 11vw, 8.5rem);
-  --text-display: clamp(2.35rem, 6.5vw, 5rem);
-  --text-heading: clamp(1.9rem, 4vw, 3.1rem);
+  /* --- Type scale — chunky, fluid -------------------------------------- */
+  --text-mega: clamp(3.4rem, 12vw, 8.5rem);
+  --text-display: clamp(2.4rem, 6.5vw, 5rem);
+  --text-heading: clamp(2rem, 4.4vw, 3.4rem);
   --text-subheading: clamp(1.25rem, 2.4vw, 1.85rem);
   --text-body: 1.0625rem;
   --text-body--line-height: 1.62;
@@ -62,16 +36,47 @@
   --spacing-section-md: 5rem;
   --spacing-section-lg: 7rem;
 
-  /* --- Shadows: flat, print-like — depth comes from rules, not glow ----- */
-  --shadow-card-sm: 0 1px 0 0 rgba(27, 23, 18, 0.06);
-  --shadow-card: 0 2px 0 0 rgba(27, 23, 18, 0.06);
-  --shadow-cta: 0 10px 22px -14px rgba(195, 63, 38, 0.6);
-  --shadow-soft: 0 12px 30px -22px rgba(27, 23, 18, 0.4);
-  --shadow-lift: 0 22px 44px -26px rgba(27, 23, 18, 0.5);
+  /* --- Hard shadows: zero blur, brown ink. The whole depth system. ------ */
+  --shadow-card-sm: 2px 2px 0 0 #3B2217;
+  --shadow-card: 3px 3px 0 0 #3B2217;
+  --shadow-soft: 4px 4px 0 0 #3B2217;
+  --shadow-lift: 7px 7px 0 0 #3B2217;
+  --shadow-cta: 4px 4px 0 0 #3B2217;
+  --shadow-hard-accent: 6px 6px 0 0 #B83C0A;
+  --shadow-hard-olive: 5px 5px 0 0 #5F6B1F;
+}
+
+/* Palette lives in a static theme block so every variable is always emitted
+   (the component CSS below references them directly). */
+@theme static {
+  --color-ink: #3B2217;            /* warm brown ink — text, outlines, shadows */
+  --color-ink-2: #4D3022;
+  --color-paper: #F4E8D0;          /* cream stock — the default ground */
+  --color-paper-dim: #F4E2A3;      /* soft butter band */
+  --color-paper-bright: #FFFBF0;   /* cards, tickets, polaroid stock */
+  --color-vermilion: #B83C0A;      /* the hot accent — AA with cream text */
+  --color-vermilion-deep: #9A2F06;
+  --color-marigold: #E9A61A;       /* second tone — fills, stripes, shadows */
+  --color-olive: #5F6B1F;          /* third tone — bands, secondary text */
+  --color-olive-deep: #38430F;     /* the quiet register (prayer, closing bands) */
+
+  /* --- brand-* aliases (kept for existing class references) -------------- */
+  --color-brand-dark: #3B2217;
+  --color-brand-green: #38430F;
+  --color-brand-mid: #5F6B1F;
+  --color-brand-accent: #B83C0A;
+  --color-brand-accent-light: #E9A61A;   /* on dark grounds the accent reads marigold */
+  --color-brand-cream: #F4E8D0;
+  --color-brand-text-dark: #3B2217;
+  --color-brand-text-light: #F4E8D0;
+  --color-brand-text-muted: #6E5242;     /* AA on cream and butter */
+  --color-brand-gold-line: #E9A61A;
+  --color-whatsapp: #1F7A4D;
+  --color-call: #38430F;
 }
 
 /* Optical sizing lets Fraunces switch to its text design at small sizes and
-   its display design in headlines — the single biggest legibility win. */
+   its display design in headlines. */
 html {
   font-optical-sizing: auto;
   -webkit-text-size-adjust: 100%;
@@ -80,16 +85,31 @@ body {
   font-feature-settings: "liga" 1, "calt" 1;
 }
 
-/* Selection in the accent — a tiny signature detail. */
+/* Base-layer type voice. Utilities (font-bold, font-black…) still win. */
+@layer base {
+  .font-display {
+    font-weight: 800;
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+    letter-spacing: -0.012em;
+  }
+  .font-mono {
+    font-weight: 700; /* labels are DM Sans caps now — they need the weight */
+  }
+}
+
 ::selection {
-  background: var(--color-vermilion);
-  color: var(--color-paper-bright);
+  background: var(--color-marigold);
+  color: var(--color-ink);
 }
 
 @layer utilities {
-  /* --- Print grain: a fixed, screen-blended film grain over everything.
-     Very low opacity — you feel it, you don't see it. img-src data: covers
-     the encoded texture. --- */
+  /* --- Paper: the dot grid rides on every cream / butter ground. -------- */
+  .bg-brand-cream,
+  .bg-paper-dim {
+    background-image: radial-gradient(rgb(59 34 23 / 0.13) 1.2px, transparent 1.5px);
+    background-size: 14px 14px;
+  }
+
   .grain {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 200px 200px;
@@ -99,9 +119,9 @@ body {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Faint geometric field for venue "photo coming soon" fallbacks. */
+  /* Faint geometric field for "photo coming soon" fallbacks. */
   .bg-geo {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23C33F26' stroke-width='1' opacity='0.12'%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Ccircle cx='32' cy='32' r='14'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23E9A61A' stroke-width='1' opacity='0.22'%3E%3Cpath d='M32 2 L62 32 L32 62 L2 32 Z'/%3E%3Ccircle cx='32' cy='32' r='14'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 64px 64px;
   }
 
@@ -113,7 +133,6 @@ body {
     display: none;
   }
 
-  /* Hairline: the structural unit of the whole design. */
   .rule {
     border-color: color-mix(in srgb, var(--color-ink) 18%, transparent);
   }
@@ -137,14 +156,10 @@ body {
 
   /* =====================================================================
      MOTION SYSTEM
-     One idea: things arrive as if being printed / set into place, along the
-     line of the road. Transforms + opacity + clip only. Everything degrades
-     to fully-visible with no motion under reduced-motion.
+     Things arrive as if being printed / set into place. Transforms,
+     opacity and clip only. Everything degrades to fully-visible with no
+     motion under reduced-motion.
      ===================================================================== */
-
-  /* rise: the workhorse. JS adds .is-in when the element scrolls into view.
-     Stagger is applied by JS via transitionDelay (no inline style attrs, for
-     CSP). Default (no JS) = fully visible. */
   .rise {
     opacity: 1;
     transform: none;
@@ -159,13 +174,11 @@ body {
     will-change: opacity, transform;
   }
 
-  /* line-mask: a headline printed up from behind a rule. The inner element is
-     pushed down and clipped; when in view it slides to 0. Use on single lines
-     (wrap each visual line in its own .line-mask). */
   .line-mask {
     display: block;
     overflow: hidden;
-    padding-bottom: 0.06em; /* room for descenders under the clip */
+    padding-bottom: 0.1em; /* room for descenders + the hard text shadow */
+    padding-right: 0.08em;
   }
   .line-mask > * {
     display: block;
@@ -181,8 +194,6 @@ body {
     transform: translateY(0);
   }
 
-  /* media-reveal: a photographic wipe — the frame uncovers left→right while
-     the image itself relaxes from a slight zoom. "Developing." */
   .media-reveal {
     clip-path: inset(0 0 0 0);
   }
@@ -203,7 +214,6 @@ body {
     transform: scale(1.08);
   }
 
-  /* route-line: the road. A hairline that draws along its axis on reveal. */
   .route-y {
     transform-origin: top;
     transform: scaleY(1);
@@ -223,8 +233,7 @@ body {
     transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
-  /* marquee: a slow signage ticker. Track is duplicated in markup for a
-     seamless loop; we translate by -50%. */
+  /* marquee: a slow signage ticker; track duplicated in markup. */
   .marquee {
     display: flex;
     width: max-content;
@@ -241,7 +250,6 @@ body {
     to { transform: translateX(-50%); }
   }
 
-  /* Pure-CSS hero entrance — no JS dependency. */
   .hero-in {
     animation: fade-in-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -250,32 +258,160 @@ body {
     to { opacity: 1; transform: none; }
   }
 
-  /* Overlay header: transparent over the hero, condensing to a solid ink bar
-     with a hairline as the page scrolls (JS toggles .header-solid). */
-  .site-header {
-    background-color: transparent;
-    border-bottom-color: transparent;
-    transition: background-color 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
-  }
-  .site-header.header-solid {
-    background-color: color-mix(in srgb, var(--color-ink) 94%, transparent);
-    border-bottom-color: color-mix(in srgb, var(--color-paper) 12%, transparent);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-  }
-
-  /* Link underline that draws from the left on hover — used site-wide. */
   .link-draw {
     background-image: linear-gradient(currentColor, currentColor);
     background-position: 0 100%;
     background-repeat: no-repeat;
-    background-size: 0% 1px;
+    background-size: 0% 2px;
     transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     padding-bottom: 1px;
   }
   .link-draw:hover,
   .link-draw:focus-visible {
-    background-size: 100% 1px;
+    background-size: 100% 2px;
+  }
+
+  /* =====================================================================
+     RETRO KIT — stripes, pop type, stickers, tickets, polaroids, frames
+     ===================================================================== */
+
+  /* Tri-stripe band: vermilion · marigold · olive. */
+  .stripes {
+    height: 1.05rem;
+    background: linear-gradient(to bottom, var(--color-vermilion) 0 33.34%, var(--color-marigold) 0 66.67%, var(--color-olive) 0);
+  }
+  .stripes-sm { height: 0.7rem; }
+
+  /* Pop type: a hard offset shadow behind chunky headlines. */
+  .text-pop { text-shadow: 0.045em 0.045em 0 var(--color-marigold); }
+  .text-pop-ink { text-shadow: 0.045em 0.045em 0 var(--color-ink); }
+  .text-pop-red { text-shadow: 0.045em 0.045em 0 var(--color-vermilion); }
+  .text-pop-white { text-shadow: 0.045em 0.045em 0 var(--color-paper-bright); }
+
+  /* Sticker: the tilted kicker tag. */
+  .sticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.32rem 0.8rem;
+    background: var(--color-marigold);
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    rotate: -2deg;
+  }
+  .sticker-white { background: var(--color-paper-bright); }
+
+  /* Km stone: the small roadside marker (rail + chips). */
+  .stone {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    min-width: 2.15rem;
+    padding: 0.26rem 0.3rem 0.22rem;
+    background: var(--color-paper-bright);
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+    border-top: 5px solid var(--color-vermilion);
+    border-radius: 0.8rem 0.8rem 0.2rem 0.2rem;
+    box-shadow: 2px 2px 0 var(--color-ink);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    transition: background-color 0.3s, color 0.3s, scale 0.3s;
+  }
+  .stone small { font-size: 0.45rem; letter-spacing: 0.2em; font-weight: 700; }
+  .stone b { margin-top: 0.12rem; font-size: 0.82rem; font-weight: 800; }
+  .stone[aria-current="true"] {
+    background: var(--color-vermilion);
+    color: var(--color-paper-bright);
+    border-top-color: var(--color-marigold);
+    scale: 1.14;
+  }
+
+  /* Ticket: inked card with a hard offset shadow (colour via --sh). */
+  .ticket {
+    background: var(--color-paper-bright);
+    border: 2px solid var(--color-ink);
+    border-radius: 0.9rem;
+    box-shadow: 6px 6px 0 var(--sh, var(--color-vermilion));
+  }
+  .barcode {
+    height: 2.6rem;
+    background: repeating-linear-gradient(90deg,
+      var(--color-ink) 0 2px, transparent 2px 4px,
+      var(--color-ink) 4px 5px, transparent 5px 8px,
+      var(--color-ink) 8px 11px, transparent 11px 13px,
+      var(--color-ink) 13px 14px, transparent 14px 17px);
+  }
+  .leader { border-bottom: 2px dotted color-mix(in srgb, var(--color-ink) 45%, transparent); }
+
+  /* Polaroid: white stock, inked edge, coloured hard shadow. */
+  .polaroid {
+    background: #FFFDF6;
+    border: 2px solid var(--color-ink);
+    box-shadow: 5px 5px 0 var(--sh, var(--color-ink));
+  }
+  [data-stage] {
+    rotate: 2.2deg;
+    opacity: 0;
+    transform: translateY(0.9rem) scale(0.96);
+    transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  [data-stage]:nth-child(even) { rotate: -2.2deg; }
+  [data-stage][data-active] { opacity: 1; transform: none; pointer-events: auto; }
+
+  /* Truck-art frame: a painted 9-slice border (map, mosque photo). */
+  .truck-frame {
+    border: 0.75rem solid transparent;
+    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23B83C0A'%3E%3Crect width='72' height='24'/%3E%3Crect y='48' width='72' height='24'/%3E%3Crect width='24' height='72'/%3E%3Crect x='48' width='24' height='72'/%3E%3C/g%3E%3Cg fill='%23E9A61A'%3E%3Crect x='0' y='3' width='72' height='2'/%3E%3Crect x='3' y='0' width='2' height='72'/%3E%3Crect x='0' y='19' width='72' height='2'/%3E%3Crect x='19' y='0' width='2' height='72'/%3E%3Crect x='0' y='51' width='72' height='2'/%3E%3Crect x='51' y='0' width='2' height='72'/%3E%3Crect x='0' y='67' width='72' height='2'/%3E%3Crect x='67' y='0' width='2' height='72'/%3E%3C/g%3E%3Cg fill='%23B83C0A'%3E%3Crect x='0' y='0' width='24' height='24'/%3E%3Crect x='48' y='0' width='24' height='24'/%3E%3Crect x='0' y='48' width='24' height='24'/%3E%3Crect x='48' y='48' width='24' height='24'/%3E%3C/g%3E%3Cg fill='%23E9A61A'%3E%3Cpolygon points='12,3 21,12 12,21 3,12'/%3E%3Cpolygon points='60,3 69,12 60,21 51,12'/%3E%3Cpolygon points='12,51 21,60 12,69 3,60'/%3E%3Cpolygon points='60,51 69,60 60,69 51,60'/%3E%3C/g%3E%3Cg fill='%233B2217'%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='60' cy='12' r='2.4'/%3E%3Ccircle cx='12' cy='60' r='2.4'/%3E%3Ccircle cx='60' cy='60' r='2.4'/%3E%3C/g%3E%3Cg fill='%23E9A61A'%3E%3Ccircle cx='36' cy='12' r='3.6'/%3E%3Ccircle cx='36' cy='60' r='3.6'/%3E%3Ccircle cx='12' cy='36' r='3.6'/%3E%3Ccircle cx='60' cy='36' r='3.6'/%3E%3C/g%3E%3Cg fill='%233B2217'%3E%3Ccircle cx='36' cy='12' r='1.6'/%3E%3Ccircle cx='36' cy='60' r='1.6'/%3E%3Ccircle cx='12' cy='36' r='1.6'/%3E%3Ccircle cx='60' cy='36' r='1.6'/%3E%3C/g%3E%3C/svg%3E") 24 / 0.75rem round;
+  }
+  .truck-frame-quiet {
+    border: 0.75rem solid transparent;
+    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23F4E8D0'%3E%3Crect width='72' height='24'/%3E%3Crect y='48' width='72' height='24'/%3E%3Crect width='24' height='72'/%3E%3Crect x='48' width='24' height='72'/%3E%3C/g%3E%3Cg fill='%2338430F'%3E%3Crect x='0' y='3' width='72' height='2'/%3E%3Crect x='3' y='0' width='2' height='72'/%3E%3Crect x='0' y='19' width='72' height='2'/%3E%3Crect x='19' y='0' width='2' height='72'/%3E%3Crect x='0' y='51' width='72' height='2'/%3E%3Crect x='51' y='0' width='2' height='72'/%3E%3Crect x='0' y='67' width='72' height='2'/%3E%3Crect x='67' y='0' width='2' height='72'/%3E%3C/g%3E%3Cg fill='%23F4E8D0'%3E%3Crect x='0' y='0' width='24' height='24'/%3E%3Crect x='48' y='0' width='24' height='24'/%3E%3Crect x='0' y='48' width='24' height='24'/%3E%3Crect x='48' y='48' width='24' height='24'/%3E%3C/g%3E%3Cg fill='%2338430F'%3E%3Cpolygon points='12,3 21,12 12,21 3,12'/%3E%3Cpolygon points='60,3 69,12 60,21 51,12'/%3E%3Cpolygon points='12,51 21,60 12,69 3,60'/%3E%3Cpolygon points='60,51 69,60 60,69 51,60'/%3E%3C/g%3E%3Cg fill='%2338430F'%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='60' cy='12' r='2.4'/%3E%3Ccircle cx='12' cy='60' r='2.4'/%3E%3Ccircle cx='60' cy='60' r='2.4'/%3E%3C/g%3E%3Cg fill='%23B83C0A'%3E%3Ccircle cx='36' cy='12' r='3.6'/%3E%3Ccircle cx='36' cy='60' r='3.6'/%3E%3Ccircle cx='12' cy='36' r='3.6'/%3E%3Ccircle cx='60' cy='36' r='3.6'/%3E%3C/g%3E%3Cg fill='%2338430F'%3E%3Ccircle cx='36' cy='12' r='1.6'/%3E%3Ccircle cx='36' cy='60' r='1.6'/%3E%3Ccircle cx='12' cy='36' r='1.6'/%3E%3Ccircle cx='60' cy='36' r='1.6'/%3E%3C/g%3E%3C/svg%3E") 24 / 0.75rem round;
+  }
+
+  /* Tandoor heat: --heat (0..1) is driven by scroll; warms the butter band
+     toward ember and breathes a glow into the corners. */
+  .heat-section {
+    --heat: 0.35;
+    position: relative;
+    isolation: isolate;
+    background-color: color-mix(in srgb, var(--color-paper-dim), #E0603A calc(var(--heat) * 14%));
+  }
+  .heat-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--heat);
+    background:
+      radial-gradient(55% 50% at 100% 100%, rgb(224 96 58 / 0.22), transparent 70%),
+      radial-gradient(40% 40% at 0 0, rgb(233 166 26 / 0.18), transparent 70%);
+  }
+
+  /* Road strip for the location diagram. */
+  .road-dash {
+    background: repeating-linear-gradient(90deg, var(--color-marigold) 0 0.9rem, transparent 0.9rem 1.7rem);
+  }
+  .route-truck { transition: left 1.8s cubic-bezier(0.65, 0, 0.35, 1); }
+  .js [data-route-wrap]:not(.is-in) .route-truck { left: 0; }
+
+  /* Prayer: crescent glows while a prayer window is open. */
+  [data-prayer-active="true"] .crescent-glow {
+    animation: crescent-glow 2.6s ease-in-out infinite;
+  }
+  @keyframes crescent-glow {
+    0%, 100% { filter: drop-shadow(0 0 2px rgb(233 166 26 / 0.35)); }
+    50% { filter: drop-shadow(0 0 12px rgb(233 166 26 / 0.95)); }
   }
 }
 
@@ -288,6 +424,9 @@ body {
   [data-media] > div,
   [data-route-y],
   [data-route-x],
+  [data-stage],
+  .route-truck,
+  .stone,
   .link-draw {
     transition: none !important;
     animation: none !important;
@@ -301,6 +440,11 @@ body {
   [data-route-x]:not(.is-in) { transform: scaleX(1); }
   .marquee { animation: none; }
   .hero-in { animation: none; }
+  [data-prayer-active="true"] .crescent-glow {
+    animation: none;
+    filter: drop-shadow(0 0 8px rgb(233 166 26 / 0.8));
+  }
+  .js [data-route-wrap]:not(.is-in) .route-truck { left: 80%; }
 }
 
 [data-menu-section] {
@@ -311,148 +455,4 @@ body {
   html {
     scroll-behavior: smooth;
   }
-}
-
-/* =========================================================================
-   THE JOURNEY — one idea: the page IS the 8 km approach to the Dera.
-   Km stones (rail + eyebrows), a speedometer that counts down, truck-art
-   trim, a dhaba parchi, tandoor heat, a prayer-aware mosque and a glovebox.
-   ========================================================================= */
-@layer utilities {
-  /* --- Km stone: the roadside marker. Used for eyebrows and the rail. --- */
-  .stone {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1;
-    min-width: 2.15rem;
-    padding: 0.28rem 0.35rem 0.24rem;
-    background: var(--color-paper-bright);
-    color: var(--color-ink);
-    border: 1px solid color-mix(in srgb, var(--color-ink) 55%, transparent);
-    border-top: 4px solid var(--color-vermilion);
-    border-radius: 0.8rem 0.8rem 0.15rem 0.15rem;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    transition: background-color 0.3s, color 0.3s, scale 0.3s;
-  }
-  .stone small { font-size: 0.45rem; letter-spacing: 0.2em; }
-  .stone b { margin-top: 0.12rem; font-size: 0.82rem; font-weight: 700; }
-  .stone[aria-current="true"] {
-    background: var(--color-vermilion);
-    color: var(--color-paper-bright);
-    border-color: var(--color-vermilion-deep);
-    border-top-color: var(--color-marigold);
-    scale: 1.14;
-  }
-
-  /* --- Truck art: a painted 9-slice frame, a hanging jhalar fringe. ---- */
-  .truck-frame {
-    border: 0.75rem solid transparent;
-    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23C33F26'%3E%3Crect width='72' height='24'/%3E%3Crect y='48' width='72' height='24'/%3E%3Crect width='24' height='72'/%3E%3Crect x='48' width='24' height='72'/%3E%3C/g%3E%3Cg fill='%23D9A441'%3E%3Crect x='0' y='3' width='72' height='2'/%3E%3Crect x='3' y='0' width='2' height='72'/%3E%3Crect x='0' y='19' width='72' height='2'/%3E%3Crect x='19' y='0' width='2' height='72'/%3E%3Crect x='0' y='51' width='72' height='2'/%3E%3Crect x='51' y='0' width='2' height='72'/%3E%3Crect x='0' y='67' width='72' height='2'/%3E%3Crect x='67' y='0' width='2' height='72'/%3E%3C/g%3E%3Cg fill='%23C33F26'%3E%3Crect x='0' y='0' width='24' height='24'/%3E%3Crect x='48' y='0' width='24' height='24'/%3E%3Crect x='0' y='48' width='24' height='24'/%3E%3Crect x='48' y='48' width='24' height='24'/%3E%3C/g%3E%3Cg fill='%23D9A441'%3E%3Cpolygon points='12,3 21,12 12,21 3,12'/%3E%3Cpolygon points='60,3 69,12 60,21 51,12'/%3E%3Cpolygon points='12,51 21,60 12,69 3,60'/%3E%3Cpolygon points='60,51 69,60 60,69 51,60'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='60' cy='12' r='2.4'/%3E%3Ccircle cx='12' cy='60' r='2.4'/%3E%3Ccircle cx='60' cy='60' r='2.4'/%3E%3C/g%3E%3Cg fill='%23D9A441'%3E%3Ccircle cx='36' cy='12' r='3.6'/%3E%3Ccircle cx='36' cy='60' r='3.6'/%3E%3Ccircle cx='12' cy='36' r='3.6'/%3E%3Ccircle cx='60' cy='36' r='3.6'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Ccircle cx='36' cy='12' r='1.6'/%3E%3Ccircle cx='36' cy='60' r='1.6'/%3E%3Ccircle cx='12' cy='36' r='1.6'/%3E%3Ccircle cx='60' cy='36' r='1.6'/%3E%3C/g%3E%3C/svg%3E") 24 / 0.75rem round;
-  }
-  .truck-frame-quiet {
-    border: 0.75rem solid transparent;
-    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23E7E1D3'%3E%3Crect width='72' height='24'/%3E%3Crect y='48' width='72' height='24'/%3E%3Crect width='24' height='72'/%3E%3Crect x='48' width='24' height='72'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Crect x='0' y='3' width='72' height='2'/%3E%3Crect x='3' y='0' width='2' height='72'/%3E%3Crect x='0' y='19' width='72' height='2'/%3E%3Crect x='19' y='0' width='2' height='72'/%3E%3Crect x='0' y='51' width='72' height='2'/%3E%3Crect x='51' y='0' width='2' height='72'/%3E%3Crect x='0' y='67' width='72' height='2'/%3E%3Crect x='67' y='0' width='2' height='72'/%3E%3C/g%3E%3Cg fill='%23E7E1D3'%3E%3Crect x='0' y='0' width='24' height='24'/%3E%3Crect x='48' y='0' width='24' height='24'/%3E%3Crect x='0' y='48' width='24' height='24'/%3E%3Crect x='48' y='48' width='24' height='24'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Cpolygon points='12,3 21,12 12,21 3,12'/%3E%3Cpolygon points='60,3 69,12 60,21 51,12'/%3E%3Cpolygon points='12,51 21,60 12,69 3,60'/%3E%3Cpolygon points='60,51 69,60 60,69 51,60'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='60' cy='12' r='2.4'/%3E%3Ccircle cx='12' cy='60' r='2.4'/%3E%3Ccircle cx='60' cy='60' r='2.4'/%3E%3C/g%3E%3Cg fill='%23C33F26'%3E%3Ccircle cx='36' cy='12' r='3.6'/%3E%3Ccircle cx='36' cy='60' r='3.6'/%3E%3Ccircle cx='12' cy='36' r='3.6'/%3E%3Ccircle cx='60' cy='36' r='3.6'/%3E%3C/g%3E%3Cg fill='%2316281E'%3E%3Ccircle cx='36' cy='12' r='1.6'/%3E%3Ccircle cx='36' cy='60' r='1.6'/%3E%3Ccircle cx='12' cy='36' r='1.6'/%3E%3Ccircle cx='60' cy='36' r='1.6'/%3E%3C/g%3E%3C/svg%3E") 24 / 0.75rem round;
-  }
-  .fringe {
-    height: 0.7rem;
-    background:
-      radial-gradient(circle at 50% 0.14rem, var(--color-marigold) 0 0.1rem, transparent 0.11rem) 0 0 / 0.9rem 0.7rem repeat-x,
-      radial-gradient(circle at 50% 0, var(--color-vermilion) 0 0.37rem, transparent 0.39rem) 0 0 / 0.9rem 0.7rem repeat-x;
-  }
-
-  /* --- Parchi: torn dhaba docket. Teeth are cones, no masks, so the     */
-  /*     polaroid can overlap the edge without being clipped.             */
-  .parchi { position: relative; filter: drop-shadow(0 18px 22px rgb(27 23 18 / 0.16)); }
-  .parchi::before,
-  .parchi::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 0.5rem;
-    pointer-events: none;
-  }
-  .parchi::before {
-    bottom: calc(100% - 1px);
-    background: conic-gradient(from 135deg at 50% 0, var(--color-paper-bright) 90deg, transparent 0) 0 0 / 1rem 0.5rem repeat-x;
-  }
-  .parchi::after {
-    top: calc(100% - 1px);
-    background: conic-gradient(from -45deg at 50% 100%, var(--color-paper-bright) 90deg, transparent 0) 0 0 / 1rem 0.5rem repeat-x;
-  }
-  .leader { border-bottom: 2px dotted color-mix(in srgb, var(--color-ink) 35%, transparent); }
-
-  /* Stage polaroids: only the active one is shown. */
-  [data-stage] {
-    rotate: 2.2deg;
-    opacity: 0;
-    transform: translateY(0.9rem) scale(0.96);
-    transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    pointer-events: none;
-  }
-  [data-stage]:nth-child(even) { rotate: -2.2deg; }
-  [data-stage][data-active] { opacity: 1; transform: none; pointer-events: auto; }
-
-  /* --- Tandoor heat: --heat (0..1) is driven by scroll; warms paper and  */
-  /*     breathes an ember glow into the corners. -------------------------*/
-  .heat-section {
-    --heat: 0.35;
-    position: relative;
-    isolation: isolate;
-    background-color: color-mix(in srgb, var(--color-paper-dim), #E0603A calc(var(--heat) * 15%));
-  }
-  .heat-section::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: var(--heat);
-    background:
-      radial-gradient(55% 50% at 100% 100%, rgb(224 96 58 / 0.24), transparent 70%),
-      radial-gradient(40% 40% at 0 0, rgb(217 164 65 / 0.16), transparent 70%);
-  }
-
-  /* --- Road strip for the location diagram. ----------------------------*/
-  .road-dash {
-    background: repeating-linear-gradient(90deg, var(--color-paper) 0 0.9rem, transparent 0.9rem 1.7rem);
-  }
-  .route-truck { transition: left 1.8s cubic-bezier(0.65, 0, 0.35, 1); }
-  .js [data-route-wrap]:not(.is-in) .route-truck { left: 0; }
-
-  /* --- Prayer: crescent glows while a prayer window is open. -----------*/
-  [data-prayer-active="true"] .crescent-glow {
-    animation: crescent-glow 2.6s ease-in-out infinite;
-  }
-  @keyframes crescent-glow {
-    0%, 100% { filter: drop-shadow(0 0 2px rgb(217 164 65 / 0.35)); }
-    50% { filter: drop-shadow(0 0 12px rgb(217 164 65 / 0.95)); }
-  }
-
-  /* --- Glovebox flap: hinges open from the bottom edge. ----------------*/
-  .glove-panel {
-    transform-origin: 100% 100%;
-    transition: opacity 0.25s ease, transform 0.38s cubic-bezier(0.2, 1, 0.3, 1), visibility 0s linear 0.38s;
-  }
-  .glove-panel:not([data-open]) {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: perspective(700px) rotateX(-65deg) translateY(0.6rem);
-  }
-  .glove-panel[data-open] { transition-delay: 0s; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-stage],
-  .glove-panel,
-  .route-truck,
-  .stone { transition: none !important; }
-  [data-prayer-active="true"] .crescent-glow {
-    animation: none;
-    filter: drop-shadow(0 0 8px rgb(217 164 65 / 0.8));
-  }
-  .js [data-route-wrap]:not(.is-in) .route-truck { left: 80%; }
 }
