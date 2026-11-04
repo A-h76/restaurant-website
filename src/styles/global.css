@@ -484,3 +484,21 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .parchi-sheet { transition: none !important; }
 }
+
+/* Mobile menu dropdown: pops from the hamburger (top-right origin). */
+.menu-pop {
+  transform-origin: top right;
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.2, 1, 0.3, 1), visibility 0s linear 0.22s;
+}
+.menu-pop:not([data-open]) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-0.4rem) scale(0.94);
+}
+.menu-pop[data-open] {
+  transition-delay: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-pop { transition: none !important; }
+}

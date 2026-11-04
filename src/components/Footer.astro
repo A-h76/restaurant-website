@@ -1,38 +1,78 @@
 ---
-import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL, WHATSAPP_DISPLAY, ADDRESS_LINE, HOURS_DISPLAY, PLUS_CODE } from '../consts.js';
+// Footer = the end of the journey. A butter band with the closing line and
+// the "0 km · you are here" road sign (the km rail's destination), then the
+// dark brown link columns so the page still lands on a heavy block.
+import Cta from './Cta.astro';
+import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL, WHATSAPP_DISPLAY, ADDRESS_LINE, HOURS_DISPLAY, PLUS_CODE, MAPS_DIRECTIONS_URL } from '../consts.js';
 const year = new Date().getFullYear();
 
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/menu', label: 'Menu' },
   { href: '/location', label: 'Location' },
-  { href: '/prayer-facility', label: 'Prayer Facility' },
+  { href: '/prayer-facility', label: 'Prayer facility' },
   { href: '/contact', label: 'Contact' },
 ];
+
+const pill =
+  'inline-flex min-h-11 items-center rounded-full border-2 border-brand-cream bg-paper-bright px-5 text-base font-extrabold text-brand-text-dark shadow-[4px_4px_0_0_var(--color-marigold)] transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-accent-light';
 ---
 
-<footer class="relative bg-brand-dark text-brand-cream">
+<footer>
   <div class="stripes" aria-hidden="true"></div>
 
-  <div class="mx-auto max-w-6xl px-5 md:px-10 lg:px-16">
-    <!-- Closing statement -->
-    <div class="border-b-2 border-dashed border-brand-cream/25 py-10 md:py-14">
-      <p class="sticker">★ Kilometre after kilometre</p>
-      <p class="mt-6 max-w-2xl font-display text-4xl font-black leading-[1.08] text-brand-cream text-pop-red md:text-6xl">
-        Good food, good rest —<br class="hidden sm:block" /> a stop worth pulling over for.
-      </p>
-    </div>
+  <!-- Closing band: the line, the actions, the sign -->
+  <div class="bg-paper-dim px-5 py-14 md:px-10 md:py-20 lg:px-16">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-[1.25fr_1fr] md:gap-16">
+      <div>
+        <p class="sticker">★ Kilometre after kilometre ★</p>
+        <p class="mt-6 max-w-xl text-balance font-display text-4xl font-black leading-[1.06] text-brand-text-dark text-pop-white md:text-5xl lg:text-[3.4rem]">
+          Good food, good rest — <span class="text-brand-accent">a stop worth pulling over for.</span>
+        </p>
+        <p class="mt-5 max-w-md text-base leading-relaxed text-brand-text-dark/85">
+          Call ahead, open the map, or just follow the signs. The karahi is on the iron pan and the parking is waiting.
+        </p>
+        <div class="mt-7 flex flex-wrap items-center gap-4">
+          <Cta href={PHONE_TEL} variant="primary">Call <span dir="ltr">{PHONE_DISPLAY}</span></Cta>
+          <Cta href={MAPS_DIRECTIONS_URL} variant="secondary">Get directions →</Cta>
+        </div>
+      </div>
 
-    <!-- Columns -->
-    <div class="grid gap-10 py-10 md:grid-cols-[1.4fr_1fr_1fr] md:py-12">
+      <!-- The sign: the end of the km countdown -->
+      <div class="mx-auto w-full max-w-sm" role="img" aria-label="Road sign: 0 kilometres. You are at the Dera.">
+        <div class="rotate-[2deg] rounded-2xl border-2 border-brand-text-dark bg-brand-green p-2 shadow-lift">
+          <div class="rounded-xl border-2 border-brand-cream/90 px-6 py-5 text-center text-brand-cream">
+            <div class="flex items-center justify-between text-xs font-extrabold uppercase tracking-[0.18em]">
+              <span>← Sahiwal</span>
+              <span>Arifwala →</span>
+            </div>
+            <p class="mt-3 flex items-end justify-center gap-2 leading-none">
+              <span class="font-display text-[6.5rem] font-black leading-[0.9]">0</span>
+              <span class="pb-3 font-display text-4xl font-black text-brand-accent-light">km</span>
+            </p>
+            <p class="mt-1 font-urdu-display text-2xl leading-[1.8] text-brand-accent-light" dir="rtl">آپ ڈیرے پر ہیں</p>
+            <span class="mt-1 inline-block rounded-full border-2 border-brand-cream/80 px-4 py-1 text-xs font-extrabold uppercase tracking-[0.22em]">You are here</span>
+          </div>
+        </div>
+        <div class="mx-auto h-12 w-5 border-x-2 border-b-2 border-brand-text-dark bg-brand-dark" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stripes" aria-hidden="true"></div>
+
+  <!-- Link columns: dark, so the page ends heavy -->
+  <div class="bg-brand-dark text-brand-cream">
+    <div class="mx-auto grid max-w-6xl gap-10 px-5 pb-24 pt-12 md:grid-cols-[1.4fr_1fr_1fr] md:px-10 md:pb-14 md:pt-14 lg:px-16">
       <div>
         <span class="font-urdu-display text-3xl leading-[1.7] text-brand-accent-light">سمارٹ کک ڈیرہ</span>
         <p class="mt-1 font-display text-xl font-black">Smart Cook Dera</p>
-        <p class="mt-4 max-w-xs text-sm leading-relaxed text-brand-cream/75">{ADDRESS_LINE}</p>
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-brand-cream/80">{ADDRESS_LINE}</p>
+        <p class="mt-4 inline-block rounded-full border-2 border-brand-text-dark bg-marigold px-3 py-1 text-[0.7rem] font-extrabold uppercase tracking-[0.18em] text-brand-text-dark">100% Halal kitchen</p>
       </div>
 
       <nav aria-label="Footer">
-        <span class="font-mono text-[0.7rem] font-extrabold uppercase tracking-[0.22em] text-brand-accent-light">Index</span>
+        <p class="font-display text-xl font-black italic text-brand-accent-light">Index</p>
         <ul class="mt-4 space-y-2.5">
           {navItems.map((item) => (
             <li>
@@ -46,17 +86,20 @@ const navItems = [
       </nav>
 
       <div>
-        <span class="font-mono text-[0.7rem] font-extrabold uppercase tracking-[0.22em] text-brand-accent-light">Direct line</span>
-        <ul class="mt-4 space-y-2.5 text-base">
-          <li><a href={PHONE_TEL} class="link-draw font-bold text-brand-cream transition-colors hover:text-brand-accent-light" dir="ltr">{PHONE_DISPLAY}</a></li>
-          <li><a href={WHATSAPP_URL} class="link-draw font-bold text-brand-cream transition-colors hover:text-brand-accent-light">WhatsApp · <span dir="ltr">{WHATSAPP_DISPLAY}</span></a></li>
-          <li class="pt-1 text-sm text-brand-cream/70">{HOURS_DISPLAY}</li>
+        <p class="font-display text-xl font-black italic text-brand-accent-light">Direct line</p>
+        <ul class="mt-4 space-y-3">
+          <li><a href={PHONE_TEL} class={pill} dir="ltr">{PHONE_DISPLAY}</a></li>
+          <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" class={pill}>WhatsApp <span class="ml-2" dir="ltr">{WHATSAPP_DISPLAY}</span></a></li>
+          <li class="pt-1 text-sm text-brand-cream/80">{HOURS_DISPLAY}</li>
         </ul>
       </div>
     </div>
+  </div>
 
-    <!-- Dateline -->
-    <div class="flex flex-col gap-2 border-t-2 border-dashed border-brand-cream/25 py-5 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-brand-cream/65 sm:flex-row sm:items-center sm:justify-between">
+  <div class="stripes stripes-sm" aria-hidden="true"></div>
+  <!-- Left-aligned on purpose: the quick-contact pill lives bottom-right and must not cover this -->
+  <div class="bg-marigold px-5 py-3.5 text-brand-text-dark md:px-10 lg:px-16">
+    <div class="mx-auto flex max-w-6xl flex-wrap gap-x-8 gap-y-1 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] sm:pr-52">
       <span>&copy; {year} Smart Cook Dera · Halal Kitchen</span>
       <span>Sahiwal–Arifwala Rd · <span dir="ltr">{PLUS_CODE}</span></span>
     </div>
