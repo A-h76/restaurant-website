@@ -14,12 +14,14 @@ const browseCategories = allMenuCategories();
   title="Menu — Smart Cook Dera | Karahi, BBQ, Fast Food | Sahiwal-Arifwala Road"
   description="Full menu at Smart Cook Dera. Fresh Mutton Karahi, Chicken Karahi, BBQ, Seekh Kabab, Naan, Fast Food and Drinks. Sahiwal-Arifwala Road, near Arifwala."
   headerSticky={false}
+  hideGlovebox
 >
   <PageHeader
     kicker="The Bill of Fare"
     kickerUrdu="مینیو"
     title="Our Menu"
-    meta={['Karahi · BBQ · Biryani', 'Pizzas · Fast Food', 'Deals & Family Platters']}
+    sub="Build your parchi: tap a size on any dish, then send the slip to us on WhatsApp."
+    meta={['1 · Tap a size to add', '2 · Check your parchi', '3 · Send on WhatsApp']}
   />
 
   <MenuBrowse categories={browseCategories} />

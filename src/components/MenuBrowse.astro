@@ -1,6 +1,7 @@
 ---
 import StickyCategoryNav from './StickyCategoryNav.astro';
 import FoodCard from './FoodCard.astro';
+import ParchiTicket from './ParchiTicket.astro';
 import { withSectionIds, formatPrice } from '../lib/menu.js';
 import { desiCategories, fastFoodCategories } from '../data/menu-catalog.js';
 
@@ -26,50 +27,256 @@ const { categories } = Astro.props;
 const sections = withSectionIds(categories);
 const desiEnd = desiCategories.length;
 const fastFoodEnd = desiEnd + fastFoodCategories.length;
+const groups: Record<number, { n: string; title: string }> = {
+  0: { n: '01', title: 'Karahi & BBQ' },
+  [desiEnd]: { n: '02', title: 'Fast Food' },
+  [fastFoodEnd]: { n: '03', title: 'Deals' },
+};
+const dishCount = sections.reduce((n, c) => n + c.items.length, 0);
 ---
 
-<div id="menu">
+<!-- group/menu: data-view ("cards" | "list") restyles every FoodCard via group-data variants -->
+<div id="menu" data-view="cards" class="group/menu">
 <StickyCategoryNav categories={sections.map((c) => ({ id: c.id, label: c.name }))} />
 
-<div class="bg-brand-cream px-4 py-section-md md:px-8 lg:px-16">
-  <div class="mx-auto max-w-6xl space-y-14">
-    {sections.map((cat, i) => (
-      <>
-        {i === 0 && (
-          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="sticker">§ 01</span>
-            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Karahi &amp; BBQ</h2>
-          </div>
-        )}
-        {i === desiEnd && (
-          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="sticker">§ 02</span>
-            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Fast Food</h2>
-          </div>
-        )}
-        {i === fastFoodEnd && (
-          <div class="-mx-4 flex items-baseline gap-4 border-b-2 border-brand-text-dark px-1 pb-2 md:-mx-8 md:px-1 lg:-mx-16 lg:px-1">
-            <span class="sticker">§ 03</span>
-            <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">Deals</h2>
-          </div>
-        )}
-        <section id={cat.id} data-menu-section>
-        <div class="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 class="font-display text-xl text-brand-text-dark md:text-2xl">{cat.name}</h3>
-          {cat.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{cat.urdu}</span>}
-          <span class="ml-auto font-mono text-[0.6rem] uppercase tracking-[0.16em] text-brand-text-muted">{cat.items.length} {cat.items.length === 1 ? 'item' : 'items'}</span>
+<div class="bg-brand-cream px-4 py-section-md md:px-8 lg:px-10">
+  <div class="mx-auto grid max-w-7xl items-start gap-10 lg:grid-cols-[minmax(0,1fr)_21rem] xl:gap-12">
+    <div class="min-w-0">
+      <!-- Toolbar: find a dish · cards/list -->
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <label class="relative block flex-1">
+          <span class="sr-only">Search the menu</span>
+          <svg class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-brand-text-dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input
+            id="menu-search"
+            type="search"
+            autocomplete="off"
+            placeholder={`Find a dish — karahi, pizza, naan… (${dishCount})`}
+            class="h-12 w-full rounded-full border-2 border-brand-text-dark bg-paper-bright pl-11 pr-4 text-base font-semibold text-brand-text-dark shadow-card-sm placeholder:font-medium placeholder:text-brand-text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+          />
+        </label>
+        <div role="group" aria-label="Menu layout" class="inline-flex shrink-0 self-start rounded-full border-2 border-brand-text-dark bg-paper-bright p-1 shadow-card-sm sm:self-auto">
+          <button type="button" data-view-btn="cards" aria-pressed="true" class="min-h-10 rounded-full px-4 text-sm font-bold text-brand-text-dark aria-pressed:bg-marigold">Cards</button>
+          <button type="button" data-view-btn="list" aria-pressed="false" class="min-h-10 rounded-full px-4 text-sm font-bold text-brand-text-dark aria-pressed:bg-marigold">List</button>
         </div>
-        {cat.note && (
-          <p class="mb-4 font-mono text-xs text-brand-text-muted">{formatPrice(cat.note)}</p>
-        )}
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {cat.items.map((item) => (
-            <FoodCard item={item} category={cat.name} urdu={cat.urdu} note={cat.note} />
-          ))}
-        </div>
-        </section>
-      </>
-    ))}
+      </div>
+      <p data-search-status role="status" class="mt-3 min-h-5 text-sm font-semibold text-brand-text-muted"></p>
+
+      <div class="mt-6 space-y-14">
+        {sections.map((cat, i) => (
+          <>
+            {groups[i] && (
+              <div data-group-head class="flex items-baseline gap-4 border-b-2 border-brand-text-dark pb-2">
+                <span class="sticker">§ {groups[i].n}</span>
+                <h2 class="font-display text-2xl text-brand-text-dark md:text-3xl">{groups[i].title}</h2>
+              </div>
+            )}
+            <section id={cat.id} data-menu-section>
+              <div class="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 class="font-display text-xl text-brand-text-dark md:text-2xl">{cat.name}</h3>
+                {cat.urdu && <span class="font-urdu-display text-sm text-brand-text-muted" dir="rtl">{cat.urdu}</span>}
+                <span class="ml-auto text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-brand-text-muted">{cat.items.length} {cat.items.length === 1 ? 'item' : 'items'}</span>
+              </div>
+              {cat.note && (
+                <p class="mb-4 text-sm font-semibold text-brand-text-muted">{formatPrice(cat.note)}</p>
+              )}
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {cat.items.map((item) => (
+                  <FoodCard item={item} category={cat.name} urdu={cat.urdu} note={cat.note} />
+                ))}
+              </div>
+            </section>
+          </>
+        ))}
+      </div>
+
+      <div data-empty hidden class="ticket mx-auto mt-10 max-w-md p-8 text-center [--sh:var(--color-olive)]">
+        <p class="font-display text-2xl font-black text-brand-text-dark">No dish matches that.</p>
+        <p class="mt-2 text-sm text-brand-text-muted">Try a shorter word, or clear the search to see everything.</p>
+      </div>
+    </div>
+
+    <ParchiTicket />
   </div>
 </div>
 </div>
+
+<script>
+  import { orderTotals, orderMessage, rs } from '../lib/parchi.js';
+
+  type Line = { key: string; name: string; label: string; price: number | null; qty: number };
+
+  const $ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
+  const $$ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
+
+  const menu = $('#menu')!;
+  const sheet = $('#parchi')!;
+  const backdrop = $('#parchi-backdrop')!;
+  const bar = $('#parchi-bar')!;
+  const barBtn = $('[data-p-open]', bar)!;
+  const mobile = window.matchMedia('(max-width: 1023.98px)');
+
+  // ── Parchi state (persisted; storage may be blocked, so every access is guarded) ──
+  const STORE = 'scd-parchi-v1';
+  const lines = new Map<string, Line>();
+  const knownIds = new Set($$('[data-card]').map((c) => c.dataset.cardId));
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) ?? '[]');
+    if (Array.isArray(saved)) {
+      for (const l of saved) {
+        const ok =
+          l && typeof l.key === 'string' && typeof l.name === 'string' && typeof l.label === 'string' &&
+          (l.price === null || Number.isFinite(l.price)) && Number.isInteger(l.qty) && l.qty > 0 && l.qty < 100 &&
+          knownIds.has(l.key.split('::')[0]); // drop dishes no longer on the menu
+        if (ok) lines.set(l.key, { key: l.key, name: l.name.slice(0, 80), label: l.label.slice(0, 30), price: l.price, qty: l.qty });
+      }
+    }
+  } catch {}
+  const persist = () => {
+    try { localStorage.setItem(STORE, JSON.stringify([...lines.values()])); } catch {}
+  };
+
+  const chipKey = (btn: HTMLElement) => `${btn.closest<HTMLElement>('[data-card]')!.dataset.cardId}::${btn.dataset.label ?? ''}`;
+
+  // ── Sheet (<lg) ──
+  const setOpen = (open: boolean) => {
+    sheet.toggleAttribute('data-open', open);
+    backdrop.hidden = !open;
+    barBtn.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('overflow-hidden', open && mobile.matches);
+    if (open && mobile.matches) $('[data-p-close]', sheet)?.focus();
+  };
+
+  // ── Render ──
+  const tpl = $<HTMLTemplateElement>('#parchi-line')!;
+  const render = () => {
+    const arr = [...lines.values()];
+    const { total, toConfirm, count } = orderTotals(arr);
+    const noun = count === 1 ? 'item' : 'items';
+
+    $('[data-p-count]', sheet)!.textContent = count ? `${count} ${noun}` : 'Empty';
+    $('[data-p-empty]', sheet)!.hidden = count > 0;
+    $('[data-p-footer]', sheet)!.hidden = count === 0;
+    $('[data-p-total]', sheet)!.textContent = rs(total);
+    const confirm = $('[data-p-confirm]', sheet)!;
+    confirm.hidden = toConfirm === 0;
+    confirm.textContent = toConfirm ? `+ ${toConfirm} item${toConfirm > 1 ? 's' : ''} priced when you send` : '';
+    $<HTMLAnchorElement>('[data-p-send]', sheet)!.href = `${sheet.dataset.wa}?text=${encodeURIComponent(orderMessage(arr))}`;
+
+    const ul = $('[data-p-lines]', sheet)!;
+    ul.replaceChildren();
+    for (const l of arr) {
+      const li = tpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      $('[data-l-name]', li)!.textContent = l.name;
+      $('[data-l-label]', li)!.textContent = l.label;
+      $('[data-l-label]', li)!.hidden = !l.label;
+      $('[data-l-price]', li)!.textContent = l.price == null ? 'price on call' : rs(l.price * l.qty);
+      $('[data-l-qty]', li)!.textContent = String(l.qty);
+      $('[data-l-dec]', li)!.dataset.key = l.key;
+      $('[data-l-inc]', li)!.dataset.key = l.key;
+      ul.appendChild(li);
+    }
+
+    bar.hidden = count === 0;
+    $('[data-bar-count]', bar)!.textContent = String(count);
+    $('[data-bar-noun]', bar)!.textContent = noun;
+    $('[data-bar-total]', bar)!.textContent = total ? rs(total) : 'confirm';
+    if (count === 0) setOpen(false);
+
+    // Mirror quantities onto the chips.
+    $$('[data-add]').forEach((btn) => {
+      const q = lines.get(chipKey(btn))?.qty ?? 0;
+      const badge = $('[data-badge]', btn)!;
+      btn.toggleAttribute('data-count', q > 0);
+      badge.hidden = q === 0;
+      badge.textContent = q ? `×${q}` : '';
+    });
+  };
+
+  const change = (key: string, delta: number) => {
+    const l = lines.get(key);
+    if (!l) return;
+    l.qty += delta;
+    if (l.qty <= 0) lines.delete(key);
+    else l.qty = Math.min(l.qty, 99);
+    persist();
+    render();
+  };
+
+  menu.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-add]');
+    if (!btn) return;
+    const key = chipKey(btn);
+    const existing = lines.get(key);
+    if (existing) existing.qty = Math.min(existing.qty + 1, 99);
+    else {
+      lines.set(key, {
+        key,
+        name: btn.closest<HTMLElement>('[data-card]')!.dataset.cardName ?? 'Dish',
+        label: btn.dataset.label ?? '',
+        price: btn.dataset.price ? Number(btn.dataset.price) : null,
+        qty: 1,
+      });
+    }
+    persist();
+    render();
+  });
+
+  sheet.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const dec = t.closest<HTMLElement>('[data-l-dec]');
+    const inc = t.closest<HTMLElement>('[data-l-inc]');
+    if (dec) change(dec.dataset.key!, -1);
+    else if (inc) change(inc.dataset.key!, 1);
+    else if (t.closest('[data-p-clear]')) { lines.clear(); persist(); render(); }
+    else if (t.closest('[data-p-close]')) { setOpen(false); barBtn.focus(); }
+  });
+  barBtn.addEventListener('click', () => setOpen(true));
+  backdrop.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sheet.hasAttribute('data-open')) { setOpen(false); barBtn.focus(); }
+  });
+  mobile.addEventListener('change', () => setOpen(false));
+
+  // ── Search ──
+  const input = $<HTMLInputElement>('#menu-search')!;
+  const cards = $$('[data-card]');
+  const sections = $$('[data-menu-section]');
+  const heads = $$('[data-group-head]');
+  const navLinks = $$('[data-cat-link]');
+  const status = $('[data-search-status]')!;
+  const empty = $('[data-empty]')!;
+  const applySearch = () => {
+    const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const c of cards) {
+      const ok = terms.every((t) => c.dataset.search!.includes(t));
+      c.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const s of sections) s.hidden = !s.querySelector('[data-card]:not([hidden])');
+    for (const h of heads) h.hidden = terms.length > 0;
+    for (const a of navLinks) a.hidden = !!document.getElementById(a.getAttribute('href')!.slice(1))?.hidden;
+    empty.hidden = shown > 0;
+    status.textContent = terms.length ? (shown ? `${shown} dish${shown > 1 ? 'es' : ''} found` : '') : '';
+  };
+  input.addEventListener('input', applySearch);
+
+  // ── Cards / List ──
+  const viewBtns = $$('[data-view-btn]');
+  const setView = (v: string, save = true) => {
+    menu.dataset.view = v;
+    viewBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.viewBtn === v)));
+    if (save) { try { localStorage.setItem('scd-menu-view', v); } catch {} }
+  };
+  viewBtns.forEach((b) => b.addEventListener('click', () => setView(b.dataset.viewBtn!)));
+  try {
+    const v = localStorage.getItem('scd-menu-view');
+    if (v === 'list' || v === 'cards') setView(v);
+    // Phones: the compact list is the default (cards are ~400px tall each); not saved as a preference.
+    else if (window.matchMedia('(max-width: 639px)').matches) setView('list', false);
+  } catch {}
+
+  persist();
+  render();
+</script>

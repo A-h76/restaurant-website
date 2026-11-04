@@ -91,7 +91,7 @@ const navCategories = categories.map((cat) => ({
       const y = navOffset();
       let current = sections[0];
       sections.forEach((section) => {
-        if (section.getBoundingClientRect().top <= y) current = section;
+        if (!section.hidden && section.getBoundingClientRect().top <= y) current = section;
       });
       setActive(current.id);
     }

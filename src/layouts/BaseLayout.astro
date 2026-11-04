@@ -11,9 +11,11 @@ interface Props {
   schema?: string;
   headerSticky?: boolean;
   noindex?: boolean;
+  /** Pages with their own fixed bottom UI (the menu parchi bar) drop the quick-contact pill. */
+  hideGlovebox?: boolean;
 }
 
-const { title, description, schema, headerSticky = true, noindex = false } = Astro.props;
+const { title, description, schema, headerSticky = true, noindex = false, hideGlovebox = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
@@ -41,7 +43,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
       <slot />
     </main>
     <Footer />
-    <Glovebox />
+    {!hideGlovebox && <Glovebox />}
 
     <script>
       // ── Motion runtime ─────────────────────────────────────────────────
