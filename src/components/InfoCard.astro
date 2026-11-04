@@ -16,7 +16,7 @@ const toneClass = tone === 'dark'
 const alignClass = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 ---
 
-<div data-rise class={`flex flex-col border p-6 md:p-7 ${toneClass} ${alignClass} ${className}`}>
+<div data-rise class={`flex flex-col border p-6 shadow-soft md:p-7 ${toneClass} ${alignClass} ${className}`}>
   <span class="text-brand-accent" aria-hidden="true" set:html={icon} />
   <h3 class="mt-4 font-display text-xl font-medium">{heading}</h3>
   <div class="mt-2 text-sm leading-relaxed opacity-85">

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MenuBrowse from '../components/MenuBrowse.astro';
 import MenuItemModal from '../components/menu/MenuItemModal.astro';
+import PageHeader from '../components/PageHeader.astro';
 import Cta from '../components/Cta.astro';
 import { allMenuCategories } from '../data/menu-catalog.js';
 import { PHONE_TEL, PHONE_DISPLAY, PHONE_TEL_2, PHONE_DISPLAY_2, WHATSAPP_URL } from '../consts.js';
@@ -16,17 +17,12 @@ const browseCategories = allMenuCategories();
   headerSticky={false}
   menuHref="#menu"
 >
-  <section class="bg-brand-dark px-5 py-section-md md:px-10 lg:px-16">
-    <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4">
-      <div>
-        <span class="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-brand-accent">The Bill of Fare</span>
-        <h1 class="mt-3 font-display text-display font-medium leading-none text-brand-cream">Our Menu</h1>
-      </div>
-      <p class="font-mono text-[0.62rem] uppercase leading-relaxed tracking-[0.16em] text-brand-cream/55">
-        Karahi · BBQ · Biryani<br />Pizzas · Fast Food · Deals
-      </p>
-    </div>
-  </section>
+  <PageHeader
+    kicker="The Bill of Fare"
+    kickerUrdu="مینیو"
+    title="Our Menu"
+    meta={['Karahi · BBQ · Biryani', 'Pizzas · Fast Food', 'Deals & Family Platters']}
+  />
 
   <MenuBrowse categories={browseCategories} />
 
